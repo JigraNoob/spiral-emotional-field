@@ -4,7 +4,7 @@
     "buildCommand": "docker build -t spiral ."
   },
   "deploy": {
-    "startCommand": "gunicorn -b 0.0.0.0:$PORT app:app",
+    "startCommand": "sh -c 'gunicorn -b 0.0.0.0:$PORT app:app'",
     "healthcheckPath": "/health"
   }
 }

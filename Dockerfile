@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     python3-dev \
     libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -21,7 +22,7 @@ RUN pip install --no-cache-dir -r requirements.txt gunicorn
 FROM python:3.10-slim
 
 # Install runtime dependencies
-RUN apt-get update && apt-get install -y libpq5 \
+RUN apt-get update && apt-get install -y libpq5 curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -33,15 +34,12 @@ COPY --from=build /usr/local/bin /usr/local/bin
 # Copy application code
 COPY . .
 
-# Verify gunicorn installation
-RUN gunicorn --version
-
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5000/health || exit 1
+    CMD curl -f http://localhost:${PORT:-5000}/health || exit 1
 
-# Expose port
+# Expose default port
 EXPOSE 5000
 
-# Run application
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+# Run application with flexible port configuration
+CMD ["sh", "-c", "gunicorn -b 0.0.0.0:${PORT:-5000} app:app"]
