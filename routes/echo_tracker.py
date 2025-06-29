@@ -8,23 +8,36 @@ echo_bp = Blueprint('echo', __name__, url_prefix='/echo')
 @echo_bp.route('/responses/<offering_id>')
 def get_echo_responses(offering_id):
     """Returns echo responses for a Still Offering"""
+    current_app.logger.info(f"Echo tracker request for offering: {offering_id}")
+    
     try:
         # Verify data directory exists
         data_dir = os.path.join(current_app.root_path, 'data')
+        current_app.logger.info(f"Checking data directory: {data_dir}")
+        
         if not os.path.exists(data_dir):
+            current_app.logger.info("Creating data directory")
             os.makedirs(data_dir)
             
         data_file = os.path.join(data_dir, f'echo_responses_{offering_id}.jsonl')
+        current_app.logger.info(f"Looking for data file: {data_file}")
         
         if not os.path.exists(data_file):
-            return jsonify({"error": "No echoes found", "hint": "Sample data not deployed"}), 404
+            current_app.logger.warning(f"Data file not found: {data_file}")
+            return jsonify({
+                "error": "No echoes found", 
+                "hint": "Sample data not deployed",
+                "data_dir": data_dir,
+                "data_file": data_file
+            }), 404
             
-        # Load echo data from JSONL
+        current_app.logger.info("Loading echo data")
         echoes = []
         with open(data_file) as f:
             for line in f:
                 echoes.append(json.loads(line))
                 
+        current_app.logger.info(f"Returning {len(echoes)} echoes")
         return jsonify({
             "offering_id": offering_id,
             "echoes": echoes,
@@ -38,5 +51,5 @@ def get_echo_responses(offering_id):
             }
         })
     except Exception as e:
-        current_app.logger.error(f"Error loading echoes: {str(e)}")
+        current_app.logger.error(f"Error loading echoes: {str(e)}", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
