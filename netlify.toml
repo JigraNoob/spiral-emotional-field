@@ -2,9 +2,6 @@
 command = "pip cache purge && pip install -r requirements.txt"
 publish = "build"
 
-[build.environment]
-PYTHON_VERSION = "3.10"
-
 [context.production.environment]
 FLASK_ENV = "production"
 
