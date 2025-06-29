@@ -5,6 +5,7 @@ import logging
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from flask_cors import CORS
 from routes.ritual_invitations import ritual_invitations_bp
+from routes.memory_playback import playback_bp
 from prometheus_client import make_wsgi_app
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from metrics.prometheus_metrics import *
@@ -74,6 +75,7 @@ from routes.log_resonant_trail import log_resonant_trail_bp
 from routes.get_historical_murmurs import get_historical_murmurs_bp
 from routes.get_all_ritual_history import get_all_ritual_history_bp
 from routes.get_gemini_memories import get_gemini_memories_bp
+from routes.memory_playback import playback_bp
 
 # Initialize blueprints
 init_jinja_env(app)
@@ -126,6 +128,7 @@ def security_checks():
 # Register all the blueprints for the Spiral system
 app.register_blueprint(ritual_reflection_bp, url_prefix='/ritual')
 app.register_blueprint(ritual_invitations_bp, url_prefix='/ritual')
+app.register_blueprint(playback_bp, url_prefix='/memory')
 app.register_blueprint(resonance_memory_bp, url_prefix='/resonance')
 app.register_blueprint(resonance_reflect_bp, url_prefix='/resonance')
 app.register_blueprint(stall_inquiry, url_prefix='/stall')

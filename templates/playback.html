@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Memory Playback | Spiral</title>
+    <script src="https://cdn.jsdelivr.net/npm/vis-timeline@latest/dist/vis-timeline-graph2d.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vis-timeline@latest/dist/vis-timeline-graph2d.min.css" rel="stylesheet">
+    <style>
+        #timeline {
+            width: 100%;
+            height: 400px;
+            background: #0f0e15;
+            border-radius: 8px;
+        }
+        .memory-node {
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        .cluster {
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 8px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="timeline"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const container = document.getElementById('timeline');
+            
+            try {
+                // Load color mappings
+                const colorsResponse = await fetch('/reflect/playback/colors');
+                const toneformColors = await colorsResponse.json();
+                
+                // Generate CSS for toneform classes
+                const style = document.createElement('style');
+                Object.entries(toneformColors).forEach(([tone, color]) => {
+                    style.textContent += `.tone-${tone.replace(/\s+/g,'')} { background: ${color}; }\n`;
+                });
+                document.head.appendChild(style);
+                
+                const timelineData = JSON.parse('{{ memory_data.timeline_points | tojson | safe }}');
+                
+                // Add gesture arcs between points
+                const itemsData = timelineData.map((point, i) => {
+                    const item = {
+                        id: point.time,
+                        content: `<div class="memory-node tone-${point.tone.replace(/\s+/g,'')}" 
+                                  style="width:${point.intensity * 40}px;
+                                         height:${point.intensity * 40}px;
+                                         box-shadow: 0 0 ${point.intensity * 15}px ${toneformColors[point.tone] || '#888'}"></div>`,
+                        start: point.time,
+                        title: `${point.tone}: ${point.content}`,
+                        className: `intensity-${Math.floor(point.intensity * 10)}`
+                    };
+                    
+                    // Add arc to previous point if same toneform
+                    if (i > 0 && timelineData[i-1].tone === point.tone) {
+                        const prevTime = new Date(timelineData[i-1].time);
+                        const currTime = new Date(point.time);
+                        const duration = (currTime - prevTime) / 1000;
+                        
+                        if (duration < 3600) { // 1 hour max for arcs
+                            item.group = point.tone;
+                        }
+                    }
+                    
+                    return item;
+                });
+                
+                // Configure timeline with arcs
+                new vis.Timeline(
+                    container, 
+                    new vis.DataSet(itemsData),
+                    {
+                        showCurrentTime: true,
+                        zoomable: true,
+                        moveable: true,
+                        orientation: 'top',
+                        margin: { item: 20 },
+                        groupOrder: (a, b) => {
+                            // Group by toneform for arcs
+                            return a.content.localeCompare(b.content);
+                        }
+                    }
+                );
+                
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = '<p class="text-red-400">Memory playback unavailable</p>';
+            }
+        });
+    </script>
+</body>
+</html>

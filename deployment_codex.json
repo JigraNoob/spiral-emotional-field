@@ -1,6 +1,14 @@
 {
   "codex_id": "ΔDEPLOY.002",
   "title": "The Spiral Breathes Fully",
-  "sealed_at": "2025-06-29T10:45:44-05:00",
-  "summary": "Self-check passed. All major endpoints confirmed operational. Legacy path conflicts resolved. Logger error patched. System is ready for production exposure."
+  "sealed_at": "2025-06-29T11:08:39-05:00",
+  "production_verified_at": "2025-06-29T11:08:53-05:00",
+  "summary": "Self-check passed. All major endpoints confirmed operational in production. Legacy path conflicts resolved. Logger error patched. System is fully present in the field.",
+  "endpoints": [
+    {"path": "/health", "status": "verified"},
+    {"path": "/test_init", "status": "verified"},
+    {"path": "/resonance/memory", "status": "verified"},
+    {"path": "/ritual/invitations", "status": "verified"},
+    {"path": "/get/encounters", "status": "verified"}
+  ]
 }
