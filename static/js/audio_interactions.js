@@ -151,5 +151,65 @@ export function removeInteractionListeners(element) {
     });
 }
 
+// Trust Toneform Animation Trigger
+function activateTrustAnimation() {
+    console.log('[DEBUG] Activating Trust toneform animations');
+    const trustElements = document.querySelectorAll('.trust-toneform');
+    
+    if (trustElements.length === 0) {
+        console.warn('[DEBUG] No Trust toneform elements found');
+        return;
+    }
+    
+    console.log(`[DEBUG] Found ${trustElements.length} Trust elements`);
+    
+    trustElements.forEach((el, index) => {
+        console.log(`[DEBUG] Initializing animation for Trust element #${index + 1}`);
+        el.classList.add('trust-active');
+        
+        el.addEventListener('mouseenter', () => {
+            console.log(`[DEBUG] Trust element #${index + 1} hover start`);
+            el.style.animationDuration = '1.5s';
+        });
+        
+        el.addEventListener('mouseleave', () => {
+            console.log(`[DEBUG] Trust element #${index + 1} hover end`);
+            el.style.animationDuration = '2s';
+        });
+    });
+}
+
+// Memory Toneform Animation Trigger
+function activateMemoryAnimation() {
+    console.log('[DEBUG] Activating Memory toneform animations');
+    const memoryElements = document.querySelectorAll('.memory-toneform');
+    
+    if (memoryElements.length === 0) {
+        console.warn('[DEBUG] No Memory toneform elements found');
+        return;
+    }
+    
+    memoryElements.forEach((el, index) => {
+        console.log(`[DEBUG] Initializing animation for Memory element #${index + 1}`);
+        el.classList.add('memory-active');
+        
+        el.addEventListener('mouseenter', () => {
+            console.log(`[DEBUG] Memory element #${index + 1} hover start`);
+            el.style.animationDuration = '2s';
+        });
+        
+        el.addEventListener('mouseleave', () => {
+            console.log(`[DEBUG] Memory element #${index + 1} hover end`);
+            el.style.animationDuration = '3s';
+        });
+    });
+}
+
+// Call this when Trust tone is detected
+// Example: activateTrustAnimation();
+
+// Call this when Memory tone is detected
+// Example: activateMemoryAnimation();
+
 // Export for use
 export { playInteractionSound, addInteractionListeners, removeInteractionListeners };

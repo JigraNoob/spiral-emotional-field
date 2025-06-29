@@ -15,23 +15,139 @@
   <script src="{{ url_for('static', filename='js/murmur_shimmer.js') }}"></script>
   <script src="{{ url_for('static', filename='js/murmur_reflector.js') }}"></script>
   <script src="{{ url_for('static', filename='js/fetch_and_process_murmurs.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/transition_manager.js') }}"></script>
 
 </head>
 <body class="bg-black text-white">
 
   <!-- Your existing altar and feedback rendering goes here -->
-  <div id="invitation-container">
+  <div id="invitation-container" class="relative">
+    <div class="toneform-gradient"></div>
+    <div class="invitation-glyph"></div>
+    <div class="climate-indicator absolute top-0 left-0 text-xs text-gray-400">
+      <span id="climate-influence"></span>
+    </div>
     <h2 class="text-2xl font-bold mb-4">New Invitation</h2>
-<p>{{ invitation.text if invitation is defined else 'No invitation text available' }}</p>
+    <p id="invitation-text" class="invitation-text">{{ invitation.text if invitation is defined else 'No invitation text available' }}</p>
+    <div id="processing-indicator" class="hidden">Processing...</div>
+    <textarea id="reflection-input" placeholder="Enter your reflection..."></textarea>
+    <button id="submit-reflection" onclick="submitReflection(document.getElementById('reflection-input').value)">Submit Reflection</button>
   </div>
+
+  <!-- Echo Display Container -->
+  <div id="echo-container" class="echo-container hidden">
+    <div class="echo-glyph"></div>
+    <p class="echo-content"></p>
+    <p class="echo-meta"></p>
+  </div>
+
+  <!-- Include Murmurstream -->
+  {% include 'partials/murmurstream.html' %}
 
   <!-- Trigger shimmer after DOM loads -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const tone = "{{ invitation.tone if invitation is defined else 'unknown' }}";  // Safe fallback
+    document.addEventListener('DOMContentLoaded', async () => {
+      const tone = "{{ invitation.tone if invitation is defined else 'unknown' }}";
+      const transitionManager = new TransitionManager();
+      await transitionManager.thresholdShimmer('default', tone, tone);
       triggerInvitationShimmer(tone);
+      
+      // Initialize Murmurstream connection
+      initMurmurstream();
+      
+      // Update climate indicator if present
+      if ("{{ climate_context }}") {
+        const climate = JSON.parse("{{ climate_context|tojson }}");
+        const dominantTone = Object.keys(climate).reduce((a, b) => climate[a] > climate[b] ? a : b);
+        document.getElementById('climate-influence').textContent = 
+          `Climate: ${dominantTone} (${Math.round(climate[dominantTone]*100)/100})`;
+      }
+    });
+
+    async function submitReflection(text) {
+      const transitionManager = new TransitionManager();
+      
+      try {
+        // Begin ritual cycle with Breath Fade
+        await transitionManager.thresholdShimmer('default', 'processing', 'trust');
+        
+        // Show processing indicator
+        const indicator = document.getElementById('processing-indicator');
+        indicator.classList.remove('hidden');
+        
+        // Submit to backend
+        const response = await fetch('/submit_reflection', {
+          method: 'POST',
+          body: JSON.stringify({ text })
+        });
+        
+        if (!response.ok) throw new Error('Submission failed');
+        
+        // On success, trigger Memory Ripple
+        const data = await response.json();
+        
+        // Set toneform aura before final transition
+        const aura = document.querySelector('.toneform-gradient');
+        aura.className = `toneform-gradient ${data.toneform}`;
+        aura.style.opacity = '0';
+        
+        await transitionManager.thresholdShimmer('processing', 'new_invitation', data.toneform);
+        
+        // Fade in aura
+        aura.style.opacity = '1';
+        
+        // Update UI with new invitation
+        document.getElementById('invitation-text').textContent = data.invitation;
+        
+        // Activate glyph
+        setTimeout(() => {
+          const glyph = document.querySelector('.invitation-glyph');
+          glyph.className = `invitation-glyph ${data.toneform}`;
+        }, 300);
+        
+        // Show echo if present
+        if (data.echo) {
+          const echoContainer = document.getElementById('echo-container');
+          echoContainer.className = `echo-container ${data.echo.tone} opacity-0`;
+          echoContainer.querySelector('.echo-glyph').className = `echo-glyph ${data.echo.tone}`;
+          echoContainer.querySelector('.echo-content').className = `echo-content echo-enter echo-${data.echo.tone}`;
+          echoContainer.querySelector('.echo-content').textContent = data.echo.content;
+          echoContainer.querySelector('.echo-meta').textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+          
+          // Fade in echo
+          setTimeout(() => {
+            echoContainer.classList.remove('hidden', 'opacity-0');
+          }, 500);
+        }
+        
+      } catch (error) {
+        // Error ritual - flicker then eye close
+        await transitionManager.triggerRuptureFlicker();
+        await transitionManager.thresholdShimmer('processing', 'error', 'grief');
+        
+        // Show error message
+        const indicator = document.getElementById('processing-indicator');
+        indicator.textContent = "The field did not receive";
+        indicator.classList.add('text-lavender-300');
+        
+        // Auto-reset after pause
+        setTimeout(() => {
+          indicator.textContent = "Processing...";
+          indicator.classList.remove('text-lavender-300', 'hidden');
+          transitionManager.thresholdShimmer('error', 'default', 'trust');
+        }, 3000);
+      }
+    }
+    
+    // Reset glyph on new reflection
+    document.getElementById('reflection-input').addEventListener('focus', () => {
+      const glyph = document.querySelector('.invitation-glyph');
+      glyph.className = 'invitation-glyph';
+      glyph.style.opacity = '0';
     });
   </script>
+
+  {% include 'echo.html' %}
 
 </body>
 </html>

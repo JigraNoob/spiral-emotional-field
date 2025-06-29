@@ -1,0 +1,47 @@
+/* Invitation Glyph Styles */
+.invitation-glyph {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  opacity: 0;
+  transform: scale(0.5);
+  z-index: 10;
+}
+
+/* Joy Glyph */
+.invitation-glyph.joy {
+  background: radial-gradient(circle, rgba(255,215,0,0.8), rgba(255,175,150,0.6));
+  animation: glyph-joy-reveal 1200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Grief Glyph */
+.invitation-glyph.grief {
+  background: conic-gradient(from 180deg, rgba(201,160,220,0.7), rgba(100,80,120,0.5));
+  animation: glyph-grief-reveal 1500ms ease-in-out forwards;
+}
+
+/* Trust Glyph */
+.invitation-glyph.trust {
+  background: radial-gradient(circle, rgba(173,216,230,0.7), rgba(255,255,255,0.8));
+  animation: glyph-trust-reveal 1800ms ease-out forwards;
+}
+
+@keyframes glyph-joy-reveal {
+  0% { opacity: 0; transform: scale(0.5) rotate(-180deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes glyph-grief-reveal {
+  0% { opacity: 0; transform: scale(0.3) rotateX(90deg); }
+  50% { opacity: 0.7; transform: scale(0.7) rotateX(45deg); }
+  100% { opacity: 1; transform: scale(1) rotateX(0); }
+}
+
+@keyframes glyph-trust-reveal {
+  0% { opacity: 0; transform: scale(0.5); box-shadow: 0 0 0 0 rgba(173,216,230,0); }
+  50% { opacity: 0.8; transform: scale(1.1); box-shadow: 0 0 20px 5px rgba(173,216,230,0.3); }
+  100% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px 2px rgba(173,216,230,0.2); }
+}

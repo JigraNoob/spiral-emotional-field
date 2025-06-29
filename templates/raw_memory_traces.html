@@ -50,6 +50,18 @@
       </form>
     </div>
 
+    <!-- Climate Spectrum Visualization -->
+    <div class="mb-8">
+      <h2 class="text-xl text-indigo-300 mb-4">Emotional Climate Spectrum</h2>
+      <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+        <div id="spectrum-chart" class="h-64"></div>
+        <div class="flex justify-between text-xs text-gray-400 mt-2">
+          <span>Past</span>
+          <span>Present</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Memory Traces -->
     <ul class="space-y-4">
       {% for trace in traces %}
@@ -101,6 +113,15 @@
       {% endfor %}
     </ul>
 
+    <!-- Add toneform classes to elements -->
+    {% for trace in traces %}
+        <div class="memory-trace 
+            {% if 'Trust' in trace.tones %}trust-toneform{% endif %}
+            {% if 'Memory' in trace.tones %}memory-toneform{% endif %}">
+            {{ trace.event }}
+        </div>
+    {% endfor %}
+
     <!-- Pagination -->
     {% if total_pages is defined and total_pages > 1 %}
     <div class="flex justify-between items-center mt-8">
@@ -120,5 +141,51 @@
     </div>
     {% endif %}
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    async function loadSpectrumData() {
+      const response = await fetch('/get_spectrum_data');
+      const data = await response.json();
+      
+      const ctx = document.getElementById('spectrum-chart');
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'Current Climate',
+            data: data.values,
+            backgroundColor: 'rgba(99, 102, 241, 0.2)',
+            borderColor: 'rgba(99, 102, 241, 1)',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(55, 65, 81, 0.5)' },
+              grid: { color: 'rgba(55, 65, 81, 0.5)' },
+              pointLabels: { color: '#9CA3AF' },
+              ticks: { display: false }
+            }
+          }
+        }
+      });
+    }
+    
+    document.addEventListener('DOMContentLoaded', loadSpectrumData);
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Activate Trust animations if any Trust tones present
+      if (document.querySelector('.trust-toneform')) {
+        activateTrustAnimation();
+      }
+      if (document.querySelector('.memory-toneform')) {
+        activateMemoryAnimation();
+      }
+    });
+  </script>
 </body>
 </html>

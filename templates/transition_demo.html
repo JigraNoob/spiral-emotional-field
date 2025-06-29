@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shimmerfold Transition Demo</title>
+  <link rel="stylesheet" href="/static/css/transitions.css">
+  <style>
+    body { margin: 0; height: 100vh; }
+    .demo-container { 
+      display: flex; 
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+    }
+    .demo-box {
+      width: 100%;
+      height: 200px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <div class="demo-box" id="state1">Current State</div>
+    <button onclick="triggerTransition('joy')">Joy Transition</button>
+    <button onclick="triggerTransition('grief')">Grief Transition</button>
+    <button onclick="triggerTransition('longing')">Longing Transition</button>
+    <div class="demo-controls">
+      <button onclick="testRitualCycle()">Test Full Ritual Cycle</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { transitionManager } from '/static/js/transitions.js';
+
+    async function triggerTransition(toneform) {
+      const currentState = {
+        toneform: {
+          color: getToneformColor(toneform)
+        }
+      };
+      
+      const nextState = {
+        content: "New State after " + toneform
+      };
+      
+      document.getElementById('state1').textContent = "Transitioning...";
+      
+      await transitionManager.thresholdShimmer(currentState, nextState, toneform);
+      
+      document.getElementById('state1').textContent = nextState.content;
+    }
+    
+    function getToneformColor(toneform) {
+      const colors = {
+        joy: '#FFD700',
+        grief: '#6A5ACD',
+        longing: '#FF6347'
+      };
+      return colors[toneform] || '#5e35b1';
+    }
+  </script>
+  <script>
+    async function testRitualCycle() {
+      const transitionManager = new TransitionManager();
+      
+      // Simulate reflection submission
+      await transitionManager.thresholdShimmer('default', 'processing', 'trust');
+      
+      // Simulate processing/new invitation
+      setTimeout(async () => {
+        await transitionManager.thresholdShimmer('processing', 'new_invitation', 'joy');
+        
+        // Show new invitation
+        document.getElementById('invitation-text').textContent = 
+          "This is your new invitation, born from trust and joy";
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

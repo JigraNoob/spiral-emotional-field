@@ -1,0 +1,35 @@
+<!-- partials/murmurstream.html -->
+<div id="murmurstream-container" class="fixed bottom-4 right-4 w-64 max-h-96 overflow-hidden">
+  <div class="bg-gray-900 bg-opacity-70 backdrop-blur-sm rounded-lg p-4 shadow-xl border border-gray-700">
+    <h3 class="text-sm font-medium text-gray-300 mb-2">Murmurstream</h3>
+    <div id="climate-display" class="text-xxs text-gray-500 mb-2"></div>
+    <div id="murmurstream-content" class="space-y-2 overflow-y-auto max-h-80">
+      <!-- Murmurs will be added here dynamically -->
+    </div>
+    
+    <div class="murmurstream-gradient absolute inset-0 -z-10 rounded-lg opacity-20"></div>
+  </div>
+</div>
+
+<style>
+  .murmurstream-gradient {
+    background: linear-gradient(135deg, rgba(201,160,220,0.3), rgba(173,216,230,0.2));
+    animation: murmurstream-pulse 15s ease infinite alternate;
+  }
+  
+  @keyframes murmurstream-pulse {
+    0% { opacity: 0.1; }
+    50% { opacity: 0.25; }
+    100% { opacity: 0.1; }
+  }
+  
+  .murmur-item {
+    animation: murmur-fade-in 1s ease-out forwards;
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  
+  @keyframes murmur-fade-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

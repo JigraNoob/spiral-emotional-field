@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     fetchClimateReports();
+    initTimedRitualUI(60); // Initialize timed ritual UI with 1-minute duration
 });
 
 const toneformClassMap = {
@@ -36,7 +37,7 @@ function fetchClimateReports() {
         { week: 'Week 7', dominant_tone: 'Connection', description: 'A coral warmth, relational glow.' }
     ];
 
-const container = document.getElementById('climateReportsGrid');
+    const container = document.getElementById('climateReportsGrid');
     if (!container) {
         console.error('Container #climateReportsGrid not found in the template.');
         return;
@@ -65,3 +66,91 @@ const container = document.getElementById('climateReportsGrid');
         container.appendChild(card);
     });
 }
+
+// Timed Ritual UI Elements
+function initTimedRitualUI(durationSeconds) {
+    // Create progress bar container
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'ritual-timer-container';
+    
+    // Progress bar element
+    const progressBar = document.createElement('div');
+    progressBar.className = 'ritual-progress-bar';
+    
+    // Digital countdown display
+    const countdownDisplay = document.createElement('div');
+    countdownDisplay.className = 'ritual-countdown';
+    
+    // Assemble UI
+    progressContainer.appendChild(progressBar);
+    progressContainer.appendChild(countdownDisplay);
+    document.querySelector('.ritual-container').prepend(progressContainer);
+    
+    // Update every second
+    const timer = setInterval(() => {
+        fetch('/api/ritual/progress')
+            .then(res => res.json())
+            .then(data => {
+                // Update progress bar
+                progressBar.style.width = `${data.progress * 100}%`;
+                
+                // Update countdown text
+                const remaining = durationSeconds - (data.progress * durationSeconds);
+                countdownDisplay.textContent = 
+                    `Time remaining: ${formatTime(remaining)}`;
+                
+                // Handle completion
+                if (data.progress >= 1) {
+                    clearInterval(timer);
+                    triggerCompletionEffects();
+                }
+            });
+    }, 1000);
+}
+
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+function triggerCompletionEffects() {
+    // Visual celebration
+    const container = document.querySelector('.ritual-timer-container');
+    
+    // Pulse animation
+    container.style.animation = 'celebrate 0.5s ease 3';
+    
+    // Success message
+    const message = document.createElement('div');
+    message.className = 'ritual-complete-message';
+    message.textContent = 'Ritual Complete!';
+    container.appendChild(message);
+    
+    // Color transition
+    document.querySelector('.ritual-progress-bar').style.background = 
+        'linear-gradient(to right, #4facfe, #00f2fe)';
+    
+    // Remove message after delay
+    setTimeout(() => {
+        message.remove();
+    }, 3000);
+}
+
+// Add to existing CSS
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes celebrate {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    .ritual-complete-message {
+        color: #00f2fe;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 10px;
+        animation: fadeIn 0.5s;
+    }
+`;
+document.head.appendChild(style);

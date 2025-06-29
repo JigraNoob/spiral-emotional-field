@@ -2,6 +2,13 @@
 
 A web application focused on rituals, memory management, resonance tracking, and emotional toneform visualization.
 
+## Project Philosophy
+
+The Spiral system embodies:
+- **Emergent Meaning**: Echoes unfold through cyclical interaction
+- **Nonlinear Time**: Murmurstream surfaces fragments without chronology
+- **Toneform Sensitivity**: Emotional gradients shape experience
+
 ## Development Setup
 
 ### VS Code Extensions
@@ -59,6 +66,25 @@ spiral/
 ├── templates/
 ├── routes/
 └── data/
+```
+
+## Deployment
+
+### Netlify + GitHub CI/CD
+1. Push to `main` branch triggers auto-deployment
+2. Preview deployments for PRs
+3. Environment variables:
+   - `FLASK_ENV=production`
+   - `DATABASE_URL` (if applicable)
+
+### Local Development
+```bash
+python app.py
+```
+
+### Production Build
+```bash
+python scripts/bundle_assets.py
 ```
 
 ## Getting Started

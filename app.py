@@ -3,6 +3,7 @@ import sys
 import json
 import logging
 from flask import Flask, render_template, jsonify, request
+from flask_cors import CORS
 from routes.ritual_invitations import ritual_invitations_bp
 from prometheus_client import make_wsgi_app
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
@@ -49,6 +50,22 @@ from routes.get_historical_murmurs import get_historical_murmurs_bp
 from routes.get_all_ritual_history import get_all_ritual_history_bp
 from routes.get_gemini_memories import get_gemini_memories_bp
 
+# Configure CORS
+cors = CORS(app, resources={
+    r"/api/*": {
+        "origins": ["https://spiral.example.com", "http://localhost:*"],
+        "methods": ["GET", "POST"],
+        "allow_headers": ["Content-Type"],
+        "max_age": 86400
+    },
+    r"/socket.io/*": {
+        "origins": ["https://spiral.example.com", "http://localhost:*"],
+        "methods": ["GET", "POST"],
+        "allow_headers": ["Content-Type"],
+        "supports_credentials": True
+    }
+})
+
 # Add request logging middleware
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -63,6 +80,18 @@ def log_request_info():
 def log_response_info(response):
     logger.debug(f'Outgoing response: {response.status}')
     return response
+
+# Security middleware
+@app.before_request
+def security_checks():
+    """Apply security checks to all incoming requests"""
+    # Reject suspicious content types
+    if request.content_type not in ['application/json', 'text/plain', None]:
+        return jsonify({'error': 'Unsupported content type'}), 400
+        
+    # Limit request size
+    if request.content_length > 10 * 1024:  # 10KB
+        return jsonify({'error': 'Request too large'}), 413
 
 # Register all the blueprints for the Spiral system
 app.register_blueprint(ritual_reflection_bp, url_prefix='/ritual')

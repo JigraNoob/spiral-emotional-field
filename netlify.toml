@@ -1,0 +1,28 @@
+[build]
+command = "python scripts/bundle_assets.py && pip install -r requirements.txt"
+publish = "build"
+
+[build.environment]
+PYTHON_VERSION = "3.13"
+NODE_VERSION = "20"
+
+[context.production.environment]
+FLASK_ENV = "production"
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+
+[dev]
+command = "python app.py"
+port = 5000
+
+# Enable build caching
+[functions]
+  node_bundler = "esbuild"
+
+[plugins]
+  [[plugins.inputs]]
+    package = "netlify-plugin-python"
+    cacheEnabled = true

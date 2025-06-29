@@ -19,9 +19,27 @@ env/
 # Logs
 *.log
 
+# Netlify
+.netlify/
+
 # Local config files
 .env
 local_settings.py
+
+# Build artifacts
+build/
+dist/
+
+# Database
+*.sqlite
+*.db
+
+# Dependency directories
+node_modules/
+
+# Test artifacts
+.coverage
+htmlcov/
 
 # System Files
 .DS_Store

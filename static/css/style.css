@@ -10,6 +10,18 @@
 .toneform-stillness { --shimmer-color: #dfe6e9; } /* Pale pearl, presence without motion */
 .toneform-resonance { --shimmer-color: #fab1a0; } /* Melon tone, echo in harmonic swell */
 
+/* Force dark theme */
+body.bg-gray-950 {
+    background-color: #2e3b4e !important;
+    color: #ffffff !important;
+}
+
+/* Dark Theme Base */
+body {
+    background-color: #2e3b4e;
+    color: #ffffff;
+}
+
 /* -- Shimmer Effect and Animation -- */
 .climate-report-card {
   position: relative;
@@ -20,7 +32,7 @@
   padding: 20px;
   margin-bottom: 20px;
   background-color: #1a1a1a;
-  color: #f0f0f0;
+  color: #ffffff; /* Changed text color for better contrast */
   transition: transform 0.3s ease-in-out;
 }
 
@@ -45,4 +57,79 @@
 @keyframes pulse-glow {
   0% { transform: scale(1); opacity: 0.15; }
   100% { transform: scale(1.2); opacity: 0.25; }
+}
+
+/* Trust Toneform */
+.trust-toneform {
+    background: rgba(169, 201, 255, 0.15);
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+}
+
+.trust-toneform:hover {
+    background: rgba(123, 169, 247, 0.25);
+}
+
+@keyframes trust-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+.trust-active {
+    animation: trust-pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.5);
+    background: rgba(74, 144, 226, 0.1);
+}
+
+/* Memory Toneform Animation */
+.memory-toneform {
+    position: relative;
+    overflow: hidden;
+    background: rgba(156, 39, 176, 0.05);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.memory-trace {
+    color: #333;
+}
+
+.memory-trace {
+    color: #ffffff !important;
+    background: transparent !important;
+}
+
+@keyframes memory-ripple {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.02); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+.memory-active {
+    animation: memory-ripple 3s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(156, 39, 176, 0.3);
+}
+
+/* Timed Ritual UI Styles */
+.ritual-timer-container {
+    margin: 20px 0;
+    width: 100%;
+}
+
+.ritual-progress-bar {
+    height: 10px;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+    margin-bottom: 8px;
+}
+
+.ritual-countdown {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    color: #4facfe;
+    text-align: center;
 }

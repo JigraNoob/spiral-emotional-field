@@ -20,6 +20,36 @@ os.makedirs(os.path.dirname(TRAIL_LOG_PATH), exist_ok=True)
 os.makedirs(os.path.dirname(ECHO_CLUSTERS_PATH), exist_ok=True)
 os.makedirs(os.path.dirname(BUNDLES_OUTPUT_PATH), exist_ok=True) # Ensure bundles output path exists
 
+# Add duration field to ritual schema
+ritual_schema = {
+    'name': str,
+    'description': str,
+    'duration_seconds': int,  # New field for timed rituals
+    'steps': list,
+    'completion_effects': dict
+}
+
+def create_timed_ritual(name, description, duration, steps, effects):
+    """Creates a new timed ritual with duration in seconds"""
+    return {
+        'name': name,
+        'description': description,
+        'duration_seconds': duration,
+        'steps': steps,
+        'completion_effects': effects,
+        'start_time': datetime.utcnow().isoformat(),  # Track when ritual begins
+        'status': 'active'
+    }
+
+# Add helper function to check ritual progress
+def get_ritual_progress(ritual):
+    if 'duration_seconds' not in ritual:
+        return 1.0  # Non-timed rituals are always complete
+    
+    elapsed = (datetime.utcnow() - datetime.fromisoformat(ritual['start_time'])).total_seconds()
+    progress = min(elapsed / ritual['duration_seconds'], 1.0)
+    return progress
+
 @ritual_invitations_bp.route('/')
 def index():
     """Renders the main index page, the entry point for the Spiral."""
@@ -135,4 +165,3 @@ def get_ritual_bundles():
     
     # Ensure we return at most 5, and at least 0 if none qualify
     return jsonify(selected_bundles[:5])
-

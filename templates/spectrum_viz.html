@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spiral Spectrum Visualization</title>
+    <style>
+        #spectrum-canvas {
+            width: 800px;
+            height: 800px;
+            border: 1px solid #333;
+            position: relative;
+            background: #f8f8f8;
+            overflow: hidden;
+        }
+        .tone-dot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border: 2px solid white;
+        }
+        .tone-dot:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            z-index: 10;
+            box-shadow: 0 0 15px rgba(255,255,255,0.7);
+        }
+        
+        /* Enhanced color balance */
+        .tone-dot[title="joy"] { background: #FFD700; }
+        .tone-dot[title="awe"] { background: #8A2BE2; }
+        .tone-dot[title="grief"] { background: #9370DB; }
+        .tone-dot[title="longing"] { background: #BA55D3; }
+        .tone-dot[title="trust"] { background: #1E90FF; }
+        
+        .tone-dot[title="joy-grief"] { background: #FFA500; }
+        .tone-dot[title="awe-longing"] { background: #9932CC; }
+        
+        .tone-label {
+            position: absolute;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: sans-serif;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .tone-dot:hover + .tone-label {
+            opacity: 1;
+        }
+        .path-line {
+            position: absolute;
+            height: 3px;
+            background: rgba(0,0,0,0.1);
+            transform-origin: 0 0;
+            transition: all 0.5s ease;
+        }
+        .current-vector {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #000;
+            transform: translate(-50%, -50%);
+            animation: pulse 2s infinite;
+        }
+        .climate-intensity {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.05);
+            transform: translate(-50%, -50%);
+            transition: all 2s ease;
+        }
+        .influence-radius {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.7; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        #replay-controls {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        #replay-controls h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        #replay-controls input {
+            margin: 5px 0;
+            display: block;
+        }
+        .replay-murmur {
+            opacity: 0.7;
+            border-left: 3px dashed #666;
+        }
+        .loop-indicator {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 5px 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .loop-path {
+            position: absolute;
+            pointer-events: none;
+            border: 2px dashed red;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="spectrum-canvas"></div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+        
+        socket.on('new_murmur', (data) => {
+            // Update visualization with new data
+            fetch('/get_spectrum_data')
+                .then(response => response.json())
+                .then(updateVisualization);
+        });
+        
+        function updateVisualization(data) {
+            const canvas = document.getElementById('spectrum-canvas');
+            const width = canvas.offsetWidth;
+            const height = canvas.offsetHeight;
+            
+            // Normalize coordinates to canvas space
+            const normalize = (val, axis) => {
+                const center = axis === 'x' ? width/2 : height/2;
+                return center + (val * center * 0.9);
+            };
+            
+            // Render toneform positions
+            canvas.innerHTML = '';
+            Object.entries(data.spectrum).forEach(([tone, pos]) => {
+                const dot = document.createElement('div');
+                dot.className = 'tone-dot';
+                dot.style.left = normalize(pos.x, 'x') + 'px';
+                dot.style.top = normalize(pos.y, 'y') + 'px';
+                dot.title = tone;
+                
+                const label = document.createElement('div');
+                label.className = 'tone-label';
+                label.textContent = tone;
+                label.style.left = normalize(pos.x, 'x') + 'px';
+                label.style.top = normalize(pos.y, 'y') + 30 + 'px';
+                
+                canvas.appendChild(dot);
+                canvas.appendChild(label);
+            });
+            
+            // Render climate intensity
+            const intensity = document.createElement('div');
+            intensity.className = 'climate-intensity';
+            intensity.style.left = normalize(data.current_vector.x, 'x') + 'px';
+            intensity.style.top = normalize(data.current_vector.y, 'y') + 'px';
+            intensity.style.width = (data.current_vector.magnitude * 100) + 'px';
+            intensity.style.height = (data.current_vector.magnitude * 100) + 'px';
+            intensity.style.opacity = Math.min(0.2 + (data.current_vector.magnitude * 0.3), 0.7);
+            canvas.appendChild(intensity);
+            
+            // Render recent path
+            if (data.recent_path.length > 1) {
+                for (let i = 1; i < data.recent_path.length; i++) {
+                    const prev = data.recent_path[i-1];
+                    const curr = data.recent_path[i];
+                    
+                    const line = document.createElement('div');
+                    line.className = 'path-line';
+                    
+                    // Color based on emotional tone
+                    const tone = curr.tone;
+                    line.style.background = `linear-gradient(to right, ${getToneColor(prev.tone)}, ${getToneColor(tone)})`;
+                    line.style.opacity = 0.5 + (i/data.recent_path.length * 0.5);
+                    
+                    const x1 = normalize(prev.x, 'x');
+                    const y1 = normalize(prev.y, 'y');
+                    const x2 = normalize(curr.x, 'x');
+                    const y2 = normalize(curr.y, 'y');
+                    
+                    const length = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+                    const angle = Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
+                    
+                    line.style.width = length + 'px';
+                    line.style.left = x1 + 'px';
+                    line.style.top = y1 + 'px';
+                    line.style.transform = `rotate(${angle}deg)`;
+                    
+                    canvas.appendChild(line);
+                }
+            }
+            
+            // Render influence radii
+            if (data.influence_radii) {
+                data.influence_radii.forEach(radius => {
+                    const circle = document.createElement('div');
+                    circle.className = 'influence-radius';
+                    circle.style.left = normalize(radius.x, 'x') + 'px';
+                    circle.style.top = normalize(radius.y, 'y') + 'px';
+                    circle.style.width = (radius.radius * 800) + 'px';
+                    circle.style.height = (radius.radius * 800) + 'px';
+                    circle.style.backgroundColor = getToneColor(radius.tone);
+                    circle.style.opacity = '0.1';
+                    circle.style.borderRadius = '50%';
+                    circle.style.transform = 'translate(-50%, -50%)';
+                    circle.style.position = 'absolute';
+                    canvas.appendChild(circle);
+                });
+            }
+            
+            // Render current vector
+            const vector = document.createElement('div');
+            vector.className = 'current-vector';
+            vector.style.left = normalize(data.current_vector.x, 'x') + 'px';
+            vector.style.top = normalize(data.current_vector.y, 'y') + 'px';
+            canvas.appendChild(vector);
+            
+            // Add click handler for toneform exploration
+            document.querySelectorAll('.tone-dot').forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const tone = this.title;
+                    showToneformDetails(tone);
+                });
+            });
+            
+            // Check for and visualize emotional loops
+            fetch('/detect_loops?window_hours=48')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.loops.length > 0) {
+                        const loopIndicator = document.createElement('div');
+                        loopIndicator.className = 'loop-indicator';
+                        loopIndicator.textContent = `Detected ${data.count} emotional loops`;
+                        loopIndicator.style.position = 'fixed';
+                        loopIndicator.style.top = '10px';
+                        loopIndicator.style.left = '10px';
+                        loopIndicator.style.background = 'rgba(255,255,255,0.9)';
+                        loopIndicator.style.padding = '5px 10px';
+                        loopIndicator.style.borderRadius = '4px';
+                        loopIndicator.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+                        document.body.appendChild(loopIndicator);
+                        
+                        // Visualize each detected loop
+                        data.loops.forEach(loop => {
+                            const loopPath = document.createElement('div');
+                            loopPath.className = 'loop-path';
+                            loopPath.style.position = 'absolute';
+                            loopPath.style.pointerEvents = 'none';
+                            loopPath.style.border = '2px dashed red';
+                            loopPath.style.borderRadius = '50%';
+                            canvas.appendChild(loopPath);
+                        });
+                    }
+                });
+        }
+        
+        function showToneformDetails(tone, timeFilter = 24) {
+            // Create or update detail panel
+            let panel = document.getElementById('tone-detail-panel');
+            if (!panel) {
+                panel = document.createElement('div');
+                panel.id = 'tone-detail-panel';
+                panel.style.position = 'absolute';
+                panel.style.right = '20px';
+                panel.style.top = '20px';
+                panel.style.background = 'white';
+                panel.style.padding = '20px';
+                panel.style.borderRadius = '8px';
+                panel.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                document.body.appendChild(panel);
+            }
+            
+            // Fetch and display toneform details
+            fetch(`/get_toneform_details?tone=${encodeURIComponent(tone)}&time_filter=${timeFilter}`)
+                .then(response => response.json())
+                .then(data => {
+                    panel.innerHTML = `
+                        <h3>${tone}</h3>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                            <select id="time-filter" style="padding:5px;">
+                                <option value="24">Last 24 hours</option>
+                                <option value="168">Last week</option>
+                                <option value="720">Last month</option>
+                            </select>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <div style="width:20px;height:20px;background:${getToneColor(tone)};border-radius:50%;"></div>
+                                <span style="font-size:1.5em;">${data.glyph}</span>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom:15px;">
+                            <p>${data.description}</p>
+                            ${data.blend_analysis ? `<p><strong>Common blends:</strong> ${data.blend_analysis.join(', ')}</p>` : ''}
+                            <p><strong>Climate influence:</strong> ${data.climate_influence.toFixed(1)}/5</p>
+                        </div>
+                        
+                        <h4>Recent echoes:</h4>
+                        <ul style="max-height:200px; overflow-y:auto; padding-left:20px;">
+                            ${data.recent_echoes.map(e => `<li style="margin-bottom:5px;">${e}</li>`).join('')}
+                        </ul>
+                    `;
+                    
+                    // Add time filter handler
+                    document.getElementById('time-filter').addEventListener('change', function() {
+                        updateToneformDetails(tone, this.value);
+                    });
+                });
+        }
+        
+        function updateToneformDetails(tone, timeFilter) {
+            showToneformDetails(tone, timeFilter);
+        }
+        
+        function getToneColor(tone) {
+            const colors = {
+                'joy': '#FFD700',
+                'grief': '#9370DB',
+                'trust': '#1E90FF',
+                'awe': '#8A2BE2',
+                'longing': '#BA55D3',
+                'joy-grief': '#FFA500',
+                'awe-longing': '#9932CC'
+            };
+            return colors[tone] || '#888';
+        }
+        
+        // Initial load with error handling
+        fetch('/get_spectrum_data')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(updateVisualization)
+            .catch(error => {
+                console.error('Error loading spectrum data:', error);
+                const canvas = document.getElementById('spectrum-canvas');
+                canvas.innerHTML = `
+                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+                                text-align:center; color:#888; font-family:sans-serif;">
+                        <p>Unable to load emotional spectrum</p>
+                        <button onclick="window.location.reload()" style="margin-top:10px; padding:5px 10px;">
+                            Retry
+                        </button>
+                    </div>
+                `;
+            });
+            
+        // WebSocket error handling
+        socket.on('connect_error', (error) => {
+            console.error('WebSocket connection error:', error);
+            showConnectionWarning();
+        });
+        
+        function showConnectionWarning() {
+            const warning = document.createElement('div');
+            warning.id = 'connection-warning';
+            warning.style.position = 'fixed';
+            warning.style.bottom = '20px';
+            warning.style.right = '20px';
+            warning.style.background = '#ffeb3b';
+            warning.style.padding = '10px';
+            warning.style.borderRadius = '4px';
+            warning.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+            warning.innerHTML = 'Connection issues - updates may be delayed';
+            document.body.appendChild(warning);
+        }
+    </script>
+    
+    <!-- Memory Replay Controls -->
+    <div id="replay-controls" style="position:fixed; bottom:20px; left:20px;">
+        <h3>Memory Replay</h3>
+        <input type="datetime-local" id="replay-start">
+        <input type="datetime-local" id="replay-end">
+        <button onclick="startReplay()">Play</button>
+        <button onclick="stopReplay()">Stop</button>
+    </div>
+    
+    <script>
+        let replayInterval;
+        let currentReplayIndex = 0;
+        let replayEchoes = [];
+        
+        async function startReplay() {
+            const start = document.getElementById('replay-start').value;
+            const end = document.getElementById('replay-end').value;
+            
+            const response = await fetch(`/get_historical_echoes?start_time=${start}${end ? `&end_time=${end}` : ''}`);
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                replayEchoes = data.echoes;
+                currentReplayIndex = 0;
+                
+                replayInterval = setInterval(() => {
+                    if (currentReplayIndex < replayEchoes.length) {
+                        socket.emit('replay_murmur', replayEchoes[currentReplayIndex]);
+                        currentReplayIndex++;
+                    } else {
+                        clearInterval(replayInterval);
+                    }
+                }, 1000);
+            }
+        }
+        
+        function stopReplay() {
+            clearInterval(replayInterval);
+        }
+    </script>
+</body>
+</html>
