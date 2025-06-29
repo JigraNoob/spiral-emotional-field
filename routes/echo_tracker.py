@@ -53,3 +53,12 @@ def get_echo_responses(offering_id):
     except Exception as e:
         current_app.logger.error(f"Error loading echoes: {str(e)}", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
+
+@echo_bp.route('/health')
+def echo_health():
+    """Verify blueprint is registered"""
+    return jsonify({
+        "status": "active",
+        "blueprint": "echo",
+        "url_prefix": echo_bp.url_prefix
+    })
