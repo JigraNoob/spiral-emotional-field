@@ -200,6 +200,10 @@ def memory_log():
         print(f"Error: {e}")
         return jsonify({"error": "Failed to fetch memory log"}), 500
         
+@app.route("/health")
+def healthcheck():
+    return jsonify(status="alive", orb="glowing"), 200
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
