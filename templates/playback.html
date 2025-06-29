@@ -59,6 +59,36 @@
         #gesture-filter {
             width: 150px;
         }
+        
+        .scrubber-container {
+            margin-top: 20px;
+            position: relative;
+        }
+        .scrubber {
+            width: 100%;
+            height: 30px;
+        }
+        .scrubber-preview {
+            position: absolute;
+            bottom: 40px;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.8);
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            padding-left: 8px;
+            margin-bottom: 5px;
+        }
+        .preview-gesture {
+            font-style: italic;
+            transition: opacity 0.3s;
+        }
     </style>
 </head>
 <body>
@@ -91,6 +121,10 @@
     </div>
     
     <div id="timeline"></div>
+    <div class="scrubber-container">
+      <input type="range" id="timeline-scrubber" min="0" max="100" value="0" class="scrubber">
+      <div id="scrubber-preview" class="scrubber-preview"></div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const container = document.getElementById('timeline');
@@ -137,7 +171,7 @@
                 });
                 
                 // Configure timeline with arcs
-                new vis.Timeline(
+                const timeline = new vis.Timeline(
                     container, 
                     new vis.DataSet(itemsData),
                     {
@@ -152,6 +186,64 @@
                         }
                     }
                 );
+                
+                // Initialize scrubber
+                const scrubber = document.getElementById('timeline-scrubber');
+                const preview = document.getElementById('scrubber-preview');
+                
+                let currentPreviewTimeout;
+                
+                scrubber.addEventListener('input', function() {
+                    clearTimeout(currentPreviewTimeout);
+                    
+                    const percent = this.value;
+                    const memory = findMemoryAtPosition(percent);
+                    
+                    if(memory) {
+                        preview.innerHTML = `
+                            <div class="preview-header" style="border-left: 3px solid ${memory.color}">
+                              <span class="preview-toneform" style="color:${memory.color}">
+                                ${memory.toneform}
+                              </span>
+                              <span class="preview-gesture" style="opacity:${memory.gesture_strength/10}">
+                                ↝ ${memory.gesture_strength}/10
+                              </span>
+                            </div>
+                            <div class="preview-context">
+                              ${memory.context.slice(0, 60)}${memory.context.length > 60 ? '...' : ''}
+                            </div>
+                            <div class="preview-time">
+                              ${new Date(memory.timestamp).toLocaleString()}
+                            </div>
+                        `;
+                        
+                        // Smooth positioning
+                        const targetLeft = Math.min(95, Math.max(5, percent - 2.5));
+                        preview.style.left = `${targetLeft}%`;
+                        preview.style.opacity = 1;
+                        
+                        // Highlight corresponding timeline item
+                        timeline.focus(memory.id);
+                    }
+                });
+                
+                scrubber.addEventListener('change', function() {
+                    currentPreviewTimeout = setTimeout(() => {
+                        preview.style.opacity = 0;
+                    }, 2000);
+                });
+                
+                function findMemoryAtPosition(percent) {
+                    // Connect to existing timeline items
+                    const items = timeline.getItems();
+                    const visibleItems = items.filter(item => item.visible);
+                    
+                    if(visibleItems.length > 0) {
+                        const index = Math.floor(percent / 100 * (visibleItems.length - 1));
+                        return visibleItems[index].data.memory;
+                    }
+                    return null;
+                }
                 
             } catch (error) {
                 console.error('Error:', error);
