@@ -128,7 +128,7 @@ def security_checks():
 # Register all the blueprints for the Spiral system
 app.register_blueprint(ritual_reflection_bp, url_prefix='/ritual')
 app.register_blueprint(ritual_invitations_bp, url_prefix='/ritual')
-app.register_blueprint(playback_bp, url_prefix='/memory')
+app.register_blueprint(playback_bp, url_prefix='/reflect')
 app.register_blueprint(resonance_memory_bp, url_prefix='/resonance')
 app.register_blueprint(resonance_reflect_bp, url_prefix='/resonance')
 app.register_blueprint(stall_inquiry, url_prefix='/stall')
