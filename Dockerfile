@@ -14,8 +14,8 @@ WORKDIR /app
 # Copy requirements first to leverage Docker cache
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies including gunicorn
+RUN pip install --no-cache-dir -r requirements.txt gunicorn
 
 # Stage 2: Production image
 FROM python:3.10-slim
@@ -32,6 +32,13 @@ COPY --from=build /usr/local/bin /usr/local/bin
 
 # Copy application code
 COPY . .
+
+# Verify gunicorn installation
+RUN gunicorn --version
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:5000/health || exit 1
 
 # Expose port
 EXPOSE 5000
