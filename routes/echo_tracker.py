@@ -1,6 +1,7 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, current_app
 from datetime import datetime, timedelta
 import json
+import os
 
 echo_bp = Blueprint('echo', __name__, url_prefix='/echo')
 
@@ -8,9 +9,19 @@ echo_bp = Blueprint('echo', __name__, url_prefix='/echo')
 def get_echo_responses(offering_id):
     """Returns echo responses for a Still Offering"""
     try:
-        # Load echo data from JSONL (mock implementation)
+        # Verify data directory exists
+        data_dir = os.path.join(current_app.root_path, 'data')
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir)
+            
+        data_file = os.path.join(data_dir, f'echo_responses_{offering_id}.jsonl')
+        
+        if not os.path.exists(data_file):
+            return jsonify({"error": "No echoes found", "hint": "Sample data not deployed"}), 404
+            
+        # Load echo data from JSONL
         echoes = []
-        with open(f'data/echo_responses_{offering_id}.jsonl') as f:
+        with open(data_file) as f:
             for line in f:
                 echoes.append(json.loads(line))
                 
@@ -26,5 +37,6 @@ def get_echo_responses(offering_id):
                 }
             }
         })
-    except FileNotFoundError:
-        return jsonify({"error": "No echoes found"}), 404
+    except Exception as e:
+        current_app.logger.error(f"Error loading echoes: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
