@@ -22,6 +22,7 @@ eventlet==0.33.3
 Flask-Cors==3.0.10
 python-json-logger==2.0.7
 blinker==1.7.0
+gunicorn==21.2.0
 
 # Development dependencies (not installed in production)
 # pytest==7.4.0
