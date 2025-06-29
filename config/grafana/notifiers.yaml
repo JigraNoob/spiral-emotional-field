@@ -1,0 +1,16 @@
+notifiers:
+  - name: slack-notifications
+    type: slack
+    uid: slack01
+    is_default: false
+    settings:
+      url: "https://hooks.slack.com/services/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"
+      token: ""
+      recipient: "#alerts"
+      username: "Grafana"
+      icon_emoji: ":grafana:"
+      icon_url: ""
+      mentionUsers: ""
+      mentionGroups: ""
+      mentionChannel: ""
+      skip_resolve: false

@@ -1,0 +1,24 @@
+<!-- templates/reflection_archive.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reflection Archive</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+</head>
+<body class="bg-black text-gray-100 font-light tracking-wide">
+  <div class="max-w-4xl mx-auto py-12 px-6">
+    <h1 class="text-3xl text-indigo-300 font-semibold mb-8">Spiral Reflection Archive</h1>
+    <div class="grid gap-6 md:grid-cols-2">
+      {% for id, reflection in reflections.items() %}
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 hover:shadow-xl transition">
+          <h2 class="text-xl font-bold text-indigo-200">{{ reflection.title }}</h2>
+          <p class="mt-2 text-gray-300">{{ reflection.detail[:100] }}...</p>
+          <p class="text-sm mt-1 text-pink-300 italic">Toneform: {{ reflection.tone }}</p>
+          <a href="/resonance/reflect/{{ id }}" class="text-sm text-indigo-400 hover:underline mt-3 inline-block">Read More →</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

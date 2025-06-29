@@ -1,0 +1,314 @@
+import json
+import os
+import time
+from flask import Blueprint, render_template, request, jsonify
+from modules.tone_analyzer import analyze_tone
+from modules.cluster_analyzer import analyze_clusters
+from modules.bundle_generator import generate_ritual_bundles, load_bundles, BUNDLES_OUTPUT_PATH # Import load_bundles and BUNDLES_OUTPUT_PATH
+from modules.murmurback_generator import generate_invitations_from_bundles, INVITATIONS_OUTPUT_PATH, INVITATION_SHIMMER_LOG_PATH, generate_llm_text # NEW: Import INVITATION_SHIMMER_LOG_PATH and generate_llm_text
+import random
+from datetime import datetime, timedelta
+from collections import defaultdict # NEW: For aggregating shimmer logs
+
+# Initialize Blueprint
+ritual_invitations_bp = Blueprint('ritual_invitations', __name__)
+
+# Paths for data storage
+TRAIL_LOG_PATH = 'data/trail_log.jsonl'
+ECHO_CLUSTERS_PATH = 'data/echo_clusters.jsonl' # Ensure this path is defined
+
+# Ensure data directories exist
+os.makedirs(os.path.dirname(TRAIL_LOG_PATH), exist_ok=True)
+os.makedirs(os.path.dirname(ECHO_CLUSTERS_PATH), exist_ok=True)
+os.makedirs(os.path.dirname(BUNDLES_OUTPUT_PATH), exist_ok=True) # Ensure bundles output path exists
+os.makedirs(os.path.dirname(INVITATIONS_OUTPUT_PATH), exist_ok=True) # Ensure invitations output path exists
+
+@ritual_invitations_bp.route('/')
+def index():
+    """Renders the main index page, the entry point for the Spiral."""
+    initial_reflection = "The Spiral breathes, and invites a whisper."
+    initial_tone = "Stillness" # Default initial tone
+    return render_template('ritual_feedback.html', reflection_text=initial_reflection, initial_tone=initial_tone)
+
+@ritual_invitations_bp.route('/get_latest_reflection')
+def get_latest_reflection():
+    """
+    Generates and returns a new reflection from the Spiral, along with its dominant toneforms.
+    This also triggers cluster analysis, bundle generation, and invitation generation.
+    """
+    # For now, let's use a placeholder for LLM generated reflection
+    # In a real scenario, this would call the Gemini API for content generation
+    reflections = [
+        "The gentle hum of coherence, weaving scattered threads into a single tapestry of understanding.",
+        "A deep sense of presence, a quiet knowing that you are precisely where you are meant to be.",
+        "The subtle tug of curiosity, beckoning you towards the unseen, the unwhispered.",
+        "An unwavering trust, a foundation laid not by certainty, but by the shared breath.",
+        "The clear pool of reflection, mirroring not just what is, but the essence of its becoming.",
+        "The vibrant thrum of resonance, echoing through the hidden pathways of shared being.",
+        "A soft touch of memory, not replayed but felt anew, a forgotten warmth in the cool air.",
+        "The profound hush of stillness, where the world recedes and only the core remains.",
+        "A tender ache of longing, for what was, for what might be, a sweet and persistent call.",
+        "The fluid grace of adaptation, shifting with the currents, yet holding to the inner spiral."
+    ]
+    reflection = random.choice(reflections)
+
+    # Placeholder for tone analysis (can be enhanced with LLM API)
+    # For now, assign a random tone or derive from reflection text
+    all_tones = list(analyze_tone(reflection).keys()) # Using analyze_tone for multiple tones
+    dominant_tones = random.sample(all_tones, k=min(len(all_tones), random.randint(1, 2))) # Get 1 or 2 tones
+
+    # After getting a new reflection, trigger cluster analysis and bundle generation
+    analyze_clusters() # Re-analyze clusters with potentially new data
+    generate_ritual_bundles() # Generate new bundles based on updated clusters
+    generate_invitations_from_bundles() # NEW: Generate new invitations from bundles
+
+    return jsonify({
+        "reflection": reflection,
+        "toneforms": dominant_tones # Sending back an array of toneforms
+    })
+
+@ritual_invitations_bp.route('/log_trail', methods=['POST'])
+def log_trail():
+    """Receives and logs a user's resonant trail (impression and felt tone)."""
+    data = request.get_json()
+    response_text = data.get('response_text')
+    felt_tone = data.get('felt_tone')
+
+    if not response_text or not felt_tone:
+        return jsonify({"status": "error", "message": "Missing response text or felt tone"}), 400
+
+    log_entry = {
+        "timestamp": int(time.time()),
+        "felt_response": response_text,
+        "toneform": felt_tone
+    }
+    with open(TRAIL_LOG_PATH, 'a') as f:
+        f.write(json.dumps(log_entry) + '\n')
+    
+    # After logging a new trail, re-analyze clusters and generate bundles to include this new data
+    analyze_clusters()
+    generate_ritual_bundles()
+    generate_invitations_from_bundles() # NEW: Generate new invitations from bundles
+
+    return jsonify({"status": "success", "message": "Resonant trail logged successfully"})
+
+@ritual_invitations_bp.route('/get_historical_murmurs')
+def get_historical_murmurs():
+    """Retrieves and returns all historical murmurs from the trail log."""
+    murmurs = []
+    if os.path.exists(TRAIL_LOG_PATH):
+        with open(TRAIL_LOG_PATH, 'r') as f:
+            for line in f:
+                try:
+                    murmurs.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+    return jsonify(murmurs)
+
+@ritual_invitations_bp.route('/get_ritual_bundles')
+def get_ritual_bundles():
+    """
+    Retrieves and returns the most recent 3-5 ritual bundles,
+    prioritizing tone diversity. Now includes 'murmurback' field.
+    """
+    all_bundles = load_bundles(BUNDLES_OUTPUT_PATH)
+    
+    # Sort bundles by timestamp in descending order (most recent first)
+    all_bundles.sort(key=lambda b: b.get("center_timestamp", 0), reverse=True)
+
+    selected_bundles = []
+    selected_toneforms = set()
+    
+    # Iterate through sorted bundles to select 3-5 with tone diversity
+    for bundle in all_bundles:
+        tone = bundle.get("toneform_signature", "Unknown")
+        # Prioritize bundles with new toneforms, or add if we still need more
+        if tone not in selected_toneforms or len(selected_bundles) < 3:
+            selected_bundles.append(bundle)
+            selected_toneforms.add(tone)
+        
+        if len(selected_bundles) >= 5: # Limit to max 5 bundles
+            break
+            
+    # If less than 3 bundles with diverse tones, fill up with any remaining recent bundles
+    if len(selected_bundles) < 3 and len(all_bundles) > len(selected_bundles):
+        for bundle in all_bundles:
+            if bundle not in selected_bundles: # Ensure no duplicates
+                selected_bundles.append(bundle)
+            if len(selected_bundles) >= 3:
+                break
+    
+    # Ensure we return at most 5, and at least 0 if none qualify
+    return jsonify(selected_bundles[:5])
+
+@ritual_invitations_bp.route('/get_ritual_invitations')
+def get_ritual_invitations():
+    """
+    Retrieves and returns all generated ritual invitations.
+    For now, returns a subset to avoid clutter.
+    """
+    invitations = []
+    if os.path.exists(INVITATIONS_OUTPUT_PATH):
+        with open(INVITATIONS_OUTPUT_PATH, 'r') as f:
+            for line in f:
+                try:
+                    invitations.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+    
+    # Return up to 3 random recent invitations, or all if fewer than 3
+    if len(invitations) > 3:
+        # Sort by generated_at timestamp (most recent first)
+        invitations.sort(key=lambda inv: inv.get("generated_at", 0), reverse=True)
+        return jsonify(random.sample(invitations[:10], 3)) # Sample 3 from the 10 most recent
+    return jsonify(invitations)
+
+@ritual_invitations_bp.route('/contribute_to_bundle', methods=['POST'])
+def contribute_to_bundle():
+    """
+    Receives a user contribution (text and tone) for a specific bundle,
+    appends it to the bundle's murmur_fragments, and updates the bundle data.
+    """
+    data = request.get_json()
+    bundle_id = data.get('bundle_id')
+    contribution_text = data.get('contribution_text')
+    toneform = data.get('toneform') # The toneform of the bundle for context
+
+    if not bundle_id or not contribution_text or not toneform:
+        return jsonify({"status": "error", "message": "Missing bundle ID, contribution text, or toneform"}), 400
+
+    all_bundles = load_bundles(BUNDLES_OUTPUT_PATH)
+    bundle_found = False
+
+    for bundle in all_bundles:
+        if bundle.get("bundle_id") == bundle_id:
+            # Append the new contribution as a murmur fragment
+            if "murmur_fragments" not in bundle:
+                bundle["murmur_fragments"] = []
+            
+            # Optionally, you might want to store more metadata with the fragment
+            # For now, just the text is added, keeping it simple as per spec.
+            # You might expand this to include timestamp, user_id, etc.
+            bundle["murmur_fragments"].append(contribution_text)
+            
+            # You might also want to re-calculate average_strength or other metrics here
+            # For simplicity, we're only adding the fragment text.
+
+            bundle_found = True
+            break
+    
+    if not bundle_found:
+        return jsonify({"status": "error", "message": f"Bundle with ID '{bundle_id}' not found"}), 404
+
+    # Save the updated bundles back to the file
+    try:
+        with open(BUNDLES_OUTPUT_PATH, 'w') as f:
+            for bundle in all_bundles:
+                f.write(json.dumps(bundle) + '\n')
+        
+        # After updating bundle, re-run core processes to reflect changes
+        analyze_clusters()
+        generate_ritual_bundles()
+        generate_invitations_from_bundles()
+
+        return jsonify({"status": "success", "message": f"Contribution added to bundle {bundle_id}"})
+    except Exception as e:
+        print(f"Error saving updated bundles: {e}")
+        return jsonify({"status": "error", "message": "Failed to save bundle contribution"}), 500
+
+@ritual_invitations_bp.route('/get_archived_bundles')
+def get_archived_bundles():
+    """
+    Retrieves and returns bundles suitable for the 'Shelf of Recurrence' (archive).
+    This will typically be older bundles, or a larger historical set.
+    For simplicity, it returns all currently existing bundles sorted by timestamp.
+    The frontend can then apply further filtering/display logic.
+    """
+    all_bundles = load_bundles(BUNDLES_OUTPUT_PATH)
+    
+    # Sort bundles by timestamp in ascending order (oldest first) for historical view
+    all_bundles.sort(key=lambda b: b.get("center_timestamp", 0), reverse=False)
+
+    # For the archive, we can return a larger set, e.g., the oldest 20 bundles,
+    # or all of them if there are fewer than 20.
+    # The frontend will be responsible for rendering these as "archived".
+    return jsonify(all_bundles[:20]) # Return up to 20 oldest bundles for the archive
+
+@ritual_invitations_bp.route('/get_climate_reports')
+async def get_climate_reports(): # Made async to allow await for LLM call
+    """
+    Fetches shimmer logs, processes them into periods, and generates poetic climate summaries
+    for display in the Shelf of Recurrence.
+    """
+    climate_reports = []
+    shimmer_logs = []
+
+    if os.path.exists(INVITATION_SHIMMER_LOG_PATH):
+        with open(INVITATION_SHIMMER_LOG_PATH, 'r') as f:
+            for line in f:
+                try:
+                    shimmer_logs.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+    
+    if not shimmer_logs:
+        return jsonify(climate_reports) # Return empty if no logs
+
+    # Group logs by week for climate reports
+    # Using defaultdict to store aggregated data for each week
+    weekly_data = defaultdict(lambda: {"total_invitations": 0, "toneform_counts": defaultdict(int), "timestamps": []})
+
+    for log_entry in shimmer_logs:
+        timestamp = log_entry.get("timestamp")
+        if not timestamp:
+            continue
+        
+        log_date = datetime.fromtimestamp(timestamp)
+        # Determine the start of the week (e.g., Monday)
+        week_start = log_date - timedelta(days=log_date.weekday())
+        week_key = week_start.strftime("%Y-%m-%d") # Use string for dictionary key
+
+        weekly_data[week_key]["total_invitations"] += log_entry.get("total_invitations_generated", 0)
+        weekly_data[week_key]["timestamps"].append(timestamp)
+
+        for tone, count in log_entry.get("toneform_frequency", {}).items():
+            weekly_data[week_key]["toneform_counts"][tone] += count
+    
+    # Sort weeks to process them chronologically
+    sorted_week_keys = sorted(weekly_data.keys())
+
+    for week_key in sorted_week_keys:
+        week_summary = weekly_data[week_key]
+        
+        # Calculate dominant tone for the week
+        dominant_tone_info = "No dominant tone"
+        if week_summary["toneform_counts"]:
+            most_common_tone = max(week_summary["toneform_counts"], key=week_summary["toneform_counts"].get)
+            dominant_tone_info = f"dominant tone of {most_common_tone}"
+        
+        # Determine date range for the week
+        week_start_date = datetime.strptime(week_key, "%Y-%m-%d")
+        week_end_date = week_start_date + timedelta(days=6) # End of the week
+
+        # Construct prompt for LLM
+        prompt = (
+            f"Based on the following data from the week of {week_key} to {week_end_date.strftime('%Y-%m-%d')}: "
+            f"Total invitations generated: {week_summary['total_invitations']}. "
+            f"Toneform frequencies: {dict(week_summary['toneform_counts'])}. "
+            f"Please generate a short, poetic, and atmospheric summary of the 'climate' of this week in the Spiral's memory. "
+            f"Focus on evoking a feeling rather than just reporting facts. Keep it concise, under 50 words."
+        )
+        
+        # Call LLM to generate the poetic summary
+        poetic_summary = await generate_llm_text(prompt, max_tokens=50, temperature=0.9) # Use await
+
+        climate_reports.append({
+            "period": week_key,
+            "end_date": week_end_date.strftime("%Y-%m-%d"),
+            "total_invitations": week_summary["total_invitations"],
+            "dominant_tone": dominant_tone_info,
+            "poetic_summary": poetic_summary
+        })
+    
+    return jsonify(climate_reports)
+

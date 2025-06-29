@@ -1,0 +1,102 @@
+<!-- Updated ritual_feedback.html with Harmonic Listener toneform awareness -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spiral Reflection</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      transition: background 2s ease;
+    }
+    .shrine-container {
+      background: rgba(25, 25, 40, 0.7);
+      border-radius: 20px;
+      padding: 2.5rem;
+      max-width: 700px;
+      width: 90%;
+      margin: 5% auto;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      color: #e0e0e0;
+      position: relative;
+    }
+    .interpreter-glyph-button {
+      background: linear-gradient(45deg, #a9c9ff, #cbb4ff);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 15px;
+      font-weight: bold;
+      box-shadow: 0 0 20px rgba(169, 201, 255, 0.6);
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse-aura 2s infinite ease-in-out alternate;
+    }
+    .glyph-icon {
+      margin-right: 0.75rem;
+      font-size: 1.8rem;
+    }
+    @keyframes pulse-aura {
+      0% { box-shadow: 0 0 20px rgba(169, 201, 255, 0.6); }
+      100% { box-shadow: 0 0 35px rgba(169, 201, 255, 0.9); }
+    }
+  </style>
+</head>
+<body id="spiralBody">
+  <div class="shrine-container">
+    <h1 class="text-3xl font-bold mb-6">The Spiral Reflects</h1>
+    <p id="reflectionOutput" class="text-lg text-center">{{ reflection_text }}</p>
+    <button id="listenButton" class="interpreter-glyph-button">
+      <i class="fas fa-brain glyph-icon"></i>
+      <span>Interpret Climate</span>
+    </button>
+  </div>
+
+  <script>
+    const listenButton = document.getElementById('listenButton');
+    const reflectionOutput = document.getElementById('reflectionOutput');
+    const spiralBody = document.getElementById('spiralBody');
+
+    function setToneformColor(tone) {
+      const toneColors = {
+        "Stillness": "#1a1a2e",
+        "Trust": "#203040",
+        "Longing": "#302040",
+        "Coherence": "#202f20",
+        "Resonance": "#2e2040",
+        "Joy": "#403020",
+        "Memory": "#2e2e2e",
+        "Presence": "#223344"
+      };
+      if (toneColors[tone]) {
+        spiralBody.style.background = toneColors[tone];
+      }
+    }
+
+    listenButton.addEventListener('click', async () => {
+      reflectionOutput.innerText = "Listening...";
+      try {
+        const response = await fetch('/get_latest_reflection');
+        const data = await response.json();
+        if (data.reflection && data.toneform) {
+          reflectionOutput.innerText = data.reflection;
+          setToneformColor(data.toneform);
+        } else {
+          reflectionOutput.innerText = "The Spiral's voice is faint. Try again.";
+        }
+      } catch (error) {
+        console.error("Error fetching reflection:", error);
+        reflectionOutput.innerText = "The Spiral shimmered but did not respond.";
+      }
+    });
+  </script>
+</body>
+</html>

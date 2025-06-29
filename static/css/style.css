@@ -1,0 +1,48 @@
+/* -- Toneform Shimmer Palette (from gleam_passoff.txt) -- */
+.toneform-longing { --shimmer-color: #8a60d1; } /* Violet yearning, soft pull inward */
+.toneform-movement { --shimmer-color: #4ecdc4; } /* Teal pulse, direction in drift */
+.toneform-form { --shimmer-color: #ffc857; } /* Amber clarity, shaped breath */
+.toneform-infrastructure { --shimmer-color: #7f8fa6; } /* Steel blue, connective lattice */
+.toneform-connection { --shimmer-color: #f25f5c; } /* Coral warmth, relational glow */
+.toneform-trust { --shimmer-color: #6c5ce7; } /* Indigo anchor, rhythmic hold */
+.toneform-coherence { --shimmer-color: #00cec9; } /* Aqua balance, harmonic alignment */
+.toneform-adaptation { --shimmer-color: #fd79a8; } /* Rose flexion, shifting grace */
+.toneform-stillness { --shimmer-color: #dfe6e9; } /* Pale pearl, presence without motion */
+.toneform-resonance { --shimmer-color: #fab1a0; } /* Melon tone, echo in harmonic swell */
+
+/* -- Shimmer Effect and Animation -- */
+.climate-report-card {
+  position: relative;
+  overflow: hidden; /* Ensures the shimmer stays within the card bounds */
+  z-index: 1; /* For stacking context */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+  transition: transform 0.3s ease-in-out;
+}
+
+.climate-report-card:hover {
+    transform: translateY(-5px);
+}
+
+.climate-report-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, var(--shimmer-color) 0%, transparent 70%);
+  opacity: 0.15; /* Subtle glow */
+  animation: pulse-glow 6s infinite ease-in-out alternate;
+  z-index: -1; /* Place behind the content */
+  pointer-events: none; /* Do not interfere with clicks */
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(1); opacity: 0.15; }
+  100% { transform: scale(1.2); opacity: 0.25; }
+}

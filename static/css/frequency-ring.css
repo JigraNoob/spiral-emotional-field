@@ -1,0 +1,290 @@
+/* Base Frequency Ring Styles */
+.frequency-ring {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.3;
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* Ring Core */
+.frequency-ring-core {
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--frequency-ring-color, #fff);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Ring Core Effects */
+.frequency-ring::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at center, 
+        var(--frequency-ring-color, #fff) 0%, 
+        transparent 70%);
+    width: 100%;
+    height: 100%;
+    animation: ringPulse 2s infinite alternate;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced Ring Pulse Animation */
+@keyframes ringPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 0.3;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+    25% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+        opacity: 0.5;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2) rotate(0deg);
+        opacity: 0.7;
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+    }
+    75% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(-5deg);
+        opacity: 0.5;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 0.3;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Ripple Effect on Click */
+@keyframes ringRipple {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+/* Glowing Edge Effect */
+@keyframes ringGlow {
+    0% {
+        filter: drop-shadow(0 0 10px var(--frequency-ring-color))
+                 drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px var(--frequency-ring-color))
+                 drop-shadow(0 0 30px rgba(255, 255, 255, 0.3));
+    }
+    100% {
+        filter: drop-shadow(0 0 10px var(--frequency-ring-color))
+                 drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+    }
+}
+
+/* Enhanced Color Transition */
+@keyframes colorTransition {
+    0% {
+        background: radial-gradient(circle at center, 
+            var(--frequency-ring-color, #fff) 0%, 
+            transparent 70%);
+    }
+    50% {
+        background: radial-gradient(circle at center, 
+            var(--frequency-ring-color, #fff) 0%, 
+            var(--frequency-ring-color, #fff) 20%,
+            transparent 70%);
+    }
+    100% {
+        background: radial-gradient(circle at center, 
+            var(--frequency-ring-color, #fff) 0%, 
+            transparent 70%);
+    }
+}
+
+/* Interactive States */
+.frequency-ring:hover {
+    animation: hoverEffect 1s ease-in-out;
+}
+
+@keyframes hoverEffect {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.05) rotate(2deg);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+}
+
+/* Drag State */
+.frequency-ring.dragging {
+    animation: dragEffect 0.3s ease-out;
+    cursor: grab;
+}
+
+@keyframes dragEffect {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.1);
+        opacity: 0.9;
+    }
+}
+
+/* Pressed State */
+.frequency-ring.pressed {
+    animation: pressEffect 0.2s ease-in-out;
+}
+
+@keyframes pressEffect {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(0.95);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+}
+
+/* Multiple Ripple Effect */
+@keyframes multiRipple {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+    25% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+.frequency-ring.multi-ripple {
+    animation: multiRipple 1s forwards;
+}
+
+/* Chain Reaction Effect */
+@keyframes chainReaction {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    25% {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.2) rotate(0deg);
+        opacity: 0.9;
+    }
+    75% {
+        transform: scale(1.1) rotate(-5deg);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.5;
+    }
+}
+
+.frequency-ring.chain-reaction {
+    animation: chainReaction 1.5s ease-in-out;
+}
+
+/* Additional Effects */
+.frequency-ring.ripple {
+    animation: ringRipple 0.8s forwards;
+}
+
+.frequency-ring.glow {
+    animation: ringGlow 2s infinite alternate;
+}
+
+.frequency-ring.color-transition {
+    animation: colorTransition 0.5s ease;
+}
+
+/* Color Transition Effects */
+.frequency-ring.color-transition {
+    transition: all 0.5s ease-in-out;
+}
+
+/* Climate Adaptation */
+.frequency-ring.night {
+    opacity: 0.5;
+    animation-duration: 3s;
+}
+
+.frequency-ring.day {
+    opacity: 0.3;
+    animation-duration: 2s;
+}
+
+/* Interaction States */
+.frequency-ring.active {
+    opacity: 0.7;
+    animation-duration: 1.5s;
+}
+
+/* Multiple Ring Layers */
+.frequency-ring-layer-1 {
+    animation-delay: 0s;
+}
+
+.frequency-ring-layer-2 {
+    animation-delay: 0.2s;
+}
+
+.frequency-ring-layer-3 {
+    animation-delay: 0.4s;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .frequency-ring {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .frequency-ring::before {
+        animation-duration: 1.5s;
+    }
+}
+
+/* Performance Optimization */
+.frequency-ring {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+}

@@ -1,0 +1,17 @@
+
+.altar-tone-trust {
+  background: radial-gradient(circle, #a9c9ff 0%, #ffffff08 100%);
+  box-shadow: 0 0 20px #a9c9ff88;
+}
+.altar-tone-longing {
+  background: radial-gradient(circle, #cbb4ff 0%, #ffffff08 100%);
+  box-shadow: 0 0 20px #cbb4ff88;
+}
+.altar-tone-coherence {
+  background: radial-gradient(circle, #9fe2bf 0%, #ffffff08 100%);
+  box-shadow: 0 0 20px #9fe2bf88;
+}
+.altar-tone-adaptation {
+  background: radial-gradient(circle, #ffd1a1 0%, #ffffff08 100%);
+  box-shadow: 0 0 20px #ffd1a188;
+}

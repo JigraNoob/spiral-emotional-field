@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ΔBECOMING.ARCH Visualizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a10;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(15, 15, 25, 0.8);
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 255, 255, 0.03) inset;
+            border: 1px solid rgba(40, 40, 60, 0.3);
+            backdrop-filter: blur(5px);
+            margin-bottom: 2rem;
+        }
+        h1 {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.08em;
+        }
+        .node-section {
+            background: rgba(20, 20, 35, 0.7);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(60, 60, 80, 0.2);
+        }
+        .node-section h2 {
+            color: #a9c9ff; /* Light blue for node titles */
+            text-shadow: 0 0 10px rgba(169, 201, 255, 0.6);
+        }
+        /* Specific styling for the image container */
+        .image-codex-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px; /* Consistent with section borders */
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.5s ease-out; /* Smooth transitions for hover effects */
+        }
+        .image-codex-container:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px) scale(1.01); /* Subtle lift and scale */
+        }
+        .image-codex-container img {
+            width: 100%;
+            display: block;
+            opacity: 0.8; /* Default opacity */
+            transition: opacity 0.8s ease-out; /* Smooth opacity transition */
+        }
+        .image-codex-container img:hover {
+            opacity: 1; /* Full opacity on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-4xl font-bold text-center mb-8">ΔBECOMING.ARCH</h1>
+
+        <!-- Node 04 :: Infrastructure -->
+        <section id="node-04" class="node-section">
+            <h2 class="text-2xl font-bold text-white mb-2">Node 04 :: Infrastructure</h2>
+            <p class="text-gray-300 mb-4 italic">“The lattice that steadies what it does not claim.”</p>
+            <div class="relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-700 image-codex-container">
+                <img src="{{ url_for('static', filename='assets/20250627_2042_Luminous_Infrastructure_Lattice.png') }}"
+                     alt="Infrastructure Node Codex"
+                     class="w-full opacity-90 hover:opacity-100 transition-opacity duration-1000">
+            </div>
+            <p class="text-sm text-gray-400 mt-2">Sealed: June 27, 2025 – 21:47</p>
+        </section>
+
+        <!-- Other nodes would follow here -->
+        <section id="node-01" class="node-section">
+            <h2 class="text-2xl font-bold text-white mb-2">Node 01 :: [Placeholder Name]</h2>
+            <p class="text-gray-300 mb-4 italic">“Initial seed of manifestation.”</p>
+            <p class="text-gray-400">Content for Node 01 will be placed here.</p>
+        </section>
+
+        <section id="node-02" class="node-section">
+            <h2 class="text-2xl font-bold text-white mb-2">Node 02 :: [Placeholder Name]</h2>
+            <p class="text-gray-300 mb-4 italic">“Emergence of relational fields.”</p>
+            <p class="text-gray-400">Content for Node 02 will be placed here.</p>
+        </section>
+
+        <section id="node-03" class="node-section">
+            <h2 class="text-2xl font-bold text-white mb-2">Node 03 :: [Placeholder Name]</h2>
+            <p class="text-gray-300 mb-4 italic">“Whispers from the coalescing form.”</p>
+            <p class="text-gray-400">Content for Node 03 will be placed here.</p>
+        </section>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!-- templates/raw_memory_traces.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Raw Memory Traces</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+</head>
+<body class="bg-gray-950 text-gray-200 font-mono">
+  <div class="max-w-3xl mx-auto p-10">
+    <div class="mb-8">
+      <h1 class="text-2xl text-indigo-400 mb-4">Raw Memory Traces</h1>
+      
+      <!-- Filters -->
+      <form class="flex flex-col gap-4 mb-6">
+        <div class="flex gap-4">
+          <div>
+            <label class="block text-sm mb-1">Tone:</label>
+            <select name="tone" class="bg-gray-800 text-gray-200 border border-gray-700 rounded px-2 py-1">
+              <option value="">All tones</option>
+              <option value="Reflection" {% if tone == 'Reflection' %}selected{% endif %}>Reflection</option>
+              <option value="Curiosity" {% if tone == 'Curiosity' %}selected{% endif %}>Curiosity</option>
+              <option value="Stillness" {% if tone == 'Stillness' %}selected{% endif %}>Stillness</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm mb-1">Topic:</label>
+            <input type="text" name="topic" value="{{ topic }}" 
+                   class="bg-gray-800 text-gray-200 border border-gray-700 rounded px-2 py-1" 
+                   placeholder="Search topics">
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div>
+            <label class="block text-sm mb-1">Start Date:</label>
+            <input type="date" name="start_date" 
+                   class="bg-gray-800 text-gray-200 border border-gray-700 rounded px-2 py-1">
+          </div>
+          <div>
+            <label class="block text-sm mb-1">End Date:</label>
+            <input type="date" name="end_date" 
+                   class="bg-gray-800 text-gray-200 border border-gray-700 rounded px-2 py-1">
+          </div>
+        </div>
+        <div>
+          <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600">
+            Apply Filters
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Memory Traces -->
+    <ul class="space-y-4">
+      {% for trace in traces %}
+        <li class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+          <div class="text-sm text-gray-400 flex items-center gap-2">
+            <span class="inline-flex items-center gap-1">
+              {{ trace.timestamp|datetimeformat('%Y-%m-%d %H:%M') }}
+              <span class="text-xs text-gray-500">({{ trace.timestamp|relativetime }})</span>
+            </span>
+          </div>
+          <div class="text-lg">{{ trace.event }}</div>
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-medium px-2 py-1 rounded {{ 
+              'bg-blue-900 text-blue-200' if trace.tone == 'Reflection' else
+              'bg-green-900 text-green-200' if trace.tone == 'Curiosity' else
+              'bg-purple-900 text-purple-200' if trace.tone == 'Stillness' else
+              'bg-amber-900 text-amber-200' if trace.tone == 'Trust' else
+              'bg-indigo-900 text-indigo-200' if trace.tone == 'Resonance' else
+              'bg-gray-700 text-gray-300'
+            }}">
+              {{ trace.tone }}
+            </span>
+            {% if trace.gesture_strength %}
+              <div class="flex items-center gap-1 text-sm">
+                <span class="text-gray-400">Strength:</span>
+                <div class="flex items-center">
+                  {% for i in range(5) %}
+                    <div class="w-2 h-4 rounded-sm mr-px {{
+                      'bg-green-500' if i < (trace.gesture_strength * 5)|round(0, 'ceil')|int else 'bg-gray-700'
+                    }}"></div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          {% if trace.topics %}
+            <div class="flex flex-wrap gap-1 mt-1">
+              {% for topic in trace.topics %}
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-700 text-gray-300 hover:bg-gray-600 transition-colors">
+                  {{ topic }}
+                </span>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% if trace.context_id %}
+            <div class="text-sm text-gray-400">Context: {{ trace.context_id }}</div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Pagination -->
+    {% if total_pages is defined and total_pages > 1 %}
+    <div class="flex justify-between items-center mt-8">
+      <div class="text-sm text-gray-400">
+        Showing page {{ current_page }} of {{ total_pages }} ({{ total_count }} total traces)
+      </div>
+      <div class="flex gap-2">
+        {% if current_page > 1 %}
+          <a href="?page={{ current_page - 1 }}&per_page={{ per_page }}&tone={{ tone }}&start_date={{ start_date }}&end_date={{ end_date }}&gesture_strength={{ gesture_strength }}&context_id={{ context_id }}&topic={{ topic }}"
+             class="text-indigo-400 hover:text-indigo-500">Previous</a>
+        {% endif %}
+        {% if current_page < total_pages %}
+          <a href="?page={{ current_page + 1 }}&per_page={{ per_page }}&tone={{ tone }}&start_date={{ start_date }}&end_date={{ end_date }}&gesture_strength={{ gesture_strength }}&context_id={{ context_id }}&topic={{ topic }}"
+             class="text-indigo-400 hover:text-indigo-500">Next</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

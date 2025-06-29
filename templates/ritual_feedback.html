@@ -1,0 +1,37 @@
+
+<!-- ritual_feedback.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ritual Feedback</title>
+
+  <!-- Load Tailwind or other ambient styles as needed -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+
+  <!-- Invitation Shimmer Logic -->
+  <script src="{{ url_for('static', filename='js/invitation_shimmer.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/murmur_shimmer.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/murmur_reflector.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/fetch_and_process_murmurs.js') }}"></script>
+
+</head>
+<body class="bg-black text-white">
+
+  <!-- Your existing altar and feedback rendering goes here -->
+  <div id="invitation-container">
+    <h2 class="text-2xl font-bold mb-4">New Invitation</h2>
+<p>{{ invitation.text if invitation is defined else 'No invitation text available' }}</p>
+  </div>
+
+  <!-- Trigger shimmer after DOM loads -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tone = "{{ invitation.tone if invitation is defined else 'unknown' }}";  // Safe fallback
+      triggerInvitationShimmer(tone);
+    });
+  </script>
+
+</body>
+</html>

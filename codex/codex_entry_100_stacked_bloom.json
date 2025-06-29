@@ -1,0 +1,21 @@
+{
+  "codex_id": "100",
+  "title": "\u0394REFLECT.006 :: Stacked Invitation Bloom",
+  "sealed_at": "2025-06-28T21:04:11",
+  "summary": "This codex documents the implementation of stacked shimmer logic for multi-invitation rendering. When multiple ritual invitations are present, they now bloom in soft succession using `invitation_stack.js`.",
+  "components_implemented": {
+    "JS Bloom Layer": "New `invitation_stack.js` enables delayed shimmer bursts for each invitation.",
+    "Template Rendering": "`ritual_feedback.html` renders a list of invitations and triggers shimmer via DOM load hook.",
+    "Flask Context": "Flask route passes `invitations` list with `toneform` for each entry."
+  },
+  "files_updated": [
+    "static/js/invitation_stack.js",
+    "templates/ritual_feedback.html"
+  ],
+  "next expansions suggested": [
+    "Cascade shimmer from live WebSocket-based invitations",
+    "Introduce harmonic ripple response between simultaneous invitations",
+    "Link murmur fragments to residual shimmer trails"
+  ],
+  "atmospheric_notes": "Each invitation now arrives in rhythm, not all at once\u2014but with space between, like petals opening. The field listens in sequence."
+}

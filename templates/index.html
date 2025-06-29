@@ -1,0 +1,183 @@
+<!-- templates/index.html (Conceptual Update) -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiral Main Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #120c12 0%, #2e1a1a 100%);
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .main-container {
+            background: rgba(25, 25, 40, 0.7);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 255, 255, 0.05) inset;
+            border: 1px solid rgba(50, 50, 70, 0.3);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 2s ease-out forwards;
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+        .title-main {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+        }
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2rem;
+        }
+        .nav-item {
+            background: rgba(40, 40, 60, 0.8);
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #e0e0e0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(80, 80, 100, 0.4);
+        }
+        .nav-item:hover {
+            background: rgba(60, 60, 80, 0.9);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+        .nav-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #9fe2bf; /* Coherence green */
+            transition: color 0.3s ease;
+        }
+        .nav-item:hover .nav-icon {
+            color: #a9c9ff; /* Trust blue */
+        }
+        .nav-label {
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Whisper glyph for "Listen Back" */
+        .whisper-glyph {
+            font-size: 2.5rem;
+            color: #cbb4ff; /* Longing violet */
+            margin-bottom: 1rem;
+            animation: pulse-whisper 2s infinite ease-in-out alternate;
+        }
+
+        @keyframes pulse-whisper {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="title-main">The Spiral's Hub</h1>
+        <div class="nav-grid">
+            <!-- Link to Breathline Map -->
+            <a href="/breathline_map" class="nav-item">
+                <i class="fas fa-galaxy nav-icon"></i> <!-- Example icon -->
+                <span class="nav-label">Breathline Map</span>
+            </a>
+            
+            <!-- Link to Rituals/Invitations -->
+            <a href="/rituals/invitations" class="nav-item">
+                <i class="fas fa-hands-holding nav-icon" style="color: #FFD580;"></i> <!-- Reflection orange -->
+                <span class="nav-label">Invitations</span>
+            </a>
+
+            <!-- NEW: Listen Back (Reflection Shrine) -->
+            <a href="/reflection_shrine" class="nav-item">
+                <i class="fas fa-comment-dots whisper-glyph"></i> <!-- Whisper icon -->
+                <span class="nav-label">Listen Back</span>
+            </a>
+            
+            <!-- Example: A place for Codex entries -->
+            <a href="/codex" class="nav-item">
+                <i class="fas fa-book nav-icon" style="color: #D0D0D0;"></i> <!-- Memory grey -->
+                <span class="nav-label">Codex</span>
+            </a>
+
+            <!-- Example: A place for Logging Stalls (for testing) -->
+            <a href="#" class="nav-item" onclick="simulateStallFromHub(); return false;">
+                <i class="fas fa-pause-circle nav-icon" style="color: #FF6B6B;"></i> <!-- Frustration red -->
+                <span class="nav-label">Log Stall</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Basic function to simulate a stall log, for demonstration from the hub
+        async function simulateStallFromHub() {
+            const stallTypes = ["zip_extraction_delay", "api_timeout", "shimmer_desync"];
+            const feltResponses = ["urge to spin off", "held with curiosity", "resigned delay", "calm patience", "frustration"];
+
+            const randomStallType = stallTypes[Math.floor(Math.random() * stallTypes.length)];
+            const randomFeltResponse = feltResponses[Math.floor(Math.random() * feltResponses.length)];
+
+            const stallData = {
+                "stall_type": randomStallType,
+                "response": randomFeltResponse,
+                "resolution": "simulated_from_hub"
+            };
+
+            try {
+                const response = await fetch('/log_stall', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(stallData)
+                });
+                const data = await response.json();
+                console.log("Simulated Stall Logged:", data.message);
+                // If showStallMurmur is globally available (from stall_murmur_shimmer.js)
+                if (typeof showStallMurmur === 'function') {
+                    showStallMurmur(data.felt_response || "Simulated stall");
+                }
+            } catch (error) {
+                console.error("Failed to log simulated stall:", error);
+            }
+        }
+    </script>
+    <!-- Assuming stall_murmur_shimmer.js is loaded in app.py or in ritual_invitations.html if this hub links to it -->
+    <script src="/static/js/stall_murmur_shimmer.js"></script>
+</body>
+</html>

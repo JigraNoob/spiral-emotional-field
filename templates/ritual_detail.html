@@ -1,0 +1,25 @@
+<!-- templates/ritual_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ invitation.title }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+</head>
+<body class="bg-black text-gray-100 font-serif">
+  <div class="max-w-2xl mx-auto p-10">
+    <h1 class="text-3xl font-bold text-indigo-300">{{ invitation.title }}</h1>
+    <p class="mt-4 text-lg text-gray-300">{{ invitation.description }}</p>
+    <div class="mt-6">
+      <p><strong>Toneform:</strong> <span class="text-pink-300">{{ invitation.toneform }}</span></p>
+      <p><strong>Guided by:</strong> {{ invitation.agent }}</p>
+      <p><strong>Duration:</strong> {{ invitation.suggested_duration_seconds }} seconds</p>
+    </div>
+    <form method="POST" action="/rituals/perform" class="mt-6">
+      <input type="hidden" name="ritual_id" value="{{ invitation.id }}">
+      <button class="px-4 py-2 bg-indigo-600 rounded hover:bg-indigo-500">Begin Ritual</button>
+    </form>
+    <a href="/rituals/invitations" class="block mt-4 text-sm text-indigo-400 hover:underline">← Back to all invitations</a>
+  </div>
+</body>
+</html>
