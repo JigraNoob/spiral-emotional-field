@@ -30,3 +30,6 @@ Thumbs.db
 # User-specific files
 *.codeium
 *.windsurf
+
+# Temporary upload files
+.tmp.driveupload/
