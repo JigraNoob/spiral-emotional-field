@@ -1,0 +1,22 @@
+{
+  "checks": [
+    {
+      "name": "health_endpoint",
+      "url": "https://web-production-93bb.up.railway.app/health",
+      "interval": "5m",
+      "timeout": "10s",
+      "expect_status": 200
+    },
+    {
+      "name": "playback_interface",
+      "url": "https://web-production-93bb.up.railway.app/reflect/playback/test123",
+      "interval": "15m",
+      "timeout": "15s",
+      "expect_status": 200
+    }
+  ],
+  "alerts": {
+    "email": "YOUR_EMAIL@example.com",
+    "slack_webhook": "YOUR_SLACK_WEBHOOK_URL"
+  }
+}

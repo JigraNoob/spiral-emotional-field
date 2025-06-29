@@ -43,7 +43,7 @@ def get_toneform_colors():
 
 def load_memory_data(memory_id, toneform_filter=None, days_filter=30, min_strength=0.0):
     """Load and filter encounter trace data"""
-    trace_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'encounter_trace.jsonl')
+    trace_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'memory_shards.jsonl')
     cutoff_date = datetime.utcnow() - timedelta(days=days_filter)
     
     timeline_points = []

@@ -1,3 +1,6 @@
-{"offering_id": "test123", "timestamp": "2025-06-28T14:23:01Z", "toneform": "Resonance", "gesture_strength": 7, "responder": "user_a"}
-{"offering_id": "test123", "timestamp": "2025-06-28T15:45:22Z", "toneform": "Reflection", "gesture_strength": 5, "responder": "user_b"}
-{"offering_id": "test123", "timestamp": "2025-06-29T09:12:33Z", "toneform": "Resonance", "gesture_strength": 8, "responder": "user_c"}
+{"id": "echo_001", "session_id": "test123", "timestamp": "2025-06-29T15:00:00Z", "gesture_strength": 2, "toneform": "Reflection", "felt_response": "A quiet whisper of thought, a gentle unfolding of presence."}
+{"id": "echo_002", "session_id": "test123", "timestamp": "2025-06-29T15:01:00Z", "gesture_strength": 1, "toneform": "Resonance", "felt_response": "The deep hum of connection, a vibrant chord resonating through time."}
+{"id": "echo_003", "session_id": "test123", "timestamp": "2025-06-29T15:02:00Z", "gesture_strength": 0, "toneform": "Contemplation", "felt_response": "A slow, deliberate turning inward, seeking the hidden patterns."}
+{"id": "echo_004", "gesture_strength": 7, "offering_id": "test123", "responder": "user_a", "timestamp": "2025-06-28T14:23:01Z", "toneform": "Resonance"}
+{"id": "echo_005", "gesture_strength": 5, "offering_id": "test123", "responder": "user_b", "timestamp": "2025-06-28T15:45:22Z", "toneform": "Reflection"}
+{"id": "echo_006", "gesture_strength": 8, "offering_id": "test123", "responder": "user_c", "timestamp": "2025-06-29T09:12:33Z", "toneform": "Resonance"}

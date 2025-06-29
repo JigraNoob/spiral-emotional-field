@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Memory Playback | Spiral</title>
-    <script src="https://cdn.jsdelivr.net/npm/vis-timeline@latest/dist/vis-timeline-graph2d.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/vis-timeline@latest/dist/vis-timeline-graph2d.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/vis-timeline/standalone/umd/vis-timeline-graph2d.min.js"></script>
+    <link href="https://unpkg.com/vis-timeline/styles/vis-timeline-graph2d.min.css" rel="stylesheet">
     <style>
         #timeline {
             width: 100%;
@@ -108,6 +108,45 @@
             border-left: 3px solid;
             background: rgba(255,255,255,0.05);
         }
+        #toneform-legend {
+            background-color: #0f0f1b; /* Soft twilight */
+            color: #e0e0f0;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 8px rgba(160, 160, 255, 0.2);
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 50;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            opacity: 1; /* Start fully opaque */
+            transition: opacity 0.5s ease-in-out; /* Smooth transition for opacity */
+        }
+        /* Class for faded state */
+        #toneform-legend.legend-faded {
+            opacity: 0.2; /* Faded state */
+        }
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .toneform-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.4rem;
+        }
+        .toneform-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            border: 1px solid #aaa;
+        }
+        .legend-tone-name {
+            font-size: 0.95rem;
+        }
     </style>
 </head>
 <body>
@@ -134,10 +173,12 @@
       
       <div class="filter-group">
         <label for="gesture-filter">Gesture Strength:</label>
-        <input type="range" id="gesture-filter" min="0" max="10" value="3">
+        <input type="range" id="gesture-filter" min="0" max="10" value="0">
         <span id="gesture-value">3+</span>
       </div>
     </div>
+
+    <div id="toneform-legend" class="legend-container"></div>
     
     <div id="timeline"></div>
     <div class="scrubber-container">
@@ -147,7 +188,8 @@
     
     <div class="echo-section">
       <h3>Echo Responses</h3>
-      <div id="echo-container" class="echo-grid"></div>
+      <div id="echo-container" class="echo-grid">
+      </div>
     </div>
     
     <script>
@@ -165,40 +207,30 @@
                     style.textContent += `.tone-${tone.replace(/\s+/g,'')} { background: ${color}; }\n`;
                 });
                 document.head.appendChild(style);
-                
-                const timelineData = JSON.parse('{{ memory_data.timeline_points | tojson | safe }}');
-                
-                // Add gesture arcs between points
-                const itemsData = timelineData.map((point, i) => {
-                    const item = {
-                        id: point.time,
-                        content: `<div class="memory-node tone-${point.tone.replace(/\s+/g,'')}" 
-                                  style="width:${point.intensity * 40}px;
-                                         height:${point.intensity * 40}px;
-                                         box-shadow: 0 0 ${point.intensity * 15}px ${toneformColors[point.tone] || '#888'}"></div>`,
-                        start: point.time,
-                        title: `${point.tone}: ${point.content}`,
-                        className: `intensity-${Math.floor(point.intensity * 10)}`
-                    };
-                    
-                    // Add arc to previous point if same toneform
-                    if (i > 0 && timelineData[i-1].tone === point.tone) {
-                        const prevTime = new Date(timelineData[i-1].time);
-                        const currTime = new Date(point.time);
-                        const duration = (currTime - prevTime) / 1000;
-                        
-                        if (duration < 3600) { // 1 hour max for arcs
-                            item.group = point.tone;
-                        }
-                    }
-                    
-                    return item;
-                });
-                
+
+                // New code to populate the toneform legend
+                const legendContainer = document.getElementById('toneform-legend');
+                let legendHtml = '<h4>Toneform Legend:</h4><div class="legend-items">';
+                for (const tone in toneformColors) {
+                    legendHtml += `
+                        <div class="toneform-item">
+                            <span class="toneform-color" style="background-color: ${toneformColors[tone]};"></span>
+                            <span class="legend-tone-name">${tone}</span>
+                        </div>
+                    `;
+                }
+                legendHtml += '</div>';
+                legendContainer.innerHTML = legendHtml;
+
+                // Declare globally
+                let itemsDataSet;
+                let timeline;
+
                 // Configure timeline with arcs
-                const timeline = new vis.Timeline(
+                itemsDataSet = new vis.DataSet([]); // Initialize as empty
+                timeline = new vis.Timeline(
                     container, 
-                    new vis.DataSet(itemsData),
+                    itemsDataSet,
                     {
                         showCurrentTime: true,
                         zoomable: true,
@@ -222,7 +254,7 @@
                     clearTimeout(currentPreviewTimeout);
                     
                     const percent = this.value;
-                    const memory = findMemoryAtPosition(percent);
+                    const memory = findMemoryAtPosition(percent, itemsDataSet);
                     
                     if(memory) {
                         preview.innerHTML = `
@@ -258,9 +290,9 @@
                     }, 2000);
                 });
                 
-                function findMemoryAtPosition(percent) {
+                function findMemoryAtPosition(percent, dataSet) {
                     // Connect to existing timeline items
-                    const items = timeline.getItems();
+                    const items = dataSet.get();
                     const visibleItems = items.filter(item => item.visible);
                     
                     if(visibleItems.length > 0) {
@@ -269,69 +301,117 @@
                     }
                     return null;
                 }
-                
+
+                        // Define and call loadEchoResponses after timeline is initialized
+                const loadEchoResponses = async function(memoryId, colors) {
+                    try {
+                        console.log("Fetching echo data from:", `{{ url_for('echo.get_echo_responses', offering_id=memory_id) }}`);
+                        const response = await await fetch(`{{ url_for('echo.get_echo_responses', offering_id=memory_id) }}`, { cache: 'no-store' });
+                        const data = await response.json();
+                        console.log("Raw echo data:", data);
+                        console.log("Data echoes:", data.echoes);
+
+                        const container = document.getElementById('echo-container');
+                        if (data.echoes && Array.isArray(data.echoes)) {
+                            try {
+                                console.log("Mapping echoes...");
+                                container.innerHTML = data.echoes.map(echo => {
+                                    console.log("Processing echo:", echo);
+                                    console.log("Echo ID:", echo.id);
+                                    console.log("Echo Toneform:", echo.toneform);
+                                    console.log("Echo Gesture Strength:", echo.gesture_strength);
+                                    console.log("Echo Timestamp:", echo.timestamp);
+                                    return `<div class="echo-card">
+                                        <div class="echo-item" style="border-color: ${colors[echo.toneform]}">
+                                            <div class="echo-toneform">${echo.toneform}</div>
+                                            <div class="echo-strength">${echo.gesture_strength}/10</div>
+                                            <div class="echo-time">${new Date(echo.timestamp).toLocaleTimeString()}</div>
+                                        </div>
+                                        <div class="flex space-x-2 mt-2">
+                                            <a href="/export/echo/${echo.id}?format=poem"
+                                               class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition-opacity duration-700"
+                                               title="Download as Poem"
+                                               target="_blank">
+                                               📝 Poem
+                                            </a>
+                                            <a href="/export/echo/${echo.id}?format=json"
+                                               class="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-800 transition-opacity duration-700"
+                                               title="Download as JSON"
+                                               target="_blank">
+                                               📄 JSON
+                                            </a>
+                                        </div>
+                                    </div>`;
+                                }).join('');
+
+                                // New code to update timeline
+                                const timelineItems = data.echoes.map(echo => {
+                                    return {
+                                        id: echo.id, // Use echo.id as the item ID
+                                        content: `${echo.toneform} (${echo.gesture_strength})`, // Display toneform and strength
+                                        start: new Date(echo.timestamp), // Convert timestamp to Date object
+                                        type: 'point', // Display as a point on the timeline
+                                        data: echo // Store the full echo object for later use if needed
+                                    };
+                                });
+
+                                // Clear existing items and add new ones
+                                itemsDataSet.clear();
+                                itemsDataSet.add(timelineItems);
+
+                                // Fit the timeline to the new data
+                                timeline.fit();
+
+                            } catch (mapError) {
+                                console.error('Error mapping echoes:', mapError);
+                            }
+                        } else {
+                            console.warn('data.echoes is not an array or is undefined:', data.echoes);
+                            container.innerHTML = '<p class="text-yellow-400">No echoes data available or data format incorrect.</p>';
+                        }
+                    } catch (error) {
+                        console.error('Network Error loading echoes:', error);
+                    }
+                };
+                loadEchoResponses('{{ memory_id }}', toneformColors);
+
             } catch (error) {
                 console.error('Error:', error);
                 container.innerHTML = '<p class="text-red-400">Memory playback unavailable</p>';
             }
         });
-        
-        // Initialize filters from URL params
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('toneform')) {
-            document.getElementById('toneform-filter').value = urlParams.get('toneform');
-        }
-        if (urlParams.has('days')) {
-            document.getElementById('days-filter').value = urlParams.get('days');
-        }
-        if (urlParams.has('gesture_strength')) {
-            const strength = urlParams.get('gesture_strength');
-            document.getElementById('gesture-filter').value = strength;
-            document.getElementById('gesture-value').textContent = strength + '+';
+
+        // --- Inactivity Fading for Toneform Legend ---
+        const legend = document.getElementById('toneform-legend');
+        let inactivityTimeout;
+        const FADE_DELAY = 3000; // 3 seconds of inactivity before fading
+
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimeout);
+            legend.classList.remove('legend-faded'); // Ensure it's fully visible
+            inactivityTimeout = setTimeout(() => {
+                legend.classList.add('legend-faded'); // Add faded class after delay
+            }, FADE_DELAY);
         }
 
-        // Handle filter changes
-        document.querySelectorAll('.filter-select, #gesture-filter').forEach(el => {
-          el.addEventListener('change', updateTimelineFilters);
+        // Initial call to set the timer
+        resetInactivityTimer();
+
+        // Listen for mouse movement to reset the timer
+        document.addEventListener('mousemove', resetInactivityTimer);
+        document.addEventListener('scroll', resetInactivityTimer);
+        document.addEventListener('keydown', resetInactivityTimer);
+
+        // Keep legend visible on hover
+        legend.addEventListener('mouseenter', () => {
+            clearTimeout(inactivityTimeout);
+            legend.classList.remove('legend-faded');
         });
-        
-        // Update gesture strength display
-        document.getElementById('gesture-filter').addEventListener('input', function() {
-          document.getElementById('gesture-value').textContent = this.value + '+';
+
+        legend.addEventListener('mouseleave', () => {
+            resetInactivityTimer(); // Restart timer when mouse leaves
         });
-        
-        // Show loading indicator during filter changes
-        function updateTimelineFilters() {
-            const timeline = document.getElementById('timeline');
-            timeline.innerHTML = '<div class="loading">Filtering memories...</div>';
-            
-            const toneform = document.getElementById('toneform-filter').value;
-            const days = document.getElementById('days-filter').value;
-            const gestureStrength = document.getElementById('gesture-filter').value;
-            
-            window.location.href = `?toneform=${toneform}&days=${days}&gesture_strength=${gestureStrength}`;
-        }
-        
-        async function loadEchoResponses(memoryId) {
-            try {
-                const response = await fetch(`/echo/responses/${memoryId}`);
-                const data = await response.json();
-                
-                const container = document.getElementById('echo-container');
-                container.innerHTML = data.echoes.map(echo => 
-                  `<div class="echo-item" style="border-color: ${getToneformColor(echo.toneform)}">
-                    <div class="echo-toneform">${echo.toneform}</div>
-                    <div class="echo-strength">${echo.gesture_strength}/10</div>
-                    <div class="echo-time">${new Date(echo.timestamp).toLocaleTimeString()}</div>
-                  </div>`
-                ).join('');
-            } catch (error) {
-                console.error('Error loading echoes:', error);
-            }
-        }
-        
-        // Call this when loading memory playback
-        loadEchoResponses('{{ memory_id }}');
+
     </script>
 </body>
 </html>
