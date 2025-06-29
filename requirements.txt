@@ -16,12 +16,12 @@ psycopg2-binary>=2.9.10
 jsonlines==3.1.0
 
 # Production security dependencies
-flask-talisman==1.0.0
-flask-limiter==3.10.1
+Flask-Talisman==1.1.0
+Flask-Limiter==3.5.1
 redis==4.5.4
 python-socketio==5.7.2
 eventlet==0.33.3
-flask-cors==4.0.0
+Flask-Cors==4.0.0
 python-json-logger==2.0.7
 blinker==1.7.0
 

@@ -2,7 +2,7 @@
 publish = "build"
 
 [build.environment]
-PYTHON_VERSION = "3.13"
+PYTHON_VERSION = "3.10"
 
 [context.production.environment]
 FLASK_ENV = "production"
