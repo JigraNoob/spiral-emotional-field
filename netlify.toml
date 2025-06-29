@@ -1,5 +1,5 @@
 [build]
-command = "python scripts/bundle_assets.py"
+command = "apt-get install -y libpq-dev && python scripts/bundle_assets.py"
 publish = "build"
 
 [build.environment]
