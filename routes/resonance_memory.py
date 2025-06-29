@@ -106,6 +106,10 @@ def topic_matches(topics, target_topic):
 
 resonance_memory_bp = Blueprint('resonance_memory_bp', __name__)
 
+# Initialize blueprint with app's jinja_env
+def init_jinja_env(app):
+    resonance_memory_bp.jinja_env = app.jinja_env
+
 # This blueprint is a placeholder for routes related to
 # accessing and reflecting on the Spiral's raw memory traces,
 # potentially linking to encounter_trace.jsonl or other data sources.
@@ -142,6 +146,9 @@ def get_raw_memory_traces():
 
         # Load memory traces
         try:
+            if not os.path.exists(ENCOUNTER_LOG_PATH):
+                return jsonify({"error": "Encounter log not found"}), 404
+                
             traces, total_count, total_pages = load_memory_traces(
                 page=page,
                 per_page=per_page,
@@ -181,19 +188,26 @@ def get_raw_memory_traces():
         print(f"  topic: {filters['topic']}")
 
         # Return HTML template
-        return render_template('raw_memory_traces.html', 
-            traces=traces or [],
-            total_count=total_count,
-            total_pages=total_pages,
-            current_page=page,
-            per_page=per_page,
-            tone=filters['tone'],
-            start_date=filters['start_date'],
-            end_date=filters['end_date'],
-            gesture_strength=filters['gesture_strength'],
-            context_id=filters['context_id'],
-            topic=filters['topic']
-        )
+        print(f"Available filters: {resonance_memory_bp.jinja_env.filters.keys()}")
+        try:
+            return render_template('raw_memory_traces.html', 
+                traces=traces or [],
+                total_count=total_count,
+                total_pages=total_pages,
+                current_page=page,
+                per_page=per_page,
+                tone=filters['tone'],
+                start_date=filters['start_date'],
+                end_date=filters['end_date'],
+                gesture_strength=filters['gesture_strength'],
+                context_id=filters['context_id'],
+                topic=filters['topic']
+            )
+        except Exception as e:
+            print(f"Template rendering error: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return jsonify({"error": str(e)}), 500
 
     except Exception as e:
         import traceback

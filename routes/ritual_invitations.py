@@ -165,3 +165,8 @@ def get_ritual_bundles():
     
     # Ensure we return at most 5, and at least 0 if none qualify
     return jsonify(selected_bundles[:5])
+
+@ritual_invitations_bp.route('/invitations')
+def show_invitations():
+    """Renders the ritual invitations page."""
+    return render_template('ritual_invitations.html')

@@ -335,7 +335,7 @@ class Node {
 
 async function fetchEncounters() {
     try {
-        const response = await fetch('/get_encounters');
+        const response = await fetch('/get/get_encounters');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
