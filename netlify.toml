@@ -1,5 +1,4 @@
 [build]
-command = "apt-get install -y libpq-dev && python scripts/bundle_assets.py"
 publish = "build"
 
 [build.environment]
@@ -7,6 +6,9 @@ PYTHON_VERSION = "3.13"
 
 [context.production.environment]
 FLASK_ENV = "production"
+
+[[plugins]]
+package = "netlify-plugin-python"
 
 [[redirects]]
 from = "/*"
