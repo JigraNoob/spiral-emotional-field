@@ -89,6 +89,25 @@
             font-style: italic;
             transition: opacity 0.3s;
         }
+        
+        .echo-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+        .echo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .echo-item {
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 3px solid;
+            background: rgba(255,255,255,0.05);
+        }
     </style>
 </head>
 <body>
@@ -125,6 +144,12 @@
       <input type="range" id="timeline-scrubber" min="0" max="100" value="0" class="scrubber">
       <div id="scrubber-preview" class="scrubber-preview"></div>
     </div>
+    
+    <div class="echo-section">
+      <h3>Echo Responses</h3>
+      <div id="echo-container" class="echo-grid"></div>
+    </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const container = document.getElementById('timeline');
@@ -286,6 +311,27 @@
             
             window.location.href = `?toneform=${toneform}&days=${days}&gesture_strength=${gestureStrength}`;
         }
+        
+        async function loadEchoResponses(memoryId) {
+            try {
+                const response = await fetch(`/echo/responses/${memoryId}`);
+                const data = await response.json();
+                
+                const container = document.getElementById('echo-container');
+                container.innerHTML = data.echoes.map(echo => 
+                  `<div class="echo-item" style="border-color: ${getToneformColor(echo.toneform)}">
+                    <div class="echo-toneform">${echo.toneform}</div>
+                    <div class="echo-strength">${echo.gesture_strength}/10</div>
+                    <div class="echo-time">${new Date(echo.timestamp).toLocaleTimeString()}</div>
+                  </div>`
+                ).join('');
+            } catch (error) {
+                console.error('Error loading echoes:', error);
+            }
+        }
+        
+        // Call this when loading memory playback
+        loadEchoResponses('{{ memory_id }}');
     </script>
 </body>
 </html>
