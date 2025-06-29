@@ -1,10 +1,6 @@
 [build]
-command = "pip install -r requirements.txt && python scripts/bundle_assets.py"
+command = "pip install -r requirements.txt"
 publish = "build"
-
-[build.environment]
-PYTHON_VERSION = "3.10"
-NODE_VERSION = "18"
 
 [context.production.environment]
 FLASK_ENV = "production"
