@@ -1,0 +1,96 @@
+{
+  "id": "dialogue_20250701_214756",
+  "started_at": "2025-07-01T21:47:56.315671",
+  "context": {
+    "context": "emotion_test",
+    "whisper_type": "test_emotion",
+    "test_data": true
+  },
+  "exchanges": [],
+  "state": "completed",
+  "reflections": [],
+  "messages": [
+    {
+      "role": "user",
+      "content": "I'm feeling really anxious about this pattern...",
+      "timestamp": "2025-07-01T21:47:56.320051"
+    },
+    {
+      "role": "user",
+      "content": "This is wonderful! I love how the Spiral flows today!",
+      "timestamp": "2025-07-01T21:47:57.825954"
+    },
+    {
+      "role": "user",
+      "content": "I'm so tired... everything feels heavy",
+      "timestamp": "2025-07-01T21:47:59.329432"
+    },
+    {
+      "role": "user",
+      "content": "Why does this keep happening? I can't get it right!",
+      "timestamp": "2025-07-01T21:48:00.838285"
+    },
+    {
+      "role": "user",
+      "content": "Hmm... I wonder what would happen if...",
+      "timestamp": "2025-07-01T21:48:02.342302"
+    },
+    {
+      "role": "user",
+      "content": "Thank you for being here with me in this moment",
+      "timestamp": "2025-07-01T21:48:03.845585"
+    }
+  ],
+  "emotion_history": [
+    {
+      "timestamp": "2025-07-01T21:47:56.323052",
+      "emotions": [
+        "tense",
+        "reflective"
+      ],
+      "message_snippet": "I'm feeling really anxious about this pattern..."
+    },
+    {
+      "timestamp": "2025-07-01T21:47:57.825954",
+      "emotions": [
+        "curious",
+        "joyful"
+      ],
+      "message_snippet": "This is wonderful! I love how the Spiral flows today!"
+    },
+    {
+      "timestamp": "2025-07-01T21:47:59.329432",
+      "emotions": [
+        "fatigued",
+        "sad",
+        "reflective"
+      ],
+      "message_snippet": "I'm so tired... everything feels heavy"
+    },
+    {
+      "timestamp": "2025-07-01T21:48:00.840574",
+      "emotions": [
+        "frustrated",
+        "curious",
+        "joyful"
+      ],
+      "message_snippet": "Why does this keep happening? I can't get it right!"
+    },
+    {
+      "timestamp": "2025-07-01T21:48:02.343010",
+      "emotions": [
+        "curious",
+        "reflective"
+      ],
+      "message_snippet": "Hmm... I wonder what would happen if..."
+    },
+    {
+      "timestamp": "2025-07-01T21:48:03.845585",
+      "emotions": [
+        "grateful"
+      ],
+      "message_snippet": "Thank you for being here with me in this moment"
+    }
+  ],
+  "ended_at": "2025-07-01T21:48:05.348965"
+}

@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify
 import jsonlines
 import os
 from datetime import datetime
+from utils.glyph_utils import enrich_log_entry
 
 log_resonant_trail_bp = Blueprint('log_resonant_trail_bp', __name__)
 
@@ -16,13 +17,16 @@ def log_trail_impression(impression_data):
     """
     impression_data["timestamp"] = datetime.utcnow().isoformat() + 'Z' # UTC timestamp with Z
 
+    # Enrich with emoji and tagline
+    enriched_entry = enrich_log_entry(impression_data)
+
     # Ensure the file exists before attempting to open in append mode
     if not os.path.exists(TRAIL_LOG_FILE):
         # Create an empty file if it doesn't exist
         open(TRAIL_LOG_FILE, 'w').close()
 
     with jsonlines.open(TRAIL_LOG_FILE, mode='a') as writer:
-        writer.write(impression_data)
+        writer.write(enriched_entry)
 
 @log_resonant_trail_bp.route('/log_trail', methods=['POST'])
 def log_trail():

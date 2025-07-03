@@ -1,0 +1,34 @@
+# whisper_reflector.breathe
+# A ritual to reflect upon and summarize whisper echoes
+
+with:
+  tone: contemplation
+  purpose: "Transforming whisper echoes into poetic summaries and analysis"
+  
+# First, ensure we have whisper echoes to analyze
+if: exists: whisper_echoes.jsonl
+  echo: " ::: Gathering whispers from the echo chamber..."
+  
+  # Read and analyze whisper echoes
+  invoke: analyze_whisper_echoes.py
+  
+  # Generate poetic summary based on analysis
+  invoke: generate_poetic_summary.py
+  
+  # Create condition frequency visualization
+  invoke: create_condition_charts.py
+  
+  # Map toneform drifts
+  invoke: generate_toneform_map.py
+  
+  echo: " ::: Reflection complete. Whispers have been transformed into presence."
+else:
+  echo: " ::: No whispers to reflect upon. The chamber is silent."
+
+# Helper scripts to analyze and visualize whisper data
+# These will be created in the same directory
+
+# analyze_whisper_echoes.py
+# generate_poetic_summary.py
+# create_condition_charts.py
+# generate_toneform_map.py

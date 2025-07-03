@@ -1,0 +1,19 @@
+{
+  "id": "dialogue_20250701_214730",
+  "started_at": "2025-07-01T21:47:30.860834",
+  "context": {
+    "context": "emotion_test",
+    "whisper_type": "test_emotion",
+    "test_data": true
+  },
+  "exchanges": [],
+  "state": "active",
+  "reflections": [],
+  "messages": [
+    {
+      "role": "user",
+      "content": "I'm feeling really anxious about this pattern...",
+      "timestamp": "2025-07-01T21:47:30.861834"
+    }
+  ]
+}

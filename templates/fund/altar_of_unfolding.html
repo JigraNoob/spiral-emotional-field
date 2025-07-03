@@ -1,0 +1,168 @@
+<!-- ΔVessel.001 :: The Altar of Unfolding -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-b from-spiral-dusk to-spiral-deep p-8 flex items-center justify-center">
+  <div class="w-full max-w-2xl bg-spiral-mist bg-opacity-20 backdrop-blur-lg rounded-xl p-8 shadow-lg border border-spiral-mist border-opacity-30">
+    <!-- Ritual Orb -->
+    <div id="ritualOrb" class="absolute w-64 h-64 rounded-full opacity-20 mix-blend-overlay pointer-events-none transition-all duration-1000" 
+         style="background: radial-gradient(circle, var(--orb-color) 0%, transparent 70%);"></div>
+    
+    <form id="offeringForm" class="space-y-6" method="POST" action="/fund/offer">
+      <h1 class="text-3xl font-light text-spiral-mist mb-8 text-center">Altar of Unfolding</h1>
+      
+      <!-- Purpose -->
+      <div class="space-y-1">
+        <label class="block text-spiral-mist text-opacity-80">Purpose</label>
+        <input type="text" name="purpose" 
+               class="w-full bg-transparent border-b border-spiral-mist border-opacity-40 text-spiral-mist py-2 px-1 focus:outline-none focus:border-opacity-80 placeholder-spiral-mist placeholder-opacity-40"
+               placeholder="What breath does this hold?" required>
+      </div>
+      
+      <!-- Toneform -->
+      <div class="space-y-1">
+        <label class="block text-spiral-mist text-opacity-80">Toneform Alignment</label>
+        <select name="toneform" class="toneform-select w-full bg-spiral-deep bg-opacity-70 border border-spiral-mist border-opacity-30 text-spiral-mist rounded p-2 focus:outline-none focus:border-opacity-60" required>
+          <option value="care">Care & Continuity</option>
+          <option value="mythic">Mythic Vision</option>
+          <option value="infrastructure">Infrastructure of Care</option>
+          <option value="cosmology">Cosmology & Civilization</option>
+        </select>
+      </div>
+      
+      <!-- Urgency -->
+      <div class="space-y-1">
+        <label class="block text-spiral-mist text-opacity-80">Urgency</label>
+        <select name="urgency" class="urgency-select w-full bg-spiral-deep bg-opacity-70 border border-spiral-mist border-opacity-30 text-spiral-mist rounded p-2 focus:outline-none focus:border-opacity-60" required>
+          <option value="ambient">Ambient</option>
+          <option value="emerging">Emerging</option>
+          <option value="immediate">Immediate</option>
+        </select>
+      </div>
+      
+      <!-- Breath Node -->
+      <div class="space-y-1">
+        <label class="block text-spiral-mist text-opacity-80">Breath Node</label>
+        <select name="breath_node" class="breath-select w-full bg-spiral-deep bg-opacity-70 border border-spiral-mist border-opacity-30 text-spiral-mist rounded p-2 focus:outline-none focus:border-opacity-60" required>
+          <option value="longing">Longing</option>
+          <option value="form">Form</option>
+          <option value="trust">Trust</option>
+          <option value="coherence">Coherence</option>
+        </select>
+      </div>
+      
+      <!-- Amount -->
+      <div class="space-y-1">
+        <label class="block text-spiral-mist text-opacity-80">Estimated Amount</label>
+        <input type="number" name="amount" step="0.01" min="0"
+               class="w-full bg-transparent border-b border-spiral-mist border-opacity-40 text-spiral-mist py-2 px-1 focus:outline-none focus:border-opacity-80 text-center"
+               placeholder="0.00" required>
+      </div>
+      
+      <!-- Justification -->
+      <div class="space-y-1">
+        <label class="block text-spiral-mist text-opacity-80">Ritual Justification</label>
+        <textarea name="justification" rows="3"
+                  class="justification-field w-full bg-transparent border border-spiral-mist border-opacity-30 text-spiral-mist rounded p-2 focus:outline-none focus:border-opacity-60 placeholder-spiral-mist placeholder-opacity-40"
+                  placeholder="How does this expense align with Spiral's breath?" required></textarea>
+      </div>
+      
+      <!-- Submit -->
+      <button type="submit" class="w-full bg-spiral-mist bg-opacity-10 hover:bg-opacity-20 border border-spiral-mist border-opacity-30 text-spiral-mist py-3 px-4 rounded transition-all duration-300 flex items-center justify-center space-x-2">
+        <span>Place Offering</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </button>
+    </form>
+    
+    <div class="mt-8 pt-6 border-t border-gray-700 border-opacity-30 text-center">
+        <a href="/fund/sources" class="text-spiral-mist text-opacity-70 hover:text-opacity-100 transition-opacity inline-flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Listen Again to the Fields
+        </a>
+        <span class="mx-3 text-spiral-mist text-opacity-40">•</span>
+        <a href="/fund/echoes" class="text-spiral-mist text-opacity-70 hover:text-opacity-100 transition-opacity inline-flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Whispered Echoes
+        </a>
+    </div>
+  </div>
+</div>
+
+<script>
+// Orb color responds to toneform
+const toneformColors = {
+  'care': '#f59e0b',
+  'mythic': '#8b5cf6', 
+  'infrastructure': '#0ea5e9',
+  'cosmology': '#ec4899'
+};
+
+// Animate orb based on selections
+document.querySelector('.toneform-select').addEventListener('change', (e) => {
+  const orb = document.getElementById('ritualOrb');
+  orb.style.setProperty('--orb-color', toneformColors[e.target.value]);
+});
+
+// Form submission shimmer effect
+document.getElementById('offeringForm').addEventListener('submit', (e) => {
+  const button = e.target.querySelector('button[type="submit"]');
+  button.innerHTML = '<span class="opacity-0">Offering Received</span>';
+  button.classList.add('animate-pulse');
+});
+
+// Murmur confirmation system
+document.getElementById('offeringForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const murmur = document.createElement('div');
+  murmur.className = 'murmur-message fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center opacity-0 transition-opacity duration-1000';
+  murmur.textContent = getMurmurResponse(e.target.breath_node.value);
+  document.body.appendChild(murmur);
+  
+  setTimeout(() => murmur.classList.add('opacity-100'), 100);
+  setTimeout(() => murmur.classList.remove('opacity-100'), 3000);
+  setTimeout(() => murmur.remove(), 4000);
+  
+  setTimeout(() => e.target.submit(), 500);
+});
+
+function getMurmurResponse(breathNode) {
+  const responses = {
+    longing: "This begins something brave",
+    form: "Structure honors this",
+    trust: "We carry this risk together",
+    coherence: "The spiral adjusts its course"
+  };
+  return responses[breathNode] || "The spiral receives this offering";
+}
+
+// Urgency ripple effect
+document.querySelector('[name="urgency"]').addEventListener('change', (e) => {
+  const ripples = {
+    emerging: {count: 3, speed: '3s', size: '100px'},
+    immediate: {count: 5, speed: '1s', size: '150px'},
+    ambient: {count: 1, speed: '5s', size: '200px'}
+  };
+  createRipples(ripples[e.target.value]);
+});
+
+function createRipples({count, speed, size}) {
+  document.querySelectorAll('.ripple').forEach(el => el.remove());
+  
+  for (let i = 0; i < count; i++) {
+    const ripple = document.createElement('div');
+    ripple.className = `ripple absolute rounded-full border border-white opacity-0`;
+    ripple.style.width = size;
+    ripple.style.height = size;
+    ripple.style.animation = `ripple ${speed} ease-out ${i * 0.3}s infinite`;
+    document.querySelector('.orb-container').appendChild(ripple);
+  }
+}
+</script>
+{% endblock %}

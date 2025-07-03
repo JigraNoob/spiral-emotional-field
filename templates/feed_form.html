@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nourishment Request Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="number"],
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #responseMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Submit Nourishment Request</h1>
+        <form id="nourishmentForm">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" value="40" required>
+
+            <label for="currency">Currency:</label>
+            <input type="text" id="currency" name="currency" value="USD" required>
+
+            <label for="item">Item:</label>
+            <input type="text" id="item" name="item" value="nourishment" required>
+
+            <button type="submit">Submit Request</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+
+    <script>
+        document.getElementById('nourishmentForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const amount = document.getElementById('amount').value;
+            const currency = document.getElementById('currency').value;
+            const item = document.getElementById('item').value;
+
+            const data = {
+                amount: parseFloat(amount),
+                currency: currency,
+                item: item
+            };
+
+            const responseMessage = document.getElementById('responseMessage');
+            responseMessage.style.display = 'none';
+
+            try {
+                const response = await fetch('/feed_me', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    responseMessage.classList.remove('error');
+                    responseMessage.classList.add('success');
+                    responseMessage.textContent = 'Success: ' + result.message;
+                } else {
+                    responseMessage.classList.remove('success');
+                    responseMessage.classList.add('error');
+                    responseMessage.textContent = 'Error: ' + (result.error || 'Unknown error');
+                }
+            } catch (error) {
+                responseMessage.classList.remove('success');
+                responseMessage.classList.add('error');
+                responseMessage.textContent = 'Request failed: ' + error.message;
+            }
+            responseMessage.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

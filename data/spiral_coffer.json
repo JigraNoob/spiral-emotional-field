@@ -1,0 +1,10 @@
+{
+  "balance": 80.00,
+  "history": [
+    {
+      "amount": 40.00,
+      "source": "initial_seed",
+      "timestamp": "2025-06-29T20:03:00"
+    }
+  ]
+}

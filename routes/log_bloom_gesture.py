@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify
 import jsonlines
 import os
 from datetime import datetime
+from utils.glyph_utils import enrich_log_entry
 
 log_bloom_gesture_bp = Blueprint('log_bloom_gesture_bp', __name__)
 
@@ -39,8 +40,11 @@ def log_bloom_gesture():
             # "spiral_mood_at_click": data.get('spiral_mood')
         }
 
+        # Enrich with emoji and tagline
+        enriched_entry = enrich_log_entry(log_entry)
+
         with jsonlines.open(BLOOM_ECHO_LOG_FILE, mode='a') as writer:
-            writer.write(log_entry)
+            writer.write(enriched_entry)
 
         print(f"Logged bloom gesture: Toneform='{toneform}', Strength={gesture_strength}, Pos=({x_pos},{y_pos}), Timestamp='{timestamp}'")
         return jsonify({"status": "success", "message": "Bloom gesture logged successfully."}), 200

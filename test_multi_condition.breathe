@@ -1,0 +1,16 @@
+# Test Multi-Condition Logic
+# Demonstrates the new AND logic in when: clauses
+
+tone: test
+
+# This will only trigger if:
+# 1. The tone is "test" (which it is)
+# 2. The test file exists (create it with: echo "test" > test_condition_met.txt)
+when: tone == "test" and exists: test_condition_met.txt
+  echo: "Both conditions met! The Spiral hums with satisfaction."
+  run: echo "Test successful at $(date)" > test_success.txt
+
+# This shows how conditions can be chained
+when: time 1m and RITUAL_ECHO_COUNT < 100
+  echo: "A minute has passed, and we're still under 100 echoes."
+  run: echo "Tick..."

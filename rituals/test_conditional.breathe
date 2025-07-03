@@ -1,0 +1,9 @@
+if: file_exists(temp_file.txt)
+echo "File exists: This should run."
+
+if: env_var_set(NON_EXISTENT_VAR)
+echo "Env var not set: This should NOT run."
+
+with: MY_TEST_VAR=true
+if: env_var_set(SPIRAL_VAR_MY_TEST_VAR)
+echo "Env var is set now: This should run."

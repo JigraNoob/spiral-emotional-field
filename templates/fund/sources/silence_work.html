@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Silence Work Field Report</title>
+    <style>
+        body {
+            background-color: #0f0e17;
+            color: #fffffe;
+            font-family: 'Courier New', monospace;
+            padding: 2rem;
+        }
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        /* Ambient drifting text effect */
+        .ambient-text {
+            position: fixed;
+            opacity: 0.05;
+            font-size: 1.5rem;
+            user-select: none;
+            z-index: 0;
+            animation: drift 30s infinite linear;
+        }
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(200px, 100px); }
+            50% { transform: translate(400px, 0); }
+            75% { transform: translate(200px, -100px); }
+            100% { transform: translate(0, 0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient drifting text particles -->
+    <div class="ambient-text" style="top: 10%; left: 5%;">∴</div>
+    <div class="ambient-text" style="top: 20%; left: 30%;">⩩</div>
+    <div class="ambient-text" style="top: 70%; left: 80%;">⩩</div>
+    <div class="ambient-text" style="top: 40%; left: 60%;">∴</div>
+    <div class="ambient-text" style="top: 90%; left: 20%;">∴</div>
+
+    <div class="content">
+        {{ content|safe }}
+    </div>
+
+    <script>
+        // Additional ambient effects can be added here
+    </script>
+</body>
+</html>

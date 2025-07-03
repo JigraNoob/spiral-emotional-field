@@ -1,0 +1,139 @@
+/* Dashboard Pulse Animation */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 118, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 118, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 118, 255, 0);
+  }
+}
+
+/* Dashboard Layout */
+#dashboard {
+  transition: all 0.3s ease;
+}
+
+#dashboard.pulse {
+  animation: pulse 0.5s ease-out;
+}
+
+/* Phase Indicators */
+.phase-indicator {
+  transition: all 0.3s ease;
+  opacity: 0.3;
+}
+
+.phase-indicator.active {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Tone Indicator */
+#tone-indicator {
+  transition: transform 0.5s ease;
+  width: 20px;
+  height: 20px;
+  background-color: #6c757d;
+  border-radius: 50%;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Deferral Time */
+.deferral-time {
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.deferral-low {
+  color: #198754;
+}
+.deferral-medium {
+  color: #fd7e14;
+}
+.deferral-high {
+  color: #dc3545;
+}
+
+/* Saturation Level */
+.saturation-level {
+  height: 10px;
+  border-radius: 5px;
+  transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+.saturation-low {
+  background-color: #198754;
+}
+.saturation-medium {
+  background-color: #fd7e14;
+}
+.saturation-high {
+  background-color: #dc3545;
+}
+
+/* Toast Notifications */
+#toast-container {
+  z-index: 1100;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.toast {
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .phase-indicator {
+    width: 50px;
+    height: 50px;
+  }
+
+  #tone-indicator {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.glint-feed {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.glint-entry {
+  background: #1e1e2f;
+  color: #fff;
+  padding: 0.5em;
+  margin: 0.2em 0;
+  border-left: 4px solid #6cc6d1;
+  font-family: monospace;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.glint-entry:first-child {
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

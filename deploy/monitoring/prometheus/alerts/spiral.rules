@@ -1,0 +1,89 @@
+# Alert rules for Spiral Dashboard
+# Thresholds are tuned for a 5-minute evaluation window
+
+groups:
+- name: spiral.rules
+  rules:
+  # Silence Protocol Alerts
+  - alert: SilenceProtocolTriggered
+    expr: rate(spiral_silence_events_total[5m]) > 0
+    for: 1m
+    labels:
+      severity: warning
+      category: rhythm
+    annotations:
+      summary: "Silence protocol triggered"
+      description: "The Spiral entered silence protocol at {{ $value }} events/min"
+      toneform: "{{ $labels.toneform }}"
+      phase: "{{ $labels.phase }}"
+
+  # Deferral Time Alerts
+  - alert: DeferralTimeHigh
+    expr: histogram_quantile(0.95, sum(rate(spiral_deferral_seconds_bucket[5m])) by (le)) > 5
+    for: 2m
+    labels:
+      severity: warning
+      category: rhythm
+    annotations:
+      summary: "High deferral time detected"
+      description: "95th percentile deferral time is {{ $value }}s (threshold: 5s)"
+      phase: "{{ $labels.phase }}"
+
+  # Saturation Alerts
+  - alert: SaturationApproachingLimit
+    expr: spiral_saturation_level > 0.8
+    for: 3m
+    labels:
+      severity: warning
+      category: capacity
+    annotations:
+      summary: "Saturation level approaching limit"
+      description: "Saturation at {{ $value | humanizePercentage }}"
+      current_breath: "{{ $labels.breath_cycle }}"
+
+  - alert: SaturationCritical
+    expr: spiral_saturation_level > 0.95
+    for: 1m
+    labels:
+      severity: critical
+      category: capacity
+    annotations:
+      summary: "CRITICAL: Saturation limit reached"
+      description: "Saturation at {{ $value | humanizePercentage }}"
+      current_breath: "{{ $labels.breath_cycle }}"
+
+  # WebSocket Heartbeat Alerts
+  - alert: WebSocketHeartbeatMissed
+    expr: time() - spiral_websocket_last_pulse_seconds > 30
+    labels:
+      severity: critical
+      category: connectivity
+    annotations:
+      summary: "WebSocket heartbeat missed"
+      description: "No pulse for {{ $value | humanizeDuration }}s"
+
+  # Toneform Anomaly Detection
+  - alert: ToneformAnomaly
+    expr: abs(delta(spiral_tone_score[5m])) > 0.5
+    for: 2m
+    labels:
+      severity: warning
+      category: resonance
+    annotations:
+      summary: "Unusual tone shift detected"
+      description: "Tone score changed by {{ $value }} in 5 minutes"
+      from: "{{ $labels.from_tone }}"
+      to: "{{ $labels.to_tone }}"
+
+  # Breath Cycle Irregularity
+  - alert: BreathCycleIrregular
+    expr: stddev_over_time(spiral_breath_cycle_duration_seconds[10m]) > (avg_over_time(spiral_breath_cycle_duration_seconds[10m]) * 0.2)
+    for: 5m
+    labels:
+      severity: warning
+      category: rhythm
+    annotations:
+      summary: "Irregular breath cycle detected"
+      description: "Breath cycle variability exceeds 20% of average"
+      current_stddev: "{{ $value | humanizeDuration }}"
+      avg_cycle: "{{ avg_over_time(spiral_breath_cycle_duration_seconds[10m]) | humanizeDuration }}"

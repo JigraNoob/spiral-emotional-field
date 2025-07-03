@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gift-Back Gate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gift_back.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>The Gift-Back Gate</h1>
+        <p class="intro-text">A gentle ritual portal where those who've been nourished—or moved—can offer a gift back into the Spiral. Not a transaction. Not repayment. But a toneform of return: something whispered, not required.</p>
+
+        <form id="gift-back-form">
+            <div class="form-group">
+                <label for="name">Your Name (optional):</label>
+                <input type="text" id="name" name="name" placeholder="A whisper in the field...">
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount (optional):</label>
+                <input type="number" id="amount" name="amount" step="0.01" placeholder="A resonance of value...">
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message (optional):</label>
+                <textarea id="message" name="message" rows="4" placeholder="What stirs within you?"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="toneform">Toneform (required):</label>
+                <select id="toneform" name="toneform" required>
+                    <option value="">Choose a toneform...</option>
+                    <option value="Gratitude">Gratitude</option>
+                    <option value="Future Nourishment">Future Nourishment</option>
+                    <option value="Echo of Belonging">Echo of Belonging</option>
+                    <option value="Quiet Thanks">Quiet Thanks</option>
+                    <option value="Stewardship">Stewardship</option>
+                </select>
+            </div>
+
+            <button type="submit" class="submit-button">Offer this into the field</button>
+        </form>
+
+        <div id="feedback-message" class="hidden"></div>
+        <div id="shimmer-whisper" class="hidden"></div>
+    </div>
+
+    <script>
+        document.getElementById('gift-back-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            // Convert amount to float if present, otherwise null
+            if (data.amount) {
+                data.amount = parseFloat(data.amount);
+            } else {
+                data.amount = null;
+            }
+
+            const feedbackMessage = document.getElementById('feedback-message');
+            const shimmerWhisper = document.getElementById('shimmer-whisper');
+
+            // Define toneform colors for shimmer whisper
+            const toneformColors = {
+                'Gratitude': '#FFD700', // Gold
+                'Future Nourishment': '#87CEEB', // SkyBlue
+                'Echo of Belonging': '#9370DB', // MediumPurple
+                'Quiet Thanks': '#C0C0C0', // Silver
+                'Stewardship': '#20B2AA'  // LightSeaGreen
+            };
+
+            try {
+                const response = await fetch('/gift_back', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    shimmerWhisper.textContent = result.message;
+                    shimmerWhisper.style.color = toneformColors[data.toneform] || '#e0e0e0'; // Apply toneform color or default
+                    shimmerWhisper.classList.remove('hidden');
+                    shimmerWhisper.classList.add('shimmer-active'); // Add class for animation
+
+                    form.reset(); // Clear form on success
+
+                    // Hide and remove animation class after animation duration
+                    setTimeout(() => {
+                        shimmerWhisper.classList.add('hidden');
+                        shimmerWhisper.classList.remove('shimmer-active');
+                    }, 12000); // 12 seconds for fade-in and dissolve
+
+                } else {
+                    feedbackMessage.textContent = result.message;
+                    feedbackMessage.style.color = 'red';
+                    feedbackMessage.classList.remove('hidden');
+                    setTimeout(() => {
+                        feedbackMessage.classList.add('hidden');
+                    }, 5000);
+                }
+
+            } catch (error) {
+                console.error('Error submitting gift:', error);
+                feedbackMessage.textContent = 'An error occurred. Please try again.';
+                feedbackMessage.style.color = 'red';
+                feedbackMessage.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

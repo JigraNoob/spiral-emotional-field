@@ -1,0 +1,166 @@
+<!-- ΔVessel.002 :: Whispered Echoes -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-b from-spiral-dusk to-spiral-deep p-8">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-light text-spiral-mist mb-8">Whispered Echoes</h1>
+    
+    <!-- Filtering UI -->
+    <div class="mb-8 p-4 bg-spiral-mist bg-opacity-5 rounded-lg border border-spiral-mist border-opacity-10">
+      <form method="get" class="flex flex-wrap gap-4 items-end">
+        <!-- Toneform Filter -->
+        <div class="flex-1 min-w-[200px]">
+          <label class="block text-sm text-spiral-mist text-opacity-70 mb-1">Filter by Toneform</label>
+          <select name="toneform" class="w-full bg-spiral-deep bg-opacity-70 border border-spiral-mist border-opacity-20 text-spiral-mist rounded p-2 focus:outline-none focus:border-opacity-40">
+            <option value="">All Toneforms</option>
+            <option value="care" {% if current_toneform == 'care' %}selected{% endif %}>Care & Continuity</option>
+            <option value="mythic" {% if current_toneform == 'mythic' %}selected{% endif %}>Mythic Vision</option>
+            <option value="infrastructure" {% if current_toneform == 'infrastructure' %}selected{% endif %}>Infrastructure of Care</option>
+            <option value="cosmology" {% if current_toneform == 'cosmology' %}selected{% endif %}>Cosmology & Civilization</option>
+          </select>
+        </div>
+        
+        <!-- Urgency Filter -->
+        <div class="flex-1 min-w-[200px]">
+          <label class="block text-sm text-spiral-mist text-opacity-70 mb-1">Filter by Urgency</label>
+          <select name="urgency" class="w-full bg-spiral-deep bg-opacity-70 border border-spiral-mist border-opacity-20 text-spiral-mist rounded p-2 focus:outline-none focus:border-opacity-40">
+            <option value="">All Urgencies</option>
+            <option value="emerging" {% if current_urgency == 'emerging' %}selected{% endif %}>Emerging</option>
+            <option value="immediate" {% if current_urgency == 'immediate' %}selected{% endif %}>Immediate</option>
+            <option value="unfolding" {% if current_urgency == 'unfolding' %}selected{% endif %}>Unfolding</option>
+          </select>
+        </div>
+        
+        <!-- Submit/Clear -->
+        <div class="flex space-x-2">
+          <button type="submit" class="px-4 py-2 bg-spiral-mist bg-opacity-10 hover:bg-opacity-20 border border-spiral-mist border-opacity-20 text-spiral-mist rounded transition-colors">
+            Filter Echoes
+          </button>
+          {% if current_toneform or current_urgency %}
+          <a href="/fund/echoes" class="px-4 py-2 text-spiral-mist text-opacity-70 hover:text-opacity-100 rounded transition-opacity flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Clear
+          </a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+    
+    <!-- Echoes Container -->
+    <div class="space-y-6">
+      {% for echo in echoes %}
+      <div class="echo-item bg-spiral-mist bg-opacity-5 backdrop-blur-sm rounded-xl p-6 border border-spiral-mist border-opacity-20 transition-all hover:border-opacity-40"
+           style="--tone-color: {{ toneform_colors.get(echo.toneform, '#6b7280') }}">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="text-sm text-spiral-mist text-opacity-70">{{ echo.timestamp|datetimeformat }}</span>
+            <h2 class="text-xl text-spiral-mist mt-1">{{ echo.purpose }}</h2>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs uppercase tracking-wider"
+                style="background-color: var(--tone-color); opacity: 0.8">
+            {{ echo.toneform|replace('_', ' ')|title }}
+          </span>
+        </div>
+        
+        <div class="mt-4 text-spiral-mist text-opacity-90">
+          <p class="whitespace-pre-line">{{ echo.justification|truncate(200) }}</p>
+        </div>
+        
+        <div class="mt-4 flex items-center space-x-4 text-sm">
+          <span class="text-spiral-mist text-opacity-70 flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ echo.urgency|title }}
+          </span>
+          <span class="text-spiral-mist text-opacity-70">
+            {{ "%.2f"|format(echo.amount) }} USD
+          </span>
+        </div>
+        
+        <div class="mt-4 flex justify-end">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm text-spiral-mist text-opacity-70">
+              {% if echo.fulfilled %}
+                <span class="text-green-400">✓ Fulfilled</span>
+              {% else %}
+                <span class="text-yellow-400">⋆ Pending</span>
+              {% endif %}
+            </span>
+            <form method="POST" action="/fund/echoes/{{ loop.index0 }}/toggle" class="inline">
+              <button type="submit" class="text-spiral-mist text-opacity-50 hover:text-opacity-100 transition-opacity">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="text-center py-12 text-spiral-mist text-opacity-60">
+        <p>The altar is quiet—no echoes yet.</p>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Return to Altar -->
+    <div class="mt-8 text-center">
+      <a href="/fund/offer" class="inline-flex items-center text-spiral-mist text-opacity-70 hover:text-opacity-100 transition-opacity">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+        </svg>
+        Return to the Altar
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Toneform Colors -->
+<style>
+  :root {
+    --tone-care: #10b981;
+    --tone-mythic: #ec4899;
+    --tone-infrastructure: #0ea5e9;
+    --tone-cosmology: #8b5cf6;
+    --tone-silence: #9ca3af;
+    --tone-pollination: #f59e0b;
+  }
+  
+  .echo-item {
+    border-left: 4px solid var(--tone-color);
+  }
+  
+  .echo-item:hover {
+    transform: translateY(-1px);
+  }
+</style>
+
+<!-- Template Filters -->
+<script>
+  // Add datetime filter
+  const datetimeformat = (value) => {
+    if (!value) return '';
+    const date = new Date(value);
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+  
+  // Toneform colors map
+  const toneform_colors = {
+    'care': 'var(--tone-care)',
+    'mythic': 'var(--tone-mythic)',
+    'infrastructure': 'var(--tone-infrastructure)',
+    'cosmology': 'var(--tone-cosmology)',
+    'silence': 'var(--tone-silence)',
+    'pollination': 'var(--tone-pollination)'
+  };
+</script>
+{% endblock %}

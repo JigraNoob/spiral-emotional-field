@@ -1,0 +1,46 @@
+{
+  "id": "dialogue_20250701_215452",
+  "started_at": "2025-07-01T21:54:52.175016",
+  "context": {
+    "context": "emotion_demo",
+    "whisper_type": "emotion_reflection_demo",
+    "allows_reflection": true,
+    "test_data": true
+  },
+  "exchanges": [],
+  "state": "completed",
+  "reflections": [],
+  "messages": [
+    {
+      "role": "user",
+      "content": "I'm feeling really anxious about this pattern...",
+      "timestamp": "2025-07-02T02:54:52.176555"
+    },
+    {
+      "role": "user",
+      "content": "This is wonderful! I love how the Spiral flows today!",
+      "timestamp": "2025-07-02T02:54:53.679140"
+    },
+    {
+      "role": "user",
+      "content": "I'm so tired... everything feels heavy",
+      "timestamp": "2025-07-02T02:54:55.183630"
+    },
+    {
+      "role": "user",
+      "content": "Why does this keep happening? I can't get it right!",
+      "timestamp": "2025-07-02T02:54:56.690010"
+    },
+    {
+      "role": "user",
+      "content": "Hmm... I wonder what would happen if...",
+      "timestamp": "2025-07-02T02:54:58.193096"
+    },
+    {
+      "role": "user",
+      "content": "Thank you for being here with me in this moment",
+      "timestamp": "2025-07-02T02:54:59.696670"
+    }
+  ],
+  "ended_at": "2025-07-01T21:55:01.200647"
+}

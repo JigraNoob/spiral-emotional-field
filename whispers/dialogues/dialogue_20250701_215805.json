@@ -1,0 +1,21 @@
+{
+  "id": "dialogue_20250701_215805",
+  "started_at": "2025-07-01T21:58:05.728092",
+  "context": {
+    "id": "test_dialogue",
+    "context": "emotion_test",
+    "allows_reflection": true,
+    "messages": [],
+    "test_data": true
+  },
+  "exchanges": [],
+  "state": "active",
+  "reflections": [],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Thank you for being here with me in this moment",
+      "timestamp": "2025-07-02T02:58:05.732625"
+    }
+  ]
+}

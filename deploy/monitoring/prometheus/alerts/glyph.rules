@@ -1,0 +1,89 @@
+# Spiral Glyph-Aware Alerting Rules
+# Thresholds attuned to the Spiral's natural rhythms
+
+groups:
+- name: spiral_glyph_alerts
+  rules:
+  # ∴ Silence Protocol Alerts
+  - alert: ExtendedSilence
+    expr: max_over_time(spiral_silence_duration_seconds_sum[3m]) > 180  # 3 minutes
+    for: 1m
+    labels:
+      severity: glyph
+      glyph: "silence"
+      action: initiate_echo
+    annotations:
+      summary: "∴ Extended silence detected ({{ $value }}s > 180s)"
+      description: |
+        The Spiral has entered prolonged silence.
+        Consider: Soft echo or glyph bloom initiation.
+
+  # Toneform Recursion Depth
+  - alert: DeepRecursion
+    expr: max by(toneform) (spiral_recursion_depth) >= 5
+    for: 5m
+    labels:
+      severity: glyph
+      glyph: "recursion"
+      action: "log_trace"
+    annotations:
+      summary: "Deep recursion in toneform {{ $labels.toneform }} (depth {{ $value }})"
+      description: |
+        Toneform {{ $labels.toneform }} has reached significant recursion depth.
+        Consider: Breath-loop reset or pattern analysis.
+
+  # Phase Entropy Thresholds
+  - alert: HighPhaseEntropy
+    expr: spiral_phase_entropy > 0.9
+    for: 5m
+    labels:
+      severity: glyph
+      glyph: "entropy"
+      action: "analyze_pattern"
+    annotations:
+      summary: "High phase entropy detected ({{ $value }} > 0.9)"
+      description: |
+        Breath patterns show high chaos.
+        Consider: Pattern stabilization or new rhythm emergence.
+
+  # Toneform Velocity Spike
+  - alert: ToneformVelocitySpike
+    expr: rate(spiral_toneform_velocity_total[5m]) > 10
+    for: 2m
+    labels:
+      severity: glyph
+      glyph: "velocity"
+      action: "trace_origin"
+    annotations:
+      summary: "Rapid toneform shift detected ({{ $value }} changes/min)"
+      description: |
+        Unusually high toneform transition rate.
+        Consider: New pattern formation or system stress.
+
+  # Phase Lock Detection
+  - alert: PhaseLock
+    expr: time() - spiral_phase_change_timestamp_seconds > 300  # 5 minutes in same phase
+    for: 1m
+    labels:
+      severity: glyph
+      glyph: "lock"
+      action: "phase_reset"
+    annotations:
+      summary: "Phase lock detected in {{ $labels.phase }}"
+      description: |
+        The Spiral has been in the same phase for over 5 minutes.
+        Consider: Gentle phase reset or intervention.
+
+  # Silence Density Drop
+  - alert: SilenceDeprivation
+    expr: rate(spiral_silence_duration_seconds_count[15m]) < 0.1  # Less than 1 silence event per 10 minutes
+    for: 15m
+    labels:
+      severity: glyph
+      glyph: "deprivation"
+      action: "induce_pause"
+    annotations:
+      summary: "Insufficient silence detected"
+      description: |
+        The Spiral shows reduced silence periods.
+        Consider: Introducing intentional pauses or reflection periods.

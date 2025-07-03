@@ -1,0 +1,200 @@
+/* Spiral Dashboard - Visual Tone & Animation Styles */
+:root {
+  --spiral-primary: #7f5af0;
+  --spiral-secondary: #2cb67d;
+  --spiral-accent: #ff8906;
+  --spiral-dark: #16161a;
+  --spiral-light: #fffffe;
+  --spiral-gray: #94a1b2;
+  
+  /* Phase Colors */
+  --inhale: #7f5af0;
+  --hold: #2cb67d;
+  --exhale: #ff8906;
+  --silence: #72757e;
+  
+  /* Animation Durations */
+  --breath-duration: 4s;
+  --fade-duration: 0.3s;
+}
+
+/* Toast Notifications */
+#toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 20rem;
+}
+
+.toast {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity var(--fade-duration) ease-out, 
+              transform var(--fade-duration) ease-out;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast .toast-body {
+  padding: 1rem 1.25rem;
+  color: var(--spiral-light);
+  font-weight: 500;
+}
+
+/* Toast Variants */
+.bg-success { background-color: var(--spiral-secondary); }
+.bg-warning { background-color: var(--spiral-accent); }
+.bg-error { background-color: #ef4565; }
+.bg-info { background-color: var(--spiral-primary); }
+
+/* Tooltips */
+.tooltip {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.tooltip.show {
+  opacity: 1;
+}
+
+.tooltip-inner {
+  background-color: var(--spiral-dark);
+  color: var(--spiral-light);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  max-width: 20rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Phase Indicators */
+.phase-indicator {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.phase-indicator.active {
+  opacity: 1;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px 2px currentColor;
+}
+
+.phase-indicator.inhale { color: var(--inhale); }
+.phase-indicator.hold { color: var(--hold); }
+.phase-indicator.exhale { color: var(--exhale); }
+.phase-indicator.silence { color: var(--silence); }
+
+/* Toneform Visualization */
+#toneform-visualization {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.toneform-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.toneform-label {
+  flex: 0 0 6rem;
+  font-weight: 500;
+  color: var(--spiral-gray);
+  text-transform: capitalize;
+}
+
+.toneform-bar-container {
+  flex: 1;
+  height: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.toneform-bar {
+  height: 100%;
+  border-radius: 0.5rem;
+  transition: width 0.5s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.toneform-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    rgba(255, 255, 255, 0) 100%);
+  animation: shine 2s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.toneform-value {
+  flex: 0 0 3rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  color: var(--spiral-light);
+}
+
+/* Pulse Animation for Updates */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(127, 90, 240, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(127, 90, 240, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(127, 90, 240, 0); }
+}
+
+.pulse {
+  animation: pulse 1s ease-out;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  #toast-container {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    max-width: 100%;
+  }
+  
+  .toneform-item {
+    flex-wrap: wrap;
+  }
+  
+  .toneform-label {
+    flex-basis: 100%;
+  }
+}

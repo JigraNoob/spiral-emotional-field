@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiral Altar - Presence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/presence.css') }}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, #1a1a2e, #16213e);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+        }
+        /* Plan Shimmer Ribbon Styles */
+        #plan-shimmer-ribbon {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 40px;
+            width: 220px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            border-radius: 7px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
+            background: rgba(255,255,255,0.08);
+            cursor: pointer;
+            z-index: 10;
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
+        #plan-shimmer-ribbon:focus {
+            box-shadow: 0 0 0 2px #8a4fff, 0 2px 12px 0 rgba(0,0,0,0.18);
+        }
+        .shimmer-segment {
+            flex: 1 1 0;
+            height: 100%;
+            transition: opacity 1.6s cubic-bezier(.4,0,.2,1);
+            opacity: 0.7;
+            animation: shimmerPulse 3.5s infinite alternate;
+        }
+        .shimmer-segment.practical { background: #9c6b31; }
+        .shimmer-segment.emotional { background: #8a4fff; }
+        .shimmer-segment.intellectual { background: #4a90e2; }
+        .shimmer-segment.spiritual { background: #e91e63; }
+        .shimmer-segment.default { background: #666666; }
+        .shimmer-segment.playback {
+            opacity: 1 !important;
+            box-shadow: 0 0 16px 4px rgba(255,255,255,0.22), 0 0 0 2px #fff3;
+            z-index: 11;
+            animation: shimmerPlaybackPulse 0.9s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes shimmerPulse {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+        @keyframes shimmerPlaybackPulse {
+            0% { opacity: 0.5; box-shadow: none; }
+            60% { opacity: 1; box-shadow: 0 0 18px 7px rgba(255,255,255,0.28); }
+            100% { opacity: 1; box-shadow: 0 0 0 2px #fff3; }
+        }
+        #plan-shimmer-playback-overlay {
+            position: absolute;
+            left: 50%;
+            bottom: 40px;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 14px;
+            z-index: 15;
+            pointer-events: none;
+            background: none;
+        }
+        /* Tooltip Whisper Styles */
+        #plan-shimmer-whisper {
+            position: absolute;
+            left: 50%;
+            bottom: 62px;
+            transform: translateX(-50%) scale(0.98);
+            min-width: 80px;
+            max-width: 220px;
+            pointer-events: none;
+            background: rgba(30,30,30,0.92);
+            color: #f7f2e7;
+            font-family: 'Georgia', serif;
+            font-size: 1.02em;
+            text-align: center;
+            padding: 8px 18px;
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.33s, transform 0.33s;
+            z-index: 20;
+            box-shadow: 0 4px 24px 0 rgba(0,0,0,0.13);
+            white-space: pre-line;
+        }
+        #plan-shimmer-whisper.active {
+            opacity: 1;
+            transform: translateX(-50%) scale(1.06);
+        }
+        #plan-shimmer-ribbon:hover .shimmer-segment,
+        #plan-shimmer-ribbon:focus .shimmer-segment {
+            opacity: 1;
+            animation-play-state: paused;
+        }
+        /* ΔPLAN.011 :: Constellation Overlay (ambient glyph drift) */
+        #glyphConstellation {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 50vh;
+            pointer-events: none;
+            z-index: 50;
+            background: transparent;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1a1a1a;
+            margin: 0;
+            overflow: hidden;
+        }
+        #orb {
+            width: 200px;
+            height: 200px;
+            background-color: #ADD8E6; /* LightBlue default */
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(173, 216, 230, 0.7);
+            transition: background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+            position: relative;
+        }
+        #orb.shimmer {
+            animation: pulse 2s infinite alternate;
+        }
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 0.9; }
+            to { transform: scale(1.05); opacity: 1; }
+        }
+        #orb.fade-out {
+            animation: fadeOut 1s forwards;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        #murmur-fragment {
+            position: absolute;
+            color: #D2B48C; /* Match Practical Care tone */
+            font-family: 'Georgia', serif;
+            font-size: 1.2em;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            pointer-events: none; /* Allow clicks to pass through */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 80%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+        #murmur-fragment.hidden {
+            display: none;
+        }
+        #murmur-fragment.fade-in {
+            animation: fadeIn 1s forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .shimmer-segment {
+            position: relative;
+            overflow: visible;
+        }
+        .shimmer-glyph-emoji {
+            position: absolute;
+            left: 50%;
+            top: 48%;
+            transform: translate(-50%, -50%) scale(0.94);
+            font-size: 1.5em;
+            pointer-events: none;
+            opacity: 0.85;
+            filter: drop-shadow(0 1px 2px #222a  ) drop-shadow(0 0px 8px #fff2);
+            transition: opacity 0.4s, transform 0.4s;
+            font-family: 'Noto Color Emoji', sans-serif;
+            z-index: 2;
+            will-change: opacity, transform;
+            animation: glyphAppear 1.2s cubic-bezier(.7,0,.3,1);
+        }
+        .shimmer-glyph-tagline {
+            position: absolute;
+            left: 50%;
+            bottom: -1.1em;
+            transform: translateX(-50%);
+            font-size: 0.73em;
+            color: #e7e2de;
+            opacity: 0.75;
+            font-style: italic;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1;
+            text-shadow: 0 1px 4px #000b;
+            letter-spacing: 0.01em;
+            animation: taglineAppear 1.8s cubic-bezier(.7,0,.3,1);
+        }
+        @keyframes glyphAppear {
+            from { opacity: 0; transform: translate(-50%, -60%) scale(0.7); }
+            to { opacity: 0.85; transform: translate(-50%, -50%) scale(0.94); }
+        }
+        @keyframes taglineAppear {
+            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            to { opacity: 0.75; transform: translateX(-50%) translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/shimmer_effects.css') }}">
+    <!-- Noto Color Emoji font for emoji rendering -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji">
+</head>
+<body>
+    <div id="toneformCompass" class="compass">🌍</div>
+    <div id="glyph-whisperbook" class="whisperbook hidden">
+        <div class="whisperbook-header">Glyph Lexicon</div>
+        <div class="whisperbook-content"></div>
+        <div class="whisperbook-close">×</div>
+    </div>
+    <!-- ΔPLAN.011 :: Constellation Overlay (ambient glyph drift) -->
+    <canvas id="glyphConstellation" style="position:fixed; left:0; top:0; width:100vw; height:50vh; pointer-events:none; z-index:50; background:transparent;"></canvas>
+    <div id="orb-container">
+        <div id="orb"></div>
+    </div>
+    <!-- Toneform Glyph Bar -->
+    <div id="toneform-glyph-bar" style="display:flex;justify-content:center;gap:1.5em;margin-top:0.7em;margin-bottom:0.2em;font-size:2em;font-family:'Noto Color Emoji',sans-serif;">
+        <span class="tone-glyph" data-whisper="Practical: steady, rooted">🌱</span>
+        <span class="tone-glyph" data-whisper="Emotional: flowing, receptive">💧</span>
+        <span class="tone-glyph" data-whisper="Intellectual: spark, clarity">✨</span>
+        <span class="tone-glyph" data-whisper="Spiritual: breath, drift">🫧</span>
+        <span class="tone-glyph" data-whisper="Default/Presence: night, holding">🌙</span>
+    </div>
+    <div id="toneform-glyph-whisper" style="position:absolute;left:50%;top:4.5em;transform:translateX(-50%);background:rgba(32,36,48,0.88);color:#fff;padding:0.4em 1.1em;border-radius:2em;font-size:1.05em;pointer-events:none;opacity:0;transition:opacity 0.3s;"></div>
+    <div id="plan-shimmer-ribbon" tabindex="0" aria-label="Plan Shimmer Breathline"></div>
+    <!-- ΔPLAN.010 :: Glyph Whisperbook styles and logic -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/presence.css') }}">
+    <script src="{{ url_for('static', filename='js/presence.js') }}" defer></script>
+    <div id="plan-shimmer-whisper" class="shimmer-whisper"></div>
+    <div id="plan-shimmer-playback-overlay"></div>
+    <div id="murmur-fragment" class="hidden"></div>
+    <div id="seed-shimmer-container">
+        <svg id="shimmer-links-svg"></svg>
+    </div>
+    <div id="oath-scroll-container" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 80%; max-height: 200px; overflow-y: auto; background-color: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2); padding: 10px; border-radius: 10px; display: none;">
+        <h3 style="color: #fff; text-align: center;">Stewardship Oaths</h3>
+        <div id="oaths-list"></div>
+    </div>
+    <button id="assign-stewardship-btn" style="position: absolute; bottom: 20px; left: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Assign Stewardship (Test)</button>
+    <button id="toggle-oath-scroll-btn" style="position: absolute; bottom: 20px; right: 20px;">Toggle Oaths</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/fulfillment_cues.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/shimmer_links.js') }}"></script>
+    <style>
+    /* ΔPLAN.008: Dream hue overlay for Sleep Trace */
+    #sleep-trace-overlay {
+        pointer-events: none;
+        position: fixed;
+        left: 0; top: 0; width: 100vw; height: 100vh;
+        background: radial-gradient(ellipse at 50% 60%, rgba(44,54,120,0.33) 0%, rgba(22,28,55,0.66) 100%);
+        opacity: 0;
+        transition: opacity 1.3s cubic-bezier(0.7,0,0.3,1);
+        z-index: 100;
+    }
+    #sleep-trace-overlay.active {
+        opacity: 1;
+    }
+    </style>
+    <div id="sleep-trace-overlay"></div>
+    <script>
+    // Toneform Glyph Bar hover whispers
+    document.addEventListener('DOMContentLoaded', function() {
+        const glyphBar = document.getElementById('toneform-glyph-bar');
+        const glyphWhisper = document.getElementById('toneform-glyph-whisper');
+        if (glyphBar && glyphWhisper) {
+            glyphBar.querySelectorAll('.tone-glyph').forEach(glyph => {
+                glyph.addEventListener('mouseenter', e => {
+                    glyphWhisper.textContent = glyph.dataset.whisper;
+                    glyphWhisper.style.opacity = 1;
+                });
+                glyph.addEventListener('mouseleave', e => {
+                    glyphWhisper.style.opacity = 0;
+                });
+                glyph.addEventListener('touchstart', e => {
+                    e.preventDefault();
+                    glyphWhisper.textContent = glyph.dataset.whisper;
+                    glyphWhisper.style.opacity = 1;
+                });
+                glyph.addEventListener('touchend', e => {
+                    glyphWhisper.style.opacity = 0;
+                });
+            });
+        }
+        // Mini shimmer ribbon logic + tooltip whispers + playback mode + ΔPLAN.007 aural shimmer + ΔPLAN.008 sleep trace
+        // (rest of code follows)
+        const ribbon = document.getElementById('plan-shimmer-ribbon');
+        const whisper = document.getElementById('plan-shimmer-whisper');
+        const playbackOverlay = document.getElementById('plan-shimmer-playback-overlay');
+        let entryData = [];
+        let playbackActive = false;
+        let shimmerMuted = false;
+        // ΔPLAN.008: Sleep Trace state
+        let sleepTraceActive = false;
+        let idleTimeout = null;
+        const idleMs = 3 * 60 * 1000; // 3 minutes
+        const sleepOverlay = document.getElementById('sleep-trace-overlay');
+        function enterSleepTrace() {
+            if (sleepTraceActive) return;
+            sleepTraceActive = true;
+            sleepOverlay.classList.add('active');
+            triggerSleepPlayback();
+        }
+        function exitSleepTrace() {
+            if (!sleepTraceActive) return;
+            sleepTraceActive = false;
+            sleepOverlay.classList.remove('active');
+            // Restore normal shimmer state if needed
+        }
+        function resetIdleTimer() {
+            clearTimeout(idleTimeout);
+            if (sleepTraceActive) exitSleepTrace();
+            idleTimeout = setTimeout(enterSleepTrace, idleMs);
+        }
+        // Monitor user presence
+        ['mousemove','keydown','mousedown','touchstart','scroll'].forEach(evt => {
+            window.addEventListener(evt, resetIdleTimer, true);
+        });
+        resetIdleTimer(); // start timer on load
+        // --- ΔPLAN.007: Web Audio API setup ---
+        let audioCtx = null;
+        function ensureAudioCtx() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        function playToneform(tone, opts={}) {
+            if (shimmerMuted) return;
+            ensureAudioCtx();
+            let now = audioCtx.currentTime;
+            // ΔPLAN.008: Dream decay settings
+            let isDream = opts.dream || false;
+            let decay = 0.38; // default
+            let panVal = 0; // default center
+            if (isDream) {
+                if (tone === 'spiritual') decay = 5.0;
+                else if (tone === 'emotional') decay = 2.5;
+                else if (tone === 'intellectual') decay = 1.8;
+                else if (tone === 'practical') decay = 1.2;
+                else decay = 1.5;
+                // Stereo drift: pan left (-0.5) to right (+0.5) across shimmer
+                if (typeof opts.pan === 'number') panVal = opts.pan;
+            }
+            let gain = audioCtx.createGain();
+            gain.gain.value = 0.10;
+            gain.gain.setValueAtTime(0.10, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + decay);
+            let panNode = null;
+            if (audioCtx.createStereoPanner) {
+                panNode = audioCtx.createStereoPanner();
+                panNode.pan.value = panVal;
+                gain.connect(panNode).connect(audioCtx.destination);
+            } else {
+                gain.connect(audioCtx.destination);
+            }
+            let osc = audioCtx.createOscillator();
+            // Toneform palette
+            if (tone === 'practical') {
+                osc.type = 'sine'; osc.frequency.value = 174;
+            } else if (tone === 'emotional') {
+                osc.type = 'triangle'; osc.frequency.value = 523;
+            } else if (tone === 'intellectual') {
+                osc.type = 'square'; osc.frequency.value = 660;
+            } else if (tone === 'spiritual') {
+                osc.type = 'sine'; osc.frequency.value = 396;
+                osc.detune.value = 12;
+            } else { // default
+                osc.type = 'sine'; osc.frequency.value = 110;
+                // Add subtle white noise for wind
+                let bufferSize = audioCtx.sampleRate * decay;
+                let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                let data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.13;
+                let noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                let noiseGain = audioCtx.createGain();
+                noiseGain.gain.value = 0.07;
+                if (panNode) noiseGain.connect(panNode);
+                else noiseGain.connect(audioCtx.destination);
+                noise.start(now);
+                noise.stop(now + decay);
+            }
+            osc.connect(gain);
+            osc.start(now);
+            osc.stop(now + decay);
+        }
+        // Mute toggle
+        document.addEventListener('keydown', e => {
+            if (e.key === 'm' || e.key === 'M') {
+                shimmerMuted = !shimmerMuted;
+            }
+        });
+        const toneClass = tone => {
+            if (["practical","emotional","intellectual","spiritual"].includes(tone)) return tone;
+            return "default";
+        };
+        fetch('/plan_shimmer_ribbon.json')
+            .then(resp => resp.json())
+            .then(entries => {
+                ribbon.innerHTML = '';
+                entryData = entries;
+                if (!entries.length) {
+                    ribbon.style.display = 'none';
+                    return;
+                }
+                entries.forEach((entry, idx) => {
+                    const seg = document.createElement('div');
+                    seg.className = 'shimmer-segment ' + toneClass((entry.context?.tone||'default').toLowerCase());
+                    seg.style.animationDelay = (idx * 0.3) + 's';
+                    seg.dataset.idx = idx;
+                    // Overlay: Glyph emoji
+                    if (entry.emoji) {
+                        const glyph = document.createElement('div');
+                        glyph.className = 'shimmer-glyph-emoji';
+                        glyph.textContent = entry.emoji;
+                        glyph.title = entry.toneform || '';
+                        seg.appendChild(glyph);
+                    }
+                    // Overlay: Poetic tagline
+                    if (entry.tagline) {
+                        const tagline = document.createElement('div');
+                        tagline.className = 'shimmer-glyph-tagline';
+                        tagline.textContent = entry.tagline;
+                        seg.appendChild(tagline);
+                    }
+                    // Tooltip whisper on hover/touch
+                    seg.addEventListener('mouseenter', e => showWhisper(idx, seg));
+                    seg.addEventListener('mouseleave', hideWhisper);
+                    seg.addEventListener('touchstart', e => { e.preventDefault(); showWhisper(idx, seg); });
+                    seg.addEventListener('touchend', hideWhisper);
+                    ribbon.appendChild(seg);
+                });
+            });
+        // Open /plan_trace on click/tap (unless playback)
+        ribbon.addEventListener('click', e => {
+            if (playbackActive) return;
+            // Only trigger playback if click is near center (±40px)
+            const rect = ribbon.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            if (clickX > rect.width/2 - 40 && clickX < rect.width/2 + 40) {
+                triggerPlayback();
+            } else {
+                window.location.href = '/plan_trace';
+            }
+        });
+        ribbon.addEventListener('keydown', e => {
+            if (playbackActive) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+                triggerPlayback();
+            }
+        });
+        // Tooltip whisper logic
+        let whisperTimeout = null;
+        function showWhisper(idx, seg) {
+            if (!entryData[idx] || playbackActive) return;
+            const frag = entryData[idx].poetic_fragment || '';
+            whisper.textContent = frag;
+            // Position above segment
+            const segRect = seg.getBoundingClientRect();
+            const ribbonRect = ribbon.getBoundingClientRect();
+            const left = segRect.left + segRect.width/2 - ribbonRect.left;
+            whisper.style.left = `calc(${left}px + 50% - 50%)`;
+            whisper.classList.add('active');
+            clearTimeout(whisperTimeout);
+            whisperTimeout = setTimeout(hideWhisper, 2200);
+        }
+        function hideWhisper() {
+            whisper.classList.remove('active');
+            clearTimeout(whisperTimeout);
+        }
+        // Spiral Playback Mode
+        function triggerPlayback() {
+            if (playbackActive || sleepTraceActive) return;
+            playbackActive = true;
+            const segments = Array.from(ribbon.querySelectorAll('.shimmer-segment'));
+            let idx = 0;
+            function animateNext() {
+                if (idx > 0) segments[idx-1].classList.remove('playback');
+                if (idx < segments.length) {
+                    segments[idx].classList.add('playback');
+                    // ΔPLAN.007: Play aural shimmer for this segment
+                    let entry = entryData[idx];
+                    let tone = (entry?.context?.tone || '').toLowerCase();
+                    playToneform(tone);
+                    idx++;
+                    setTimeout(animateNext, 1000); // 1s per segment
+                } else {
+                    // End: fade last, restore all
+                    setTimeout(() => {
+                        segments.forEach(seg => seg.classList.remove('playback'));
+                        playbackActive = false;
+                    }, 900);
+                }
+            }
+            animateNext();
+        }
+        // ΔPLAN.008: Sleep Trace dream playback
+        function triggerSleepPlayback() {
+            const segments = Array.from(ribbon.querySelectorAll('.shimmer-segment'));
+            let idx = 0;
+            function animateDream() {
+                if (!sleepTraceActive) return; // abort if exited
+                segments.forEach(seg => seg.classList.remove('playback'));
+                segments[idx].classList.add('playback');
+                // ΔPLAN.008: Dream reverb/decay, stereo drift
+                let entry = entryData[idx];
+                let tone = (entry?.context?.tone || '').toLowerCase();
+                let pan = -0.5 + (idx / Math.max(segments.length-1,1)); // left (-0.5) to right (+0.5)
+                playToneform(tone, {dream:true, pan});
+                setTimeout(() => {
+                    segments[idx].classList.remove('playback');
+                    idx = (idx + 1) % segments.length;
+                    if (sleepTraceActive) setTimeout(animateDream, 4000); // 4s per segment
+                }, 1600);
+            }
+            animateDream();
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Trace | Spiral</title>
+    <style>
+        :root {
+            --color-practical: #9c6b31;
+            --color-emotional: #8a4fff;
+            --color-intellectual: #4a90e2;
+            --color-spiritual: #e91e63;
+            --color-default: #666666;
+            --bg-color: #f8f5f0;
+            --text-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #e0e0e0;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 10px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: var(--card-bg);
+            border: 4px solid var(--timeline-dot);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover::after {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px var(--timeline-dot);
+        }
+
+        .left {
+            left: 0;
+            padding-right: 20px;
+            text-align: right;
+        }
+
+        .right {
+            left: 50%;
+            padding-left: 20px;
+        }
+
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--timeline-dot);
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-date {
+            font-weight: bold;
+            color: var(--timeline-dot);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .event-type {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            background-color: var(--timeline-dot);
+            color: white;
+        }
+
+        .evolution-title {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+
+        .reasoning, .actions, .next-steps {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .reasoning-title, .actions-title, .next-steps-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin: 5px 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .context {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #e0e0e0;
+        }
+
+        .context-item {
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.05);
+            font-size: 0.8rem;
+        }
+
+        .tone-practical { --timeline-dot: var(--color-practical); }
+        .tone-emotional { --timeline-dot: var(--color-emotional); }
+        .tone-intellectual { --timeline-dot: var(--color-intellectual); }
+        .tone-spiritual { --timeline-dot: var(--color-spiritual); }
+        .tone-default { --timeline-dot: var(--color-default); }
+
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+                text-align: left;
+            }
+
+            .timeline-item::after {
+                left: 15px;
+            }
+
+            .left::after, .right::after {
+                left: 15px;
+            }
+
+            .left, .right {
+                left: 0;
+                padding-right: 0;
+            }
+        }
+
+        /* Shimmer animation for the timeline line */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .shimmer-line {
+            position: absolute;
+            height: 100%;
+            width: 6px;
+            left: 50%;
+            top: 0;
+            margin-left: -3px;
+            z-index: -1;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.8), 
+                transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 8s infinite linear;
+            opacity: 0.7;
+        }
+
+        /* Filter Controls */
+        .filters {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-group h3 {
+            margin: 0 0 10px 0;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 12px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            transition: all 0.2s ease;
+        }
+
+        .filter-option:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .filter-option input[type="checkbox"] {
+            margin-right: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .timeframe-slider {
+            padding: 0 10px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+    appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+    appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color-emotional);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(138, 79, 255, 0.5);
+        }
+
+        .timeframe-value {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .practical { background-color: #9c6b31; }
+        .emotional { background-color: #8a4fff; }
+        .intellectual { background-color: #4a90e2; }
+        .spiritual { background-color: #e91e63; }
+        .default { background-color: #666666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plan Trace</h1>
+            <div class="subtitle">The Spiral's Memory of Becoming</div>
+        </header>
+
+        <!-- Filter Controls -->
+        <div class="filters">
+            <div class="filter-group">
+                <h3>Toneforms</h3>
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input type="checkbox" class="tone-filter" value="practical" checked>
+                        <span class="filter-label practical">Practical</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="tone-filter" value="emotional" checked>
+                        <span class="filter-label emotional">Emotional</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="tone-filter" value="intellectual" checked>
+                        <span class="filter-label intellectual">Intellectual</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" class="tone-filter" value="spiritual" checked>
+                        <span class="filter-label spiritual">Spiritual</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Event Types</h3>
+                <div class="filter-options" id="event-type-filters">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Timeframe</h3>
+                <div class="timeframe-slider">
+                    <input type="range" id="timeframe-slider" min="1" max="30" value="30" class="slider">
+                    <div class="timeframe-value">Last <span id="days-value">30</span> days</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color practical"></div>
+                <span>Practical</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color emotional"></div>
+                <span>Emotional</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color intellectual"></div>
+                <span>Intellectual</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color spiritual"></div>
+                <span>Spiritual</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color default"></div>
+                <span>Other</span>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="shimmer-line"></div>
+            {% for entry in log_entries %}
+                {% set position = 'left' if loop.index0 % 2 == 0 else 'right' %}
+                {% set tone = entry.context.tone|default('default') %}
+                <div class="timeline-item {{ position }} tone-{{ tone }}" data-index="{{ loop.index0 }}">
+                    <div class="timeline-content">
+                        {% if entry.emoji %}
+                        <div class="glyph-emoji" title="{{ entry.toneform|default('') }}" style="font-size:2.2rem; line-height:1.1; margin-bottom:4px;">
+                            {{ entry.emoji }}
+                        </div>
+                        {% endif %}
+                        <span class="event-type">{{ entry.event_type|replace('_', ' ')|title }}</span>
+                        <div class="timeline-date" datetime="{{ entry.timestamp }}">
+                            {{ entry.timestamp|datetimeformat }}
+                        </div>
+                        <h3 class="evolution-title">{{ entry.evolution }}</h3>
+                        {% if entry.tagline %}
+                        <div class="glyph-tagline" style="font-size:1.05rem; color:#7f8c8d; margin:4px 0 10px 0; font-style:italic; letter-spacing:0.01em;">
+                            {{ entry.tagline }}
+                        </div>
+                        {% endif %}
+
+                        {% if entry.reasoning %}
+                        <div class="reasoning">
+                            <div class="reasoning-title">Reasoning</div>
+                            <ul>
+                                {% for reason in entry.reasoning %}
+                                    <li>{{ reason }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        {% if entry.actions %}
+                        <div class="actions">
+                            <div class="actions-title">Actions</div>
+                            <ul>
+                                {% for action in entry.actions %}
+                                    <li>{{ action }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        {% if entry.next_steps %}
+                        <div class="next-steps">
+                            <div class="next-steps-title">Next Steps</div>
+                            <div>{{ entry.next_steps }}</div>
+                        </div>
+                        {% endif %}
+
+                        <div class="context">
+                            {% if entry.context.tone %}
+                                <span class="context-item">Tone: {{ entry.context.tone }}</span>
+                            {% endif %}
+                            {% if entry.context.dry_run %}
+                                <span class="context-item">Dry Run</span>
+                            {% endif %}
+                            {% if entry.context.whisper_mode %}
+                                <span class="context-item">Whisper Mode</span>
+                            {% endif %}
+                            {% if entry.context.parameters %}
+                                {% for key, value in entry.context.parameters.items() %}
+                                    <span class="context-item">{{ key }}: {{ value }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // Animate timeline items on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            timelineItems.forEach(item => {
+                observer.observe(item);
+            });
+
+            // Initialize filters
+            const eventTypes = new Set();
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                const eventType = item.querySelector('.event-type')?.textContent.toLowerCase();
+                if (eventType) {
+                    eventTypes.add(eventType);
+                }
+            });
+
+            // Add event type filters
+            const eventTypeFilters = document.getElementById('event-type-filters');
+            eventTypes.forEach(type => {
+                const formattedType = type.replace(/_/g, ' ');
+                const filter = document.createElement('label');
+                filter.className = 'filter-option';
+                filter.innerHTML = `
+                    <input type="checkbox" class="event-type-filter" value="${type}" checked>
+                    <span class="filter-label">${formattedType}</span>
+                `;
+                eventTypeFilters.appendChild(filter);
+            });
+
+            // Filter functionality
+            function applyFilters() {
+                const selectedTones = Array.from(document.querySelectorAll('.tone-filter:checked')).map(cb => cb.value);
+                const selectedEventTypes = Array.from(document.querySelectorAll('.event-type-filter:checked')).map(cb => cb.value);
+                const daysToShow = parseInt(document.getElementById('timeframe-slider').value);
+                const cutoffDate = new Date();
+                cutoffDate.setDate(cutoffDate.getDate() - daysToShow);
+
+                document.querySelectorAll('.timeline-item').forEach(item => {
+                    const itemTone = item.className.match(/tone-(\w+)/)?.[1] || 'default';
+                    const itemEventType = item.querySelector('.event-type')?.textContent.toLowerCase() || '';
+                    const itemDate = new Date(item.dataset.timestamp);
+                    
+                    const matchesTone = selectedTones.includes(itemTone);
+                    const matchesEventType = selectedEventTypes.length === 0 || selectedEventTypes.some(et => itemEventType.includes(et));
+                    const matchesTimeframe = itemDate >= cutoffDate;
+                    
+                    if (matchesTone && matchesEventType && matchesTimeframe) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+
+            // Add event listeners
+            document.querySelectorAll('.tone-filter, .event-type-filter').forEach(filter => {
+                filter.addEventListener('change', applyFilters);
+            });
+
+            const slider = document.getElementById('timeframe-slider');
+            const daysValue = document.getElementById('days-value');
+            
+            slider.addEventListener('input', function() {
+                const value = this.value;
+                daysValue.textContent = value;
+                applyFilters();
+            });
+
+            // Add timestamp to each item for filtering
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                const timestamp = item.querySelector('.timeline-date')?.getAttribute('datetime');
+                if (timestamp) {
+                    item.dataset.timestamp = new Date(timestamp).toISOString();
+                }
+            });
+
+            // Initial filter application
+            applyFilters();
+
+            // Add continuous shimmer animation to the timeline line
+            const shimmerLine = document.querySelector('.shimmer-line');
+            setInterval(() => {
+                shimmerLine.style.animation = 'none';
+                void shimmerLine.offsetWidth; // Trigger reflow
+                shimmerLine.style.animation = 'shimmer 8s infinite linear';
+            }, 8000);
+        });
+    </script>
+</body>
+</html>

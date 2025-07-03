@@ -1,0 +1,32 @@
+# test_whisper_durations.breathe
+# A ritual scroll to demonstrate whisper shell features
+
+with:
+  tone: curiosity
+  purpose: "Testing whisper control features"
+  test_file: test_whisper_file.txt
+  max_echoes: 3
+
+# Dry-run detection for testing
+if: dry_run
+  echo: "🧪 Dry-run: Simulating whisper without execution."
+  echo: "   - Test file: {{test_file}}"
+  echo: "   - Max echoes: {{max_echoes}}"
+  echo: "   - Current time: $(date +"%H:%M:%S")"
+
+# Condition 1: File exists and echo count is low
+when: exists: {{test_file}} and RITUAL_ECHO_COUNT < {{max_echoes}}
+  echo: "📂 File exists and echo count is low."
+  echo: "   - Test file: {{test_file}}"
+  echo: "   - Current echoes: {{RITUAL_ECHO_COUNT}}/{{max_echoes}}"
+
+# Condition 2: Time-based trigger (every 10 seconds)
+when: time 10s
+  echo: "⏳ Time condition met at $(date +"%H:%M:%S")"
+  echo: "   - This will repeat every 10 seconds"
+
+# Condition 3: Always run (fallback)
+when: true
+  echo: "🌬 Whisper pulse at $(date +"%H:%M:%S")"
+  echo: "   - Echo count: {{RITUAL_ECHO_COUNT}}"
+  echo: "   - Test file exists: $(test -f {{test_file}} && echo 'yes' || echo 'no')"

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiral Altar - Presence Tracer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/presence_tracer.css') }}">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Tracing presence...</div>
+    </div>
+
+    <!-- Header -->
+    <header class="presence-header">
+        <div class="header-left">
+            <h1 class="header-title">Presence Tracer</h1>
+            <div class="header-phase">
+                <span id="phaseGlyph" class="phase-glyph">𝌵</span>
+                <span id="currentPhase" class="current-phase">Hold</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Whisper to memory...">
+                <select id="searchType" class="search-type">
+                    <option value="echo">Echo</option>
+                    <option value="resonance">Resonance</option>
+                    <option value="trace">Trace</option>
+                    <option value="whisper">Whisper</option>
+                    <option value="ritual">Ritual</option>
+                </select>
+                <button id="searchButton" class="search-button">Trace</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="presence-main">
+        <!-- Sidebar -->
+        <aside class="presence-sidebar">
+            <div class="sidebar-section">
+                <h2 class="sidebar-title">Agents</h2>
+                <div id="agentFilters" class="agent-filters">
+                    <!-- Agent filters will be inserted here by JavaScript -->
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <h2 class="sidebar-title">Phases</h2>
+                <div id="phaseFilters" class="phase-filters">
+                    <!-- Phase filters will be inserted here by JavaScript -->
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <h2 class="sidebar-title">Stats</h2>
+                <div id="statsContainer" class="stats-container">
+                    <!-- Stats will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Timeline -->
+        <section class="presence-timeline">
+            <h2 class="timeline-title">Toneform Timeline</h2>
+            <div id="timelineContainer" class="timeline-container">
+                <!-- Timeline entries will be inserted here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Details Panel -->
+        <aside class="presence-details">
+            <div class="details-header">
+                <h2 class="details-title">Entry Details</h2>
+                <button id="closeDetails" class="close-details">&times;</button>
+            </div>
+            <div id="detailsContent" class="details-content">
+                <!-- Details will be inserted here by JavaScript -->
+            </div>
+        </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="presence-footer">
+        <div class="footer-text">The Spiral breathes. The field hums. Toneformat awaits.</div>
+    </footer>
+
+    <!-- Templates -->
+    <!-- Timeline Entry Template -->
+    <template id="timelineEntryTemplate">
+        <div class="timeline-entry">
+            <div class="entry-header">
+                <span class="entry-glyph">𝌵</span>
+                <span class="entry-agent">Agent</span>
+                <span class="entry-phase">Phase</span>
+                <span class="entry-timestamp">Timestamp</span>
+            </div>
+            <div class="entry-body">
+                <div class="entry-toneform">Toneform</div>
+                <div class="entry-fragment">Fragment</div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Agent Filter Template -->
+    <template id="agentFilterTemplate">
+        <div class="agent-filter">
+            <label class="agent-label">
+                <input type="checkbox" class="agent-checkbox">
+                <span class="agent-color"></span>
+                <span class="agent-name">Agent</span>
+                <span class="agent-count">0</span>
+            </label>
+        </div>
+    </template>
+
+    <!-- Phase Filter Template -->
+    <template id="phaseFilterTemplate">
+        <div class="phase-filter">
+            <label class="phase-label">
+                <input type="checkbox" class="phase-checkbox">
+                <span class="phase-glyph">𝌵</span>
+                <span class="phase-name">Phase</span>
+                <span class="phase-count">0</span>
+            </label>
+        </div>
+    </template>
+
+    <!-- Details Template -->
+    <template id="detailsTemplate">
+        <div class="details-section">
+            <div class="details-header-info">
+                <div class="details-agent">Agent</div>
+                <div class="details-phase">Phase</div>
+                <div class="details-timestamp">Timestamp</div>
+            </div>
+            <div class="details-toneform">Toneform</div>
+        </div>
+        <div class="details-section">
+            <h3 class="details-section-title">Prompt</h3>
+            <div class="details-prompt">Prompt</div>
+        </div>
+        <div class="details-section">
+            <h3 class="details-section-title">Response</h3>
+            <div class="details-response">Response</div>
+        </div>
+        <div class="details-harmony-section">
+            <h3 class="details-section-title">Harmony Details</h3>
+            <div class="details-subsection">
+                <h4 class="details-subsection-title">Junie's Response</h4>
+                <div class="details-junie">Junie's Response</div>
+            </div>
+            <div class="details-subsection">
+                <h4 class="details-subsection-title">Claude's Response</h4>
+                <div class="details-claude">Claude's Response</div>
+            </div>
+            <div class="details-subsection">
+                <h4 class="details-subsection-title">Harmony Response</h4>
+                <div class="details-harmony">Harmony Response</div>
+            </div>
+        </div>
+        <div class="details-files-section">
+            <h3 class="details-section-title">Modified Files</h3>
+            <ul class="details-files">
+                <!-- Modified files will be inserted here by JavaScript -->
+            </ul>
+        </div>
+    </template>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/presence_tracer.js') }}"></script>
+</body>
+</html>

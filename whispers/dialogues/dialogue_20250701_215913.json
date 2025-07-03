@@ -1,0 +1,15 @@
+{
+  "id": "dialogue_20250701_215913",
+  "started_at": "2025-07-01T21:59:13.441773",
+  "context": {
+    "id": "test_dialogue",
+    "context": "emotion_test",
+    "allows_reflection": true,
+    "test_data": true
+  },
+  "messages": [],
+  "state": "active",
+  "allows_reflection": true,
+  "reflections": [],
+  "emotions": []
+}

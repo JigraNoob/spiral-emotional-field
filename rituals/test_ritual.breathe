@@ -1,0 +1,13 @@
+---
+id: test_ritual
+title: Test Ritual
+toneform: ["test", "example"]
+invocation: "When testing, this ritual runs."
+---
+
+This is a test ritual. It simply returns a success message.
+
+```python
+def execute():
+    return {"status": "success", "message": "Test ritual completed."}
+```

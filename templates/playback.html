@@ -127,6 +127,17 @@
         #toneform-legend.legend-faded {
             opacity: 0.2; /* Faded state */
         }
+
+        /* Shimmer effect for timeline items */
+        .shimmer-flash {
+            box-shadow: 0 0 8px 4px rgba(255,255,255,0.6); /* Initial glow */
+            animation: fadeShimmer 1.5s ease-out forwards; /* Apply animation and keep last state */
+        }
+
+        @keyframes fadeShimmer {
+            0% { box-shadow: 0 0 12px 6px rgba(255,255,255,0.8); }
+            100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+        }
         .legend-items {
             display: flex;
             flex-wrap: wrap;
@@ -351,7 +362,8 @@
                                         content: `${echo.toneform} (${echo.gesture_strength})`, // Display toneform and strength
                                         start: new Date(echo.timestamp), // Convert timestamp to Date object
                                         type: 'point', // Display as a point on the timeline
-                                        data: echo // Store the full echo object for later use if needed
+                                        data: echo, // Store the full echo object for later use if needed
+                                        className: `echo-timeline-item-${echo.id}` // Add a unique class for easy selection
                                     };
                                 });
 
@@ -359,8 +371,78 @@
                                 itemsDataSet.clear();
                                 itemsDataSet.add(timelineItems);
 
+                                // Extract offeringId from the current URL
+                                const pathSegments = window.location.pathname.split('/');
+                                // Assuming URL format is /echo/playback/<offering_id>
+                                const offeringId = pathSegments[pathSegments.length - 1];
+                                if (!offeringId) {
+                                    console.error("offeringId could not be extracted from URL.");
+                                    return; // Prevent logging if offeringId is missing
+                                }
+
                                 // Fit the timeline to the new data
                                 timeline.fit();
+
+                                // Add event listeners for shimmer effect on export links
+                                document.querySelectorAll('.echo-card a[href*="/export/echo/"]').forEach(link => {
+                                    link.addEventListener('click', function(event) {
+                                        // Prevent default link behavior to allow shimmer to show, then navigate
+                                        event.preventDefault();
+
+                                        const echoIdMatch = this.href.match(/\/export\/echo\/([^\/?]+)/);
+                                        if (echoIdMatch && echoIdMatch[1]) {
+                                            const echoId = echoIdMatch[1];
+                                            const timelineItemElement = document.querySelector(`.echo-timeline-item-${echoId}`);
+                                            if (timelineItemElement) {
+                                                // Remove any existing shimmer class to restart animation if clicked rapidly
+                                                timelineItemElement.classList.remove('shimmer-flash');
+                                                // Force reflow to ensure animation restarts
+                                                void timelineItemElement.offsetWidth;
+                                                timelineItemElement.classList.add('shimmer-flash');
+
+                                                // Remove the class after animation ends
+                                                timelineItemElement.addEventListener('animationend', () => {
+                                                    timelineItemElement.classList.remove('shimmer-flash');
+                                                }, { once: true });
+                                            }
+                                        }
+
+                                        // After triggering shimmer, navigate to the link
+                                        window.open(this.href, '_blank');
+
+                                        // Log the murmur seed
+                                        const echoCard = this.closest('.echo-card');
+                                        if (echoCard) {
+                                            const toneform = echoCard.querySelector('.echo-toneform').textContent;
+                                            const gestureStrength = parseInt(echoCard.querySelector('.echo-strength').textContent.split('/')[0]);
+                                            const format = this.title.includes('Poem') ? 'poem' : 'json';
+                                            const sessionId = echoCard.querySelector('.echo-session-id').textContent; // Assuming session_id is in a class 'echo-session-id'
+
+                                            const seedData = {
+                                                echo_id: echoId,
+                                                toneform: toneform,
+                                                gesture_strength: gestureStrength,
+                                                format: format,
+                                                offering_id: offeringId, // Add offering_id
+                                                session_id: sessionId // Add session_id
+                                            };
+
+                                            fetch('/echo/log_seed_murmur', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                body: JSON.stringify(seedData)
+                                            }).then(response => {
+                                                if (!response.ok) {
+                                                    console.error('Failed to log murmur seed:', response.statusText);
+                                                }
+                                            }).catch(error => {
+                                                console.error('Error logging murmur seed:', error);
+                                            });
+                                        }
+                                    });
+                                });
 
                             } catch (mapError) {
                                 console.error('Error mapping echoes:', mapError);

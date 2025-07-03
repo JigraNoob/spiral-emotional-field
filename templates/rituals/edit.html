@@ -1,0 +1,207 @@
+{% extends "rituals/base_ritual.html" %}
+
+{% block title %}{{ 'Edit' if ritual else 'Create' }} Ritual - Ritual Steward{% endblock %}
+
+{% block ritual_content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="h4 mb-0">{{ 'Edit' if ritual else 'Create New' }} Ritual</h2>
+            </div>
+            <div class="card-body">
+                <form id="ritualForm" method="POST" 
+                      action="{{ url_for('save_ritual', name=ritual.id) if ritual else url_for('create_ritual') }}">
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Ritual Name</label>
+                                <input type="text" class="form-control" id="title" name="title" 
+                                       value="{{ ritual.title if ritual }}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id" class="form-label">Ritual ID</label>
+                                <input type="text" class="form-control" id="id" name="id" 
+                                       value="{{ ritual.id if ritual }}" 
+                                       {{ 'readonly' if ritual }} required>
+                                <div class="form-text">A unique identifier (lowercase, no spaces, use hyphens)</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="invocation" class="form-label">Invocation Phrase</label>
+                                <input type="text" class="form-control" id="invocation" name="invocation" 
+                                       value="{{ ritual.invocation if ritual }}" required>
+                                <div class="form-text">A short phrase describing when this ritual should be invoked</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="toneform" class="form-label">Toneform</label>
+                                <input type="text" class="form-control" id="toneform" name="toneform"
+                                       value="{{ ritual.toneform | join(', ') if ritual }}" required>
+                                <div class="form-text">Comma-separated list of toneforms (e.g., "awaken, deepen, flow")</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title">Ritual Preview</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">ID:</label>
+                                        <div id="previewId" class="text-muted">{{ ritual.id if ritual else 'ritual-id' }}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Title:</label>
+                                        <div id="previewTitle">{{ ritual.title if ritual else 'Ritual Title' }}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Toneform:</label>
+                                        <div id="previewToneform">
+                                            {% if ritual %}
+                                                {% for tone in ritual.toneform %}
+                                                <span class="badge bg-secondary">{{ tone }}</span>
+                                                {% endfor %}
+                                            {% else %}
+                                                <span class="badge bg-secondary">tone</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ ritual.description if ritual }}</textarea>
+                        <div class="form-text">Markdown is supported</div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="code" class="form-label">Ritual Code</label>
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                Define an <code>execute()</code> function that returns the result of the ritual.
+                                The function can be async if needed.
+                            </small>
+                        </div>
+                        <pre><textarea class="form-control font-monospace" id="code" name="code" 
+                                    rows="15" style="white-space: pre;" required>{{ ritual.code if ritual else 'def execute():
+    # Your ritual code here
+    return {"status": "success", "message": "Ritual completed"}' }}</textarea></pre>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('list_rituals') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <div>
+                            {% if ritual %}
+                            <button type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> {{ 'Update' if ritual else 'Create' }} Ritual
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if ritual %}
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the ritual "{{ ritual.title }}"? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="{{ url_for('delete_ritual', name=ritual.id) }}" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete Permanently
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+// Live preview updates
+document.getElementById('title').addEventListener('input', (e) => {
+    document.getElementById('previewTitle').textContent = e.target.value || 'Ritual Title';
+    
+    // Auto-generate ID if not editing
+    {% if not ritual %}
+    const id = e.target.value
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+    document.getElementById('id').value = id;
+    document.getElementById('previewId').textContent = id || 'ritual-id';
+    {% endif %}
+});
+
+document.getElementById('id').addEventListener('input', (e) => {
+    document.getElementById('previewId').textContent = e.target.value || 'ritual-id';
+});
+
+document.getElementById('toneform').addEventListener('input', (e) => {
+    const preview = document.getElementById('previewToneform');
+    preview.innerHTML = e.target.value
+        .split(',')
+        .map(tone => tone.trim())
+        .filter(tone => tone.length > 0)
+        .map(tone => `<span class="badge bg-secondary me-1">${tone}</span>`)
+        .join('\n');
+    
+    if (preview.innerHTML.trim() === '') {
+        preview.innerHTML = '<span class="text-muted">No toneforms</span>';
+    }
+});
+
+// Code editor enhancement
+const codeTextarea = document.getElementById('code');
+codeTextarea.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+        
+        // Set textarea value to: text before caret + tab + text after caret
+        this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+        
+        // Put caret at right position again
+        this.selectionStart = this.selectionEnd = start + 4;
+    }
+});
+
+// Auto-resize textarea to fit content
+function adjustHeight(el) {
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight) + 'px';
+}
+
+// Initial adjustment
+adjustHeight(codeTextarea);
+
+// Adjust on input
+codeTextarea.addEventListener('input', function() {
+    adjustHeight(this);
+});
+</script>
+{% endblock %}

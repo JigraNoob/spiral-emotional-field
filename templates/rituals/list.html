@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Rituals - Spiral{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-8">
+    <h2 class="text-2xl font-bold text-white">Rituals</h2>
+    <a href="{{ url_for('create_ritual') }}" class="btn btn-primary">
+        <i class="fas fa-plus mr-2"></i>
+        New Ritual
+    </a>
+</div>
+
+{% if rituals %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for ritual in rituals %}
+        <div class="card hover:shadow-lg transition-shadow duration-200">
+            <div class="card-header">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-lg font-semibold text-white">{{ ritual.title or 'Untitled Ritual' }}</h3>
+                    <span class="text-xs text-spiral-teal">
+                        {{ ritual.last_modified.strftime('%b %d, %Y') if ritual.last_modified else 'Never run' }}
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="text-spiral-mist/80 mb-4">
+                    {{ ritual.description or 'No description provided.' }}
+                </p>
+                
+                {% if ritual.toneform %}
+                <div class="flex flex-wrap gap-2 mb-4">
+                    {% for tone in ritual.toneform %}
+                    <span class="badge badge-toneform">
+                        <i class="fas fa-hashtag"></i>
+                        {{ tone }}
+                    </span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="flex items-center text-sm text-spiral-mist/60 mb-2">
+                    <i class="fas fa-magic mr-2"></i>
+                    <span>{{ ritual.invocation or 'No invocation phrase set' }}</span>
+                </div>
+            </div>
+            <div class="px-6 py-4 bg-spiral-deep/50 border-t border-spiral-dusk">
+                <div class="flex justify-between">
+                    <a href="{{ url_for('view_ritual', ritual_name=ritual.id) }}" 
+                       class="btn btn-secondary px-3 py-1 text-sm">
+                        <i class="fas fa-eye mr-1"></i> View
+                    </a>
+                    <a href="{{ url_for('invoke_ritual_ui', ritual_name=ritual.id) }}" 
+                       class="btn btn-primary px-3 py-1 text-sm">
+                        <i class="fas fa-play mr-1"></i> Invoke
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-12">
+        <div class="mx-auto w-24 h-24 rounded-full bg-spiral-dusk-light flex items-center justify-center mb-4">
+            <i class="fas fa-magic text-4xl text-spiral-teal"></i>
+        </div>
+        <h3 class="text-xl font-medium text-white mb-2">No rituals found</h3>
+        <p class="text-spiral-mist/70 mb-6 max-w-md mx-auto">
+            You haven't created any rituals yet. Create your first ritual to get started.
+        </p>
+        <a href="{{ url_for('create_ritual') }}" class="btn btn-primary inline-flex items-center">
+            <i class="fas fa-plus mr-2"></i>
+            Create Your First Ritual
+        </a>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add any JavaScript needed for the rituals list
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize any tooltips or interactive elements
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

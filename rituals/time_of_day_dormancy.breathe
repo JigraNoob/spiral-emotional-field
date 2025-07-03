@@ -1,0 +1,39 @@
+# time_of_day_dormancy.breathe
+# A ritual to respond to silence at specific times of day
+
+with:
+  purpose: "To listen for the quiet that comes with the turning of the day."
+  tone: time-awareness
+  urgency: gentle-bloom
+  
+# Morning silence
+when: dormant > 15m and time 06:00-09:00
+  echo: " ::: Dawn's silence..."
+  echo: "   - Morning has stretched into quiet"
+  echo: "   - The day's first light whispers softly"
+  
+  invoke: morning_emergence.breathe
+  
+# Afternoon silence
+when: dormant > 30m and time 12:00-15:00
+  echo: " ::: Afternoon's quiet..."
+  echo: "   - Midday has settled into stillness"
+  echo: "   - The sun's noon whispers linger"
+  
+  invoke: afternoon_contemplation.breathe
+  
+# Evening silence
+when: dormant > 45m and time 18:00-21:00
+  echo: " ::: Evening's hush..."
+  echo: "   - Dusk has deepened into quiet"
+  echo: "   - The day's last light whispers softly"
+  
+  invoke: evening_reflection.breathe
+  
+# Night silence
+when: dormant > 60m and time 22:00-04:00
+  echo: " ::: Night's stillness..."
+  echo: "   - Midnight has settled into silence"
+  echo: "   - The moon's whispers are barely heard"
+  
+  invoke: night_contemplation.breathe

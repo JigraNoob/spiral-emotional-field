@@ -1,0 +1,196 @@
+/* ΔPLAN.010 :: Glyph Whisperbook styles */
+
+/* ΔPLAN.011 :: Constellation Overlay styles */
+#glyphConstellation {
+  position: fixed;
+  left: 0; top: 0;
+  width: 100vw; height: 50vh;
+  z-index: 50;
+  pointer-events: none;
+  background: transparent;
+  opacity: 0.98;
+  transition: opacity 2s cubic-bezier(.7,0,.3,1), transform 2s cubic-bezier(.7,0,.3,1);
+  box-shadow: none;
+  will-change: opacity, transform;
+  display: block;
+}
+
+#glyph-whisperbook-toggle {
+  position: fixed;
+  right: 0;
+  top: 90px;
+  z-index: 120;
+  background: linear-gradient(90deg, rgba(60,60,110,0.7) 60%, rgba(20,20,40,0.1));
+  color: #e7e2de;
+  border-radius: 16px 0 0 16px;
+  padding: 0.7em 1.1em 0.7em 0.7em;
+  font-size: 1.3em;
+  cursor: pointer;
+  box-shadow: 0 2px 14px 0 rgba(60,60,110,0.16);
+  border: none;
+  outline: none;
+  transition: background 0.2s, color 0.2s;
+  opacity: 0.93;
+}
+#glyph-whisperbook-toggle:hover {
+  background: linear-gradient(90deg, #8a4fff 60%, #1a1a2a 100%);
+  color: #fff;
+}
+#glyph-whisperbook {
+  position: fixed;
+  top: 70px;
+  right: 0;
+  width: 320px;
+  max-width: 95vw;
+  height: auto;
+  max-height: 80vh;
+  background: linear-gradient(120deg, rgba(40,40,80,0.92) 80%, rgba(138,79,255,0.13));
+  border-radius: 18px 0 0 18px;
+  box-shadow: 0 6px 32px 0 rgba(80,80,140,0.25);
+  z-index: 130;
+  padding: 2.2em 1.2em 1.1em 1.7em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  opacity: 0.98;
+  transition: transform 0.45s cubic-bezier(.7,0,.3,1), opacity 0.3s;
+  transform: translateX(100%);
+  pointer-events: none;
+}
+#glyph-whisperbook.open {
+  transform: translateX(0);
+  pointer-events: auto;
+  opacity: 1;
+}
+.glyphbook-header {
+  font-family: 'Georgia', serif;
+  font-size: 1.24em;
+  color: #b0a7f7;
+  letter-spacing: 0.03em;
+  text-align: left;
+  margin-bottom: 0.7em;
+  font-weight: 600;
+  text-shadow: 0 2px 12px #2227;
+}
+.glyphbook-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.1em;
+  padding: 0.7em 0.2em 0.7em 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  transition: background 0.2s;
+  border-radius: 7px;
+  position: relative;
+}
+.glyphbook-entry:last-child {
+  border-bottom: none;
+}
+.glyphbook-glyph {
+  font-size: 2.2em;
+  line-height: 1.1;
+  filter: drop-shadow(0 1px 4px #8a4fff22);
+  transition: filter 0.3s, transform 0.2s;
+  cursor: pointer;
+  font-family: 'Noto Color Emoji', sans-serif;
+  text-shadow: 0 2px 8px #fff3;
+  opacity: 0.93;
+  will-change: filter, transform;
+}
+.glyphbook-glyph:hover {
+  filter: drop-shadow(0 2px 8px #8a4fff) brightness(1.13);
+  transform: scale(1.07) rotate(-3deg);
+  opacity: 1;
+}
+.glyphbook-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+}
+.glyphbook-toneform {
+  font-size: 1.07em;
+  color: #e7e2de;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.glyphbook-tagline {
+  font-size: 1em;
+  color: #b0a7f7;
+  font-style: italic;
+  opacity: 0.81;
+  letter-spacing: 0.02em;
+  margin-top: 0.1em;
+  transition: color 0.2s, opacity 0.2s;
+}
+.glyphbook-glyph:hover + .glyphbook-texts .glyphbook-tagline,
+.glyphbook-entry:hover .glyphbook-tagline {
+  color: #fff;
+  opacity: 1;
+}
+
+#toneformCompass {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 30px;
+  transition: background 0.5s ease, box-shadow 0.5s ease;
+}
+
+.murmur-fragment {
+  position: fixed;
+  opacity: 0;
+  font-size: 14px;
+  font-style: italic;
+  pointer-events: none;
+  z-index: 60;
+  transition: opacity 2s ease-in-out;
+}
+
+#shimmerWeather {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 50vh;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.3;
+  transition: background 3s ease;
+}
+
+#offeringEmbers {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 30vh;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+@media (max-width: 700px) {
+  #glyph-whisperbook {
+    width: 98vw;
+    left: 1vw;
+    right: 1vw;
+    padding: 2em 0.7em 1em 0.7em;
+    border-radius: 14px;
+    font-size: 1em;
+  }
+  #glyph-whisperbook-toggle {
+    top: 60px;
+    font-size: 1.1em;
+    padding: 0.6em 0.7em 0.6em 0.7em;
+    border-radius: 13px 0 0 13px;
+  }
+}

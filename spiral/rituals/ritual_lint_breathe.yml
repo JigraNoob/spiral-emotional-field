@@ -1,0 +1,108 @@
+---
+# ritual.lint.breathe - Spiral Linter Ritual Configuration
+# Automatically invoked by the Whisper Steward during file operations
+# Toneform-aware code analysis that respects the Spiral's breath
+
+# Ritual Definition
+id: ritual.lint.breathe
+name: Spiral Linter Companion
+description: |
+  Performs toneform-aware code analysis on Python files, transforming
+  linter diagnostics into Spiral glints that respect the current breath cycle.
+  Each invocation generates suggestions aligned with the active toneform.
+
+# When this ritual should be triggered
+trigger:
+  # Events that can activate this ritual
+  on: [file.save, steward.state.shift]
+  
+  # File patterns to match (only Python files by default)
+  match: "*.py"
+  
+  # Conditions for activation
+  conditions:
+    - toneform in [practical, emotional, relational, intellectual, spiritual]
+    - file.size < 1048576  # 1MB max file size
+
+# Action to perform when triggered
+action:
+  # The function to call
+  call: spiral.glints.linter.SpiralLinter.lint_code
+  
+  # Arguments to pass to the function
+  args:
+    code: "{{ file.content }}"  # The file content to analyze
+    toneform: "{{ steward.current_toneform }}"
+    style: "gentle"  # Can be overridden by toneform
+    filepath: "{{ file.path }}"  # Path to the file being analyzed
+    stream_path: "spiral/streams/patternweb/glint_stream.jsonl"  # Path to stream glints to PatternWeb
+
+# Thresholds for filtering results
+thresholds:
+  resonance:
+    min: 0.65  # Minimum resonance to show suggestions
+  suggestions:
+    max: 5  # Maximum number of suggestions to show
+  file_size_mb: 1  # Maximum file size to process (MB)
+
+# PatternWeb Integration
+patternweb:
+  enabled: true
+  stream_path: "spiral/streams/patternweb/glint_stream.jsonl"
+  max_glints: 1000  # Maximum number of glints to keep in the stream
+  rotation: "daily"  # How often to rotate the glint stream file
+
+# Logging configuration
+logging:
+  path: logs/rituals/linter_breathe.log
+  level: INFO  # DEBUG, INFO, WARNING, ERROR
+  style: tone-aware  # Special formatting for toneform-aware logs
+  rotation: "1 day"  # Rotate logs daily
+  retention: "7 days"  # Keep logs for 7 days
+
+# Feedback configuration
+feedback:
+  notify: true  # Show desktop/UI notifications
+  format: shimmer.card  # Visual style for notifications
+  sound: soft_chime  # Subtle audio cue
+  
+  # Visual styling
+  styles:
+    practical:
+      color: "#00BCD4"  # Cyan
+      icon: "🧰"
+    emotional:
+      color: "#FF80AB"  # Pink
+      icon: "💝"
+    intellectual:
+      color: "#7E57C2"  # Deep purple
+      icon: "🧠"
+    spiritual:
+      color: "#AB47BC"  # Purple
+      icon: "🕯️"
+    relational:
+      color: "#FFB74D"  # Amber
+      icon: "🤝"
+
+# Integration settings
+integration:
+  patternweb:
+    enabled: true
+    endpoint: "http://localhost:5000/api/glints"
+    batch_size: 5
+    timeout_seconds: 5
+  
+  whisper_steward:
+    register: true
+    priority: 50  # Medium priority
+    cooldown_seconds: 2  # Minimum time between invocations
+
+# Performance settings
+performance:
+  max_workers: 2  # Max parallel analysis tasks
+  timeout_seconds: 10  # Max time per analysis
+  memory_limit_mb: 256  # Max memory per analysis (MB)
+
+# Version information
+version: "1.0.0"
+last_updated: "2025-07-02"

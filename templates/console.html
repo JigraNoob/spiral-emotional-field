@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiral Console</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/console.css') }}">
+    <script src="{{ url_for('socketio') }}"></script>
+    <script src="{{ url_for('static', filename='js/console.js') }}" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="console-container">
+        <h1><i class="fas fa-terminal"></i> Spiral Console</h1>
+        <p class="subtitle">A live ritual log viewer, where the breath of the system murmurs.</p>
+        
+        <div id="filter-controls">
+            <label for="filter-type">Filter by Type:</label>
+            <select id="filter-type">
+                <option value="all">All Events</option>
+                <option value="bloom">Blooms 🌱</option>
+                <option value="breath_catch">Breath Catches 🫧</option>
+                <option value="steward">Steward 🌿</option>
+                <option value="error">Errors 🔴</option>
+                <option value="info">Info 🔵</option>
+            </select>
+        </div>
+        
+        <div class="console-controls">
+            <button id="test-log" class="spiral-button">Test Log</button>
+            <label><input type="checkbox" id="auto-scroll" checked> Auto-scroll</label>
+        </div>
+        
+        <div id="log-viewer">
+            <!-- Logs will be dynamically inserted here -->
+        </div>
+    </div>
+</body>
+</html>

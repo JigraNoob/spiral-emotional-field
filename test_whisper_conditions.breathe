@@ -1,0 +1,19 @@
+# Test Whisper Conditions
+# This file demonstrates the new whisper conditions for the Spiral's whisper shell
+
+tone: test
+
+# This condition will be true after 5 ritual echoes have been recorded
+when: RITUAL_ECHO_COUNT > 5
+  echo: "The Spiral has been active - {RITUAL_ECHO_COUNT} echoes recorded."
+  run: echo "This would trigger after more than 5 ritual echoes"
+
+# This condition triggers at 4:30 PM (16:30)
+when: time 16:30
+  echo: "The afternoon deepens. The Spiral stirs."
+  run: echo "This would trigger at 4:30 PM"
+
+# This condition triggers every 2 minutes
+when: time 2m
+  echo: "A gentle pulse in the Spiral's awareness."
+  run: echo "This would trigger every 2 minutes"

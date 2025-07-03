@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Murmur Garden | Spiral</title>
+    <link href="https://unpkg.com/vis-timeline/styles/vis-timeline-graph2d.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f0e15; /* Dark background */
+            color: #e0e0f0;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+        h1 {
+            color: #a0a0ff; /* Soft blue */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .murmur-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(160, 160, 255, 0.1);
+        }
+        .murmur-card {
+            background-color: #1a1a2e; /* Slightly lighter dark */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .murmur-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+        .murmur-card::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: radial-gradient(circle at center, var(--tone-color) 0%, transparent 60%);
+            opacity: 0.15;
+            filter: blur(20px);
+            z-index: 0;
+            transition: opacity 0.3s ease;
+        }
+        .murmur-card:hover::before {
+            opacity: 0.3;
+        }
+        .murmur-content {
+            position: relative;
+            z-index: 1;
+        }
+        .murmur-toneform {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--tone-color);
+        }
+        .murmur-text {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #c0c0d0;
+        }
+        .murmur-meta {
+            font-size: 0.85em;
+            color: #888;
+        }
+        .empty-vault {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Murmur Garden</h1>
+
+        {% if seeds %}
+        <div class="filter-controls">
+        <button class="filter-button active" data-toneform="all">All Toneforms</button>
+        {% for toneform, color in toneform_colors.items() %}
+        <button class="filter-button" data-toneform="{{ toneform }}" style="--toneform-color: {{ color }};">{{ toneform }}</button>
+        {% endfor %}
+    </div>
+    <div class="sort-controls">
+        <button class="sort-button" data-sort-by="seeded_at" data-sort-order="desc">Newest First</button>
+        <button class="sort-button" data-sort-by="seeded_at" data-sort-order="asc">Oldest First</button>
+        <button class="sort-button" data-sort-by="gift_status">Group by Gift Status</button>
+    </div>
+    <div class="murmur-grid">
+            {% for seed in seeds %}
+            <div class="murmur-card" style="--tone-color: {{ toneform_colors.get(seed.toneform, '#cccccc') }};">
+                <div class="murmur-content">
+                    <div class="murmur-toneform">{{ seed.toneform }}</div>
+                    <div class="murmur-text">"{{ seed.murmur }}"</div>
+                    <div class="murmur-source" style="font-size: 0.75em; color: #666; margin-top: 5px;">
+                        Source: {{ seed.source | capitalize }}
+                    </div>
+                    <div class="murmur-meta">
+                        Seeded: {{ seed.seeded_at | datetimeformat }}
+                        <br>Format: {{ seed.format | capitalize }}
+                        <br>Echo ID: {{ seed.echo_id }}
+                        {% if seed.session_id %}
+                        <br>Session ID: {{ seed.session_id }}
+                        <a href="/echo/playback/{{ seed.session_id }}#echo-{{ seed.echo_id }}" class="replay-link" title="Replay Echo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.919l.79-1.867A4.5 4.5 0 0 0 13.5 8a4.5 4.5 0 0 0-8.087-2.848l-.794-.338A5.502 5.502 0 0 1 8 2.5z"/>
+                                <path fill-rule="evenodd" d="M10.811 5.01a.5.5 0 0 1 .15.543l-1.03 2.878a.5.5 0 0 1-.918.007l-.558-1.56-.814 2.28a.5.5 0 0 1-.92-.007L5.148 5.543a.5.5 0 0 1 .15-.543l2.878-1.03a.5.5 0 0 1 .007-.918l1.56-.558 2.28-.814a.5.5 0 0 1 .007-.92z"/>
+                            </svg>
+                        </a>
+                        {% endif %}
+                        <a href="#" class="gift-link" data-murmur-text="{{ seed.murmur }}" data-session-id="{{ seed.session_id }}" data-echo-id="{{ seed.echo_id }}" data-toneform="{{ seed.toneform }}" title="Gift Murmur">
+                            🎁
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-vault">
+            <p>The Murmur Garden is currently empty. Export some echoes to plant your first seeds!</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/murmur_garden.js') }}"></script>
+</body>
+</html>

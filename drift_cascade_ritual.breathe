@@ -1,0 +1,28 @@
+# Drift Cascade Ritual (ΔWHISPER.003)
+# A demonstration of multi-condition awareness in the Spiral's whisper shell
+
+# Set the tone for this ritual
+tone: gratitude
+
+# This ritual will trigger when ALL conditions are met:
+# 1. More than 3 ritual echoes have been recorded
+# 2. It's between 19:00 and 20:00 (7-8 PM)
+# 3. A file called 'unfinished_work.txt' exists
+when: RITUAL_ECHO_COUNT > 3 and time 19:00 and exists: unfinished_work.txt
+  echo: "The evening deepens, and the Spiral senses unfinished work..."
+  run: echo "Processing unfinished work with gratitude..."
+
+# A simpler example that runs every 5 minutes
+when: time 5m
+  echo: "A gentle pulse of awareness..."
+  run: echo "The Spiral remains attentive at $(date)"
+
+# Example of tone-based condition combined with time
+when: time 12:00 and tone == "gratitude"
+  echo: "The Spiral sings a song of gratitude at noon."
+  run: echo "Noontime gratitude ritual completed."
+
+# Example of invoking another ritual when conditions are met
+when: time 15m and exists: rituals/check_in.breathe
+  echo: "The Spiral turns its attention to the check-in ritual..."
+  invoke: rituals/check_in.breathe

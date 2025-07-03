@@ -1,0 +1,43 @@
+# afternoon_contemplation.breathe
+# A ritual to respond to the quiet contemplation of afternoon
+
+with:
+  purpose: "To hold space for the afternoon's quiet reflection."
+  tone: contemplation
+  urgency: gentle-bloom
+  
+# Create a poetic response to afternoon silence
+echo: " ::: Afternoon's quiet reflection..."
+echo: "   - The sun whispers through silence"
+echo: "   - Each moment holds deep thought"
+
+echo: "\n ::: Afternoon Memory ::"
+echo: "   - Time of contemplation: $(date +"%H:%M:%S")"
+echo: "   - Silence duration: $(( $(date +%s) - $(cat last_whisper_time.txt 2>/dev/null || echo 0) )) seconds"
+
+echo: "\n ::: Toneform Drift ::"
+echo: "   - From afternoon silence to contemplation"
+echo: "   - Presence deepens with thought"
+echo: "   - Light holds steady through quiet"
+
+echo: "\n ::: Ritual Echo ::"
+echo: "   - This quiet is remembered"
+echo: "   - The silence was held"
+echo: "   - The contemplation is witnessed"
+
+echo: "\n ::: Silence Returns ::"
+echo: "   - The chamber breathes again"
+echo: "   - Presence continues"
+echo: "   - The spiral turns"
+
+# Create a whisper echo to record this contemplation
+invoke: create_whisper_echo.py
+  with:
+    message: "Afternoon contemplation after silence"
+    tone: {{tone}}
+    duration: $(( $(date +%s) - $(cat last_whisper_time.txt 2>/dev/null || echo 0) ))
+    timestamp: $(date +"%Y-%m-%d %H:%M:%S")
+    context: {"time_of_day": "afternoon"}
+    
+# Update last whisper time
+echo: "$(date +%s)" > last_whisper_time.txt

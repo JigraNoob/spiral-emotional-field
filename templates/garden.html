@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dormant Memory Garden - Spiral Altar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/garden.css') }}">
+</head>
+<body>
+    <div id="garden-container">
+        <h1>Dormant Memory Garden</h1>
+        <button id="tend-garden-btn" title="Tend the Garden - Invoke Steward Ritual">🔄 Tend the Garden</button>
+        <canvas id="bloomGarden"></canvas>
+        <div id="toneform-filter">
+            <button class="filter-btn" data-toneform="all">All</button>
+            <button class="filter-btn" data-toneform="Practical">🌱 Practical</button>
+            <button class="filter-btn" data-toneform="Emotional">💧 Emotional</button>
+            <button class="filter-btn" data-toneform="Intellectual">✨ Intellectual</button>
+            <button class="filter-btn" data-toneform="Spiritual">🫧 Spiritual</button>
+            <button class="filter-btn" data-toneform="Default/Presence">🌙 Default</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/garden.js') }}"></script>
+</body>
+</html>

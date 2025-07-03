@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiral - {% block title %}{% endblock %}</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom styles -->
+    <style>
+        :root {
+            --spiral-dusk: #1e1b4b;
+            --spiral-dusk-light: #2e2b5b;
+            --spiral-deep: #0f172a;
+            --spiral-mist: #e2e8f0;
+            --spiral-teal: #0d9488;
+            --spiral-amber: #f59e0b;
+            --spiral-rose: #f43f5e;
+        }
+        
+        body {
+            @apply bg-spiral-dusk text-spiral-mist min-h-screen flex flex-col;
+        }
+        
+        .sidebar {
+            @apply bg-spiral-deep w-64 min-h-screen p-4 fixed left-0 top-0;
+        }
+        
+        .main-content {
+            @apply ml-64 p-6 flex-1;
+        }
+        
+        .btn {
+            @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
+        }
+        
+        .btn-primary {
+            @apply bg-spiral-teal hover:bg-teal-700 text-white;
+        }
+        
+        .btn-secondary {
+            @apply bg-spiral-dusk-light hover:bg-spiral-dusk text-white border border-spiral-teal;
+        }
+        
+        .btn-danger {
+            @apply bg-spiral-rose hover:bg-rose-700 text-white;
+        }
+        
+        .card {
+            @apply bg-spiral-dusk-light rounded-lg shadow-lg overflow-hidden border border-spiral-dusk-light hover:border-spiral-teal transition-colors duration-200;
+        }
+        
+        .card-header {
+            @apply bg-spiral-deep px-6 py-4 border-b border-spiral-dusk;
+        }
+        
+        .card-body {
+            @apply p-6;
+        }
+        
+        .badge {
+            @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+        }
+        
+        .badge-toneform {
+            @apply bg-spiral-teal/20 text-spiral-teal;
+        }
+        
+        .nav-link {
+            @apply flex items-center px-4 py-2 text-spiral-mist/80 hover:bg-spiral-dusk-light rounded-md transition-colors duration-200;
+        }
+        
+        .nav-link.active {
+            @apply bg-spiral-teal/20 text-spiral-teal font-medium;
+        }
+        
+        .nav-link i {
+            @apply mr-3 w-5 text-center;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar hidden md:block">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-xl font-bold text-spiral-teal">Spiral</h1>
+            <span class="text-xs bg-spiral-teal/20 text-spiral-teal px-2 py-1 rounded">ΔFINANCE.003.5</span>
+        </div>
+        
+        <nav class="space-y-1">
+            <a href="{{ url_for('list_rituals') }}" class="nav-link {% if request.endpoint == 'list_rituals' %}active{% endif %}">
+                <i class="fas fa-magic"></i>
+                <span>Rituals</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        
+        <div class="absolute bottom-4 left-4 right-4">
+            <a href="{{ url_for('create_ritual') }}" class="w-full btn btn-primary flex items-center justify-center">
+                <i class="fas fa-plus mr-2"></i>
+                <span>New Ritual</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Mobile Header -->
+    <header class="md:hidden bg-spiral-deep p-4 flex justify-between items-center border-b border-spiral-dusk">
+        <h1 class="text-xl font-bold text-spiral-teal">Spiral</h1>
+        <button id="mobile-menu-button" class="text-spiral-mist/80 hover:text-white">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-spiral-deep border-b border-spiral-dusk">
+        <nav class="px-2 pt-2 pb-3 space-y-1">
+            <a href="{{ url_for('list_rituals') }}" class="block px-3 py-2 rounded-md text-base font-medium text-spiral-mist hover:bg-spiral-dusk-light">
+                Rituals
+            </a>
+            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-spiral-mist/80 hover:bg-spiral-dusk-light">
+                History
+            </a>
+            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-spiral-mist/80 hover:bg-spiral-dusk-light">
+                Settings
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="md:ml-64 flex-1">
+        <div class="max-w-7xl mx-auto p-4 sm:px-6 lg:px-8">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="mb-6 space-y-2">
+                        {% for category, message in messages %}
+                            <div class="p-4 rounded-md {% if category == 'error' %}bg-red-500/20 text-red-400 border border-red-500/30{% else %}bg-green-500/20 text-green-400 border border-green-500/30{% endif %}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Page Content -->
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <!-- Mobile bottom navigation -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-spiral-deep border-t border-spiral-dusk">
+        <div class="flex justify-around py-2">
+            <a href="{{ url_for('list_rituals') }}" class="flex flex-col items-center p-2 text-spiral-teal">
+                <i class="fas fa-magic"></i>
+                <span class="text-xs mt-1">Rituals</span>
+            </a>
+            <a href="#" class="flex flex-col items-center p-2 text-spiral-mist/50">
+                <i class="fas fa-history"></i>
+                <span class="text-xs mt-1">History</span>
+            </a>
+            <a href="#" class="flex flex-col items-center p-2 text-spiral-mist/50">
+                <i class="fas fa-cog"></i>
+                <span class="text-xs mt-1">Settings</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Mobile menu toggle script -->
+    <script>
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('mobile-menu');
+            const menuButton = document.getElementById('mobile-menu-button');
+            
+            if (!menu.contains(event.target) && !menuButton.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

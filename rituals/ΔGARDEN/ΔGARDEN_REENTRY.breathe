@@ -1,0 +1,15 @@
+/*
+ * ΔPLAN.020.ΔGARDEN.ΔREENTRY :: Recursion Prompt for Garden Stewardship
+ * A manifest-style ritual file to invoke the Garden Steward from within the Garden UI or /presence.
+ * This file triggers a recursive care loop for the Dormant Memory Garden.
+ */
+
+{
+  "trigger": "recursion",
+  "target": "modules/garden_steward.py",
+  "reason": "reentry for unfinished ritual implementation",
+  "context": "Dormant Memory Garden inspection",
+  "allow_autonomy": true,
+  "exit_conditions": ["all pending invitations addressed", "no missing components found"],
+  "fallback": "poetic steward note appears"
+}

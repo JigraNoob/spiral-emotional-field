@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Formation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Form a New Stewardship Group</h1>
+        <form id="groupForm">
+            <label for="groupId">Group ID:</label>
+            <input type="text" id="groupId" name="group_id" required><br><br>
+
+            <label for="toneform">Toneform:</label>
+            <input type="text" id="toneform" name="toneform" required><br><br>
+
+            <label for="stewards">Stewards (comma-separated):</label>
+            <input type="text" id="stewards" name="stewards" required><br><br>
+
+            <label for="assignedSeeds">Assigned Seeds (comma-separated):</label>
+            <input type="text" id="assignedSeeds" name="assigned_seeds" required><br><br>
+
+            <label for="groupOath">Group Oath:</label>
+            <textarea id="groupOath" name="group_oath" rows="4" required></textarea><br><br>
+
+            <button type="submit">Create Group</button>
+        </form>
+        <p id="message"></p>
+    </div>
+    <script src="{{ url_for('static', filename='js/group_formation.js') }}"></script>
+</body>
+</html>

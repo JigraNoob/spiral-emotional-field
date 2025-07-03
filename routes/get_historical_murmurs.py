@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify
 import jsonlines
 import os
 import random
+from utils.glyph_utils import enrich_log_entry
 
 get_historical_murmurs_bp = Blueprint('get_historical_murmurs_bp', __name__)
 
@@ -38,11 +39,12 @@ def load_encounter_murmurs(page=1, per_page=12, toneform=None, start_date=None, 
                             if end_date and entry['timestamp'] > end_date:
                                 continue
 
-                            murmurs.append({
+                            enriched = enrich_log_entry({
                                 "text": entry['felt_response'],
                                 "toneform": entry['toneform'],
                                 "timestamp": entry['timestamp']
                             })
+                            murmurs.append(enriched)
                             filtered_count += 1
                     except Exception as e:
                         print(f"Error processing entry {i+1}: {str(e)}")

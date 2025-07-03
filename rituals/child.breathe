@@ -1,0 +1,3 @@
+inherit: base.breathe
+with: common_var=sea
+echo :: child breath continues

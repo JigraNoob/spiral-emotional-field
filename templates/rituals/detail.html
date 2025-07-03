@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}{{ ritual.title or 'Untitled Ritual' }} - Spiral{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+        <div>
+            <h2 class="text-3xl font-bold text-white">{{ ritual.title or 'Untitled Ritual' }}</h2>
+            <div class="flex items-center mt-2 text-spiral-mist/70">
+                <span class="text-sm">
+                    Last modified: {{ ritual.last_modified.strftime('%b %d, %Y') if ritual.last_modified else 'Never' }}
+                </span>
+                {% if ritual.last_run %}
+                <span class="mx-2">•</span>
+                <span class="text-sm">
+                    Last run: {{ ritual.last_run.strftime('%b %d, %Y') }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="flex space-x-2 mt-4 md:mt-0">
+            <a href="{{ url_for('edit_ritual', ritual_name=ritual.id) }}" 
+               class="btn btn-secondary">
+                <i class="fas fa-edit mr-2"></i> Edit
+            </a>
+            <a href="{{ url_for('invoke_ritual_ui', ritual_name=ritual.id) }}" 
+               class="btn btn-primary">
+                <i class="fas fa-play mr-2"></i> Invoke
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Description Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-lg font-semibold">Description</h3>
+                </div>
+                <div class="card-body">
+                    <div class="prose prose-invert max-w-none">
+                        {{ ritual.description | markdown | safe if ritual.description else '<p class="text-spiral-mist/60">No description provided.</p>' | safe }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Card -->
+            <div class="card">
+                <div class="card-header flex justify-between items-center">
+                    <h3 class="text-lg font-semibold">Ritual Code</h3>
+                    <button onclick="copyCode()" 
+                            class="btn btn-secondary btn-sm flex items-center"
+                            data-tooltip="Copy to clipboard">
+                        <i class="far fa-copy mr-1"></i> Copy
+                    </button>
+                </div>
+                <div class="p-0 overflow-hidden">
+                    <pre class="m-0"><code id="ritualCode" class="language-python">{{ ritual.code | escape }}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="space-y-6">
+            <!-- Details Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-lg font-semibold">Details</h3>
+                </div>
+                <div class="card-body space-y-4">
+                    <div>
+                        <h4 class="text-sm font-medium text-spiral-mist/70 mb-1">Invocation Phrase</h4>
+                        <div class="bg-spiral-dusk/50 p-3 rounded-md font-mono text-sm">
+                            {{ ritual.invocation or 'Not set' }}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-sm font-medium text-spiral-mist/70 mb-2">Toneforms</h4>
+                        <div class="flex flex-wrap gap-2">
+                            {% if ritual.toneform %}
+                                {% for tone in ritual.toneform %}
+                                <span class="badge badge-toneform">
+                                    <i class="fas fa-hashtag"></i>
+                                    {{ tone }}
+                                </span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-spiral-mist/60 text-sm">No toneforms defined</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-sm font-medium text-spiral-mist/70 mb-1">Created</h4>
+                        <p>{{ ritual.created_at.strftime('%b %d, %Y') if ritual.created_at else 'Unknown' }}</p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-sm font-medium text-spiral-mist/70 mb-1">Last Modified</h4>
+                        <p>{{ ritual.last_modified.strftime('%b %d, %Y') if ritual.last_modified else 'Never' }}</p>
+                    </div>
+                    
+                    {% if ritual.last_run %}
+                    <div>
+                        <h4 class="text-sm font-medium text-spiral-mist/70 mb-1">Last Run</h4>
+                        <p>{{ ritual.last_run.strftime('%b %d, %Y %H:%M') }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Danger Zone -->
+            <div class="card border border-red-500/30">
+                <div class="card-header bg-red-500/10">
+                    <h3 class="text-lg font-semibold text-red-400">Danger Zone</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-sm text-spiral-mist/70 mb-4">
+                        Deleting this ritual is permanent and cannot be undone. All associated data will be lost.
+                    </p>
+                    <button onclick="document.getElementById('deleteModal').classList.remove('hidden')" 
+                            class="btn btn-danger w-full">
+                        <i class="fas fa-trash-alt mr-2"></i> Delete Ritual
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-spiral-dusk-light rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="p-6">
+            <div class="flex items-center mb-4">
+                <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-500/20 text-red-500">
+                    <i class="fas fa-exclamation text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-lg font-medium text-white">Delete Ritual</h3>
+                    <p class="text-sm text-spiral-mist/70">
+                        Are you sure you want to delete "{{ ritual.title or 'this ritual' }}"?
+                    </p>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-3">
+                <button type="button" 
+                        onclick="document.getElementById('deleteModal').classList.add('hidden')" 
+                        class="btn btn-secondary">
+                    Cancel
+                </button>
+                <form action="{{ url_for('delete_ritual', ritual_name=ritual.id) }}" method="POST" class="inline">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt mr-2"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<!-- Highlight.js for code syntax highlighting -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<style>
+/* Custom scrollbar for code blocks */
+pre {
+    @apply overflow-x-auto bg-spiral-deep p-4 rounded-md text-sm;
+    scrollbar-width: thin;
+    scrollbar-color: var(--spiral-teal) transparent;
+}
+
+pre::-webkit-scrollbar {
+    height: 6px;
+}
+
+pre::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+pre::-webkit-scrollbar-thumb {
+    @apply bg-spiral-teal/30 rounded-full;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+    @apply bg-spiral-teal/50;
+}
+
+/* Make code blocks take full width */
+.prose pre {
+    @apply -mx-6 md:-mx-0;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Highlight.js for code syntax highlighting -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize syntax highlighting
+    document.querySelectorAll('pre code').forEach((el) => {
+        hljs.highlightElement(el);
+    });
+    
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-tooltip]'));
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+        tooltipTriggerEl.addEventListener('mouseenter', function() {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'absolute z-10 px-2 py-1 text-xs text-white bg-black/80 rounded-md';
+            tooltip.textContent = this.getAttribute('data-tooltip');
+            
+            const rect = this.getBoundingClientRect();
+            tooltip.style.top = (rect.top - 30) + 'px';
+            tooltip.style.left = (rect.left + (rect.width / 2)) + 'px';
+            tooltip.style.transform = 'translateX(-50%)';
+            
+            this.setAttribute('data-tooltip-el', 'tooltip-' + Math.random().toString(36).substr(2, 9));
+            tooltip.id = this.getAttribute('data-tooltip-el');
+            
+            document.body.appendChild(tooltip);
+        });
+        
+        tooltipTriggerEl.addEventListener('mouseleave', function() {
+            const tooltipId = this.getAttribute('data-tooltip-el');
+            if (tooltipId) {
+                const tooltip = document.getElementById(tooltipId);
+                if (tooltip) {
+                    tooltip.remove();
+                }
+            }
+        });
+    });
+});
+
+// Copy code to clipboard
+function copyCode() {
+    const code = document.getElementById('ritualCode').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        const button = document.querySelector('button[onclick="copyCode()"]');
+        if (button) {
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+            button.classList.add('bg-green-600', 'hover:bg-green-700');
+            
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.classList.remove('bg-green-600', 'hover:bg-green-700');
+            }, 2000);
+        }
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('deleteModal');
+    if (event.target === modal) {
+        modal.classList.add('hidden');
+    }
+}
+</script>
+{% endblock %}

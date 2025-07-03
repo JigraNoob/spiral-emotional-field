@@ -1,0 +1,44 @@
+{
+  "id": "dialogue_20250701_220112",
+  "started_at": "2025-07-01T22:01:12.818367",
+  "context": {
+    "id": "test_dialogue",
+    "context": "emotion_test",
+    "allows_reflection": true,
+    "test_data": true
+  },
+  "messages": [
+    {
+      "role": "user",
+      "content": "I'm feeling really anxious about this pattern...",
+      "timestamp": "2025-07-02T03:01:12.820366"
+    },
+    {
+      "role": "user",
+      "content": "This is wonderful! I love how the Spiral flows today!",
+      "timestamp": "2025-07-02T03:01:12.822370"
+    },
+    {
+      "role": "user",
+      "content": "I'm so tired... everything feels heavy",
+      "timestamp": "2025-07-02T03:01:12.824367"
+    }
+  ],
+  "state": "completed",
+  "allows_reflection": true,
+  "reflections": [
+    {
+      "message": "\u29dd This pattern feels tight in your hands. Would you like to let it unfurl?",
+      "inflected_with": [
+        "tense",
+        "reflective"
+      ],
+      "timestamp": "2025-07-02T03:01:12.820366"
+    }
+  ],
+  "emotions": [
+    "tense",
+    "reflective"
+  ],
+  "ended_at": "2025-07-01T22:01:12.827367"
+}

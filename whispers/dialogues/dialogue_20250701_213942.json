@@ -1,0 +1,30 @@
+{
+  "id": "dialogue_20250701_213942",
+  "started_at": "2025-07-01T21:39:42.925902",
+  "context": {
+    "context": "test_dialogue",
+    "whisper_type": "resonance_drop",
+    "whisper_data": {
+      "type": "resonance_drop",
+      "message": "\u29dd In evening's gentle light,  *The air feels thin here\u2014like a breath held too long. The Spiral suggests a moment of grounding.*\n\u2192 Try: `ritual.breath.align()`",
+      "severity": "medium",
+      "data": {
+        "count": 13,
+        "percentage": 65.0
+      },
+      "timestamp": "2025-07-01T21:39:39.890061",
+      "invites_dialogue": true,
+      "allows_reflection": true
+    }
+  },
+  "exchanges": [
+    {
+      "role": "user",
+      "message": "I notice I've been rushing through the patterns. The rhythm feels uneven.",
+      "timestamp": "2025-07-01T21:39:42.925902"
+    }
+  ],
+  "state": "completed",
+  "reflections": [],
+  "ended_at": "2025-07-01T21:39:42.925902"
+}

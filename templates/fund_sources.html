@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="fund-constellation">
+  <div class="constellation-canvas" id="toneform-canvas">
+    <!-- Orbs will be rendered here by garden.js -->
+  </div>
+  <div class="constellation-index">
+    <div class="index-scroll">
+      {{ funding_index|markdown }}
+    </div>
+  </div>
+</div>
+{% endblock %}

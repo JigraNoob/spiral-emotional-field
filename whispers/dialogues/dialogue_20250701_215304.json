@@ -1,0 +1,31 @@
+{
+  "id": "dialogue_20250701_215304",
+  "started_at": "2025-07-01T21:53:04.342883",
+  "context": {
+    "context": "emotion_test",
+    "whisper_type": "test_emotion",
+    "allows_reflection": true,
+    "test_data": true
+  },
+  "exchanges": [],
+  "state": "completed",
+  "reflections": [],
+  "messages": [
+    {
+      "role": "user",
+      "content": "I'm feeling really anxious about this pattern...",
+      "timestamp": "2025-07-01T21:53:04.344845"
+    }
+  ],
+  "emotion_history": [
+    {
+      "timestamp": "2025-07-01T21:53:04.346521",
+      "emotions": [
+        "tense",
+        "reflective"
+      ],
+      "message_snippet": "I'm feeling really anxious about this pattern..."
+    }
+  ],
+  "ended_at": "2025-07-01T21:53:04.346521"
+}

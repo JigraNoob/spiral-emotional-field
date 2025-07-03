@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Ritual Steward{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .ritual-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 1.5rem;
+    }
+    .ritual-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .ritual-header {
+        background: linear-gradient(135deg, #6e8efb 0%, #a777e3 100%);
+        color: white;
+    }
+    .code-block {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .toneform-badge {
+        margin-right: 0.3rem;
+        margin-bottom: 0.3rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Ritual Steward</h1>
+        <a href="{{ url_for('ritual_creation') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New Ritual
+        </a>
+    </div>
+    
+    {% block ritual_content %}{% endblock %}
+</div>
+{% endblock %}

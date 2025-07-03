@@ -1,0 +1,33 @@
+{
+  "id": "dialogue_20250701_220151",
+  "started_at": "2025-07-01T22:01:51.097881",
+  "context": {
+    "id": "test_dialogue",
+    "context": "test_emotion_reflection",
+    "allows_reflection": true
+  },
+  "messages": [
+    {
+      "role": "user",
+      "content": "I'm feeling really anxious about this pattern...",
+      "timestamp": "2025-07-02T03:01:51.098885"
+    }
+  ],
+  "state": "completed",
+  "allows_reflection": true,
+  "reflections": [
+    {
+      "message": "\u29dd Would it help to sit beside the pattern, rather than inside it?",
+      "inflected_with": [
+        "tense",
+        "reflective"
+      ],
+      "timestamp": "2025-07-02T03:01:51.099885"
+    }
+  ],
+  "emotions": [
+    "tense",
+    "reflective"
+  ],
+  "ended_at": "2025-07-01T22:01:51.101883"
+}

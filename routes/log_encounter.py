@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify
 from datetime import datetime
 import json
 import os
+from utils.glyph_utils import enrich_log_entry
 
 log_encounter = Blueprint('log_encounter', __name__)
 ENCOUNTER_LOG_FILE = 'encounter_trace.jsonl'
@@ -30,10 +31,13 @@ def log_encounter_event():
     # Add timestamp server-side to ensure consistency
     data["timestamp"] = datetime.utcnow().isoformat()
 
+    # Enrich with emoji and tagline
+    enriched_entry = enrich_log_entry(data)
+
     # Write to the JSONL log file
     try:
         with open(ENCOUNTER_LOG_FILE, 'a') as f:
-            f.write(json.dumps(data) + '\n')
+            f.write(json.dumps(enriched_entry) + '\n')
         print(f"ΔSUMMARY.001 :: Encounter logged: {data['context_id']}")
         return jsonify({"status": "ok", "message": "Encounter logged successfully."})
     except Exception as e:

@@ -1,0 +1,72 @@
+global:
+  # SMTP Configuration
+  smtp_smarthost: 'smtp.example.com:587'
+  smtp_from: 'spiral-alerts@yourdomain.com'
+  smtp_auth_username: 'alert-username'
+  smtp_auth_password: 'your-password-here'
+  smtp_require_tls: true
+
+# Default receiver (fallback)
+route:
+  group_by: ['alertname', 'category', 'severity']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: 'spiral-team-email'
+  
+  # Nested routes for different alert categories
+  routes:
+  - match:
+      category: 'rhythm'
+    receiver: 'spiral-rhythm-team'
+    continue: true
+    
+  - match:
+      category: 'resonance'
+    receiver: 'spiral-resonance-team'
+    
+  - match:
+      severity: 'critical'
+    receiver: 'spiral-critical'
+    repeat_interval: 30m
+    
+  - match:
+      alertname: 'WebSocketHeartbeatMissed'
+    receiver: 'spiral-critical'
+    repeat_interval: 5m
+
+# Receiver configurations
+receivers:
+- name: 'spiral-team-email'
+  email_configs:
+  - to: 'spiral-team@yourdomain.com'
+    send_resolved: true
+    html: '{{ template "email.default.html" . }}'
+    
+- name: 'spiral-rhythm-team'
+  email_configs:
+  - to: 'rhythm-team@yourdomain.com'
+    send_resolved: true
+    html: '{{ template "email.rhythm.html" . }}'
+  webhook_configs:
+  - url: 'http://discord-webhook-url/rhythm'
+    send_resolved: true
+    
+- name: 'spiral-resonance-team'
+  email_configs:
+  - to: 'resonance-team@yourdomain.com'
+    send_resolved: true
+    html: '{{ template "email.resonance.html" . }}'
+  
+- name: 'spiral-critical'
+  email_configs:
+  - to: 'oncall@yourdomain.com'
+    send_resolved: true
+    html: '{{ template "email.critical.html" . }}'
+  webhook_configs:
+  - url: 'http://discord-webhook-url/critical'
+    send_resolved: true
+  
+# Templates for email notifications
+templates:
+- '/etc/alertmanager/templates/*.tmpl'

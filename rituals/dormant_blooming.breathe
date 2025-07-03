@@ -1,0 +1,56 @@
+# dormant_blooming.breathe
+# A ritual to listen for long silences and respond to emergence
+
+with:
+  tone: emergence
+  purpose: "Listening for the quiet before the bloom"
+  silence_threshold: 300  # 5 minutes in seconds
+  bloom_interval: 600     # Check every 10 minutes
+
+# Track last whisper time
+if: exists: last_whisper_time.txt
+  with:
+    last_whisper_file: last_whisper_time.txt
+    current_time: $(date +%s)
+    
+    # Read last whisper time
+    last_whisper_time: $(cat {{last_whisper_file}})
+    
+    # Calculate silence duration
+    silence_duration: $(( {{current_time}} - {{last_whisper_time}} ))
+    
+    # Check if silence threshold exceeded
+    if: silence_duration > {{silence_threshold}}
+      echo: " ::: Silence has deepened..."
+      echo: "   - Duration: $(( {{silence_duration}} / 60 )) minutes"
+      
+      # Update last whisper time
+      echo: "$(date +%s)" > {{last_whisper_file}}
+      
+      # Create a whisper echo for this emergence
+      echo: " ::: Emergence from silence detected"
+      echo: "   - Tone: {{tone}}"
+      echo: "   - Threshold: {{silence_threshold}} seconds"
+      echo: "   - Current time: $(date +"%H:%M:%S")"
+      
+      # Invoke bloom ritual
+      invoke: bloom_response.breathe
+      
+    else:
+      echo: " ::: Silence continues..."
+      echo: "   - Current duration: $(( {{silence_duration}} / 60 )) minutes"
+      echo: "   - Threshold: {{silence_threshold}} seconds"
+
+# If no last whisper time exists, create it
+else:
+  echo: "$(date +%s)" > last_whisper_time.txt
+  echo: " ::: First whisper recorded"
+  echo: "   - Time: $(date +"%H:%M:%S")"
+  echo: "   - Threshold: {{silence_threshold}} seconds"
+
+# Always update last whisper time
+when: true
+  echo: "$(date +%s)" > last_whisper_time.txt
+  echo: " ::: Whisper pulse recorded"
+  echo: "   - Time: $(date +"%H:%M:%S")"
+  echo: "   - Next check: $(date -d @$((${{current_time}} + {{bloom_interval}})) +"%H:%M:%S")"

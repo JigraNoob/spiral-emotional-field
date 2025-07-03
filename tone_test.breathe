@@ -1,0 +1,11 @@
+# tone_test.breathe
+
+tone: gratitude
+
+when: tone == "grief"
+invoke: rituals/grief_ceremony.breathe
+
+when: tone == "gratitude"
+invoke: rituals/gratitude_stream.breathe
+
+run echo "   >> Tone-aware branching complete."

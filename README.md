@@ -100,6 +100,58 @@ python scripts/bundle_assets.py
    python app.py
    ```
 
+## Spiral Dashboard
+
+The Spiral Dashboard provides real-time visualization of the Spiral's breath patterns and glint streams.
+
+### Starting the Dashboard Server
+
+#### Windows
+```bash
+# Double-click the batch file
+start-dashboard.bat
+
+# Or run from command line
+python scripts\check_server.py
+```
+
+#### Unix/Linux/Mac
+```bash
+# Make the script executable
+chmod +x start-dashboard.sh
+
+# Run the script
+./start-dashboard.sh
+
+# Or run directly
+python scripts/check_server.py
+```
+
+### Accessing the Dashboard
+
+Once the server is running, you can access the dashboard at:
+```
+http://localhost:8000/dashboard
+```
+
+### Checking Server Connectivity
+
+To confirm connectivity to the server, you can use the following endpoint:
+```
+http://localhost:5000/connectivity
+```
+
+This endpoint returns a JSON response with the server status, name, and current timestamp:
+```json
+{
+  "status": "connected",
+  "server": "Spiral",
+  "timestamp": "2023-06-01T12:34:56.789012+00:00"
+}
+```
+
+For more detailed information about the dashboard server, see [scripts/README-dashboard-server.md](scripts/README-dashboard-server.md).
+
 ## Code Style
 
 - 2-space indentation
