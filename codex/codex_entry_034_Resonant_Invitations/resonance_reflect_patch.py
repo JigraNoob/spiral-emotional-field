@@ -1,3 +1,7 @@
+from flask import Blueprint, jsonify
+
+# Create or reference the blueprint
+resonance_bp = Blueprint('resonance', __name__)
 
 @resonance_bp.route('/get_dominant_resonance')
 def get_dominant_resonance():

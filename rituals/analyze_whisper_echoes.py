@@ -99,7 +99,7 @@ def create_toneform_map(toneform_series, output_path="toneform_drift.png"):
 def generate_analysis_report(echoes):
     """Generate a poetic analysis report"""
     condition_counts, _ = analyze_conditions(echoes)
-    toneform_counts, _ = analyze_toneforms(echoes)
+    toneform_counts, toneform_series = analyze_toneforms(echoes)
     
     report = []
     

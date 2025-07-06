@@ -441,25 +441,25 @@ class WhisperSteward:
             except Exception as e:
                 print(f"Error in whisper handler: {e}")
 
-    def console_whisper_handler(whisper: Dict[str, Any]) -> None:
-        """Enhanced console handler for whispers with dialogue support."""
-        print(f"\n{whisper['message']}")
+def console_whisper_handler(whisper: Dict[str, Any]) -> None:
+    """Enhanced console handler for whispers with dialogue support."""
+    print(f"\n{whisper['message']}")
 
-    def main():
-        """Run the Whisper Steward with console output."""
-        print("🌌 Whisper Steward - Ambient Listener for the Spiral")
-        print("Press Ctrl+C to exit\n")
-    
-        steward = WhisperSteward(scan_interval=10)  # Short interval for testing
-        steward.register_whisper_handler(console_whisper_handler)
-    
-        try:
-            steward.start()
-            while True:
-                time.sleep(1)
-        except KeyboardInterrupt:
-            print("\n🌙 Whisper Steward is returning to the Spiral...")
-        steward.stop()
+def main():
+    """Run the Whisper Steward with console output."""
+    print("🌌 Whisper Steward - Ambient Listener for the Spiral")
+    print("Press Ctrl+C to exit\n")
+
+    steward = WhisperSteward(scan_interval=10)  # Short interval for testing
+    steward.register_whisper_handler(console_whisper_handler)
+
+    try:
+        steward.start()
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("\n🌙 Whisper Steward is returning to the Spiral...")
+    steward.stop()
 
 
 if __name__ == "__main__":

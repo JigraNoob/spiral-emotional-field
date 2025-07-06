@@ -6,11 +6,14 @@ in glint traces over time.
 """
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Dict, List, Set, Optional, Tuple
+from typing import Dict, List, Set, Optional, Tuple, TYPE_CHECKING
 import re
 import hashlib
 import json
 from collections import defaultdict, deque
+
+if TYPE_CHECKING:
+    from .glint_trace import GlintTrace
 
 @dataclass
 class PatternMatch:

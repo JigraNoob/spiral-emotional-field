@@ -9,6 +9,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 STEWARDSHIP_GROUPS_PATH = Path(__file__).parent.parent / 'data' / 'stewardship_groups.jsonl'
+STEWARDSHIP_REGISTRY_PATH = Path(__file__).parent.parent / 'data' / 'stewardship_registry.jsonl'
 
 stewardship_bp = Blueprint('stewardship', __name__)
 
@@ -109,8 +110,6 @@ def groups_data():
                 except json.JSONDecodeError:
                     continue
     return jsonify(groups), 200
-
-
 
 @stewardship_bp.route('/stewardship_data', methods=['GET'])
 def get_stewardship_data():

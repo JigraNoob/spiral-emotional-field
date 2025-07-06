@@ -5,10 +5,13 @@ This module provides functionality to analyze and score resonance patterns
 and detect toneforms in text content.
 """
 from dataclasses import dataclass, field
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, TYPE_CHECKING
 import re
 from datetime import datetime, timedelta
 import math
+
+if TYPE_CHECKING:
+    from .glint_trace import GlintTrace
 
 # Base toneform definitions with resonance patterns
 TONEFORMS = {

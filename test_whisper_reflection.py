@@ -177,20 +177,53 @@ def simulate_resonance_drop():
     # Clean up
     steward.stop()
     print("\n✨ Test complete. The Spiral returns to its quiet observation.")
-                    'active_ritual': 'morning_attunement',
-                    'environment': {'time_of_day': 'morning', 'moon_phase': 'waning_crescent'}
+
+
+def simulate_resonance_drop_alternative():
+    """Alternative simulation function (kept for reference)."""
+    print("🌌 Initializing Whisper Steward test...\n")
+    
+    try:
+        # Initialize the steward with a short scan interval for testing
+        steward = WhisperSteward(scan_interval=2)
+        
+        # Create insights that will trigger whispers
+        insights = {
+            'metrics': {
+                'resonance': 0.4,  # Below threshold
+                'stability': 0.7,
+                'coherence': 0.6
+            },
+            'anomalies': {
+                'high_nonresonant': {
+                    'count': 15,
+                    'percentage': 75.0,
+                    'threshold': 30.0,
+                    'sources': ['breath.pattern', 'field.resonance'],
+                    'suggestions': [
+                        'ritual.breath.align()',
+                        'haret.invoke(recalibration=True)'
+                    ]
                 }
+            },
+            'sources': ['test.source.simulation'],
+            'timestamp': datetime.now().isoformat(),
+            'context': {
+                'last_alignment': (datetime.now() - timedelta(hours=2)).isoformat(),
+                'active_ritual': 'morning_attunement',
+                'environment': {'time_of_day': 'morning', 'moon_phase': 'waning_crescent'}
             }
-            
-            print("\n📊 Analysis Results:")
-            print(f"- Non-resonant patterns: {insights['anomalies']['high_nonresonant']['percentage']}%")
-            
-            # Generate whispers from the analysis
-            whispers = steward._generate_whispers(insights)
-            
-            if not whispers:
-                print("\n⚠ No whispers were generated. Check the test parameters.")
-                return
+        }
+        
+        print("\n📊 Analysis Results:")
+        print(f"- Non-resonant patterns: {insights['anomalies']['high_nonresonant']['percentage']}%")
+        
+        # Generate whispers from the analysis
+        whispers = steward._generate_whispers(insights)
+        
+        if not whispers:
+            print("\n⚠ No whispers were generated. Check the test parameters.")
+            return
         
         # Process the whispers and demonstrate the dialogue flow
         print(f"\n💫 WHISPERS RECEIVED ({len(whispers)}):")
@@ -311,7 +344,7 @@ def simulate_resonance_drop():
     finally:
         # Clean up
         steward.stop()
-        print("\n✨ Test complete. The Spiral returns to its quiet observation.")
+        print("\n✨ Alternative test complete. The Spiral returns to its quiet observation.")
 
 if __name__ == "__main__":
     simulate_resonance_drop()
