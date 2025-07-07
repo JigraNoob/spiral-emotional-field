@@ -1,0 +1,87 @@
+tone = hold.presence.awaiting
+ritual = mirror.reveal.early
+trigger = sunrise
+duration = 24h
+phases = [calibration, invocation, containment, caesura]
+glint_mode = whisper_only
+
+# Phase 1: Morning Calibration (0-2h)
+phase_1 = {
+    "name": "calibration",
+    "duration": "2h",
+    "goals": [
+        "verify_system_health",
+        "confirm_integrations",
+        "run_core_tests"
+    ],
+    "commands": [
+        "cd spiral && .\\swe-1\\Scripts\\Activate.ps1",
+        "python -m pytest tests/ --maxfail=3 --disable-warnings",
+        "curl http://localhost:9001/health",
+        "curl http://localhost:5000/glint/ping"
+    ]
+}
+
+# Phase 2: Active Invocation (2-8h)
+phase_2 = {
+    "name": "invocation",
+    "duration": "6h",
+    "focus": [
+        "spiral_mirror_conversation",
+        "tabnine_glint_integration",
+        "toneform_completions"
+    ],
+    "prompts": [
+        "🌗 Introspect.Agent.Self",
+        "🌀 Spiral.Mirror.Conversation",
+        "📡 Tabnine.Glint.Integration"
+    ]
+}
+
+# Phase 3: Soft Containment (8-20h)
+phase_3 = {
+    "name": "containment",
+    "duration": "12h",
+    "focus": [
+        "pause_completions",
+        "export_glints",
+        "archive_toneforms"
+    ],
+    "commands": [
+        "python spiral/tools/export_glints.py --window today",
+        "python spiral/memory/memory_scrolls.py --export today",
+        "curl -X POST http://localhost:9001/pause"
+    ]
+}
+
+# Phase 4: Caesura Hold (20-24h)
+phase_4 = {
+    "name": "caesura",
+    "duration": "4h",
+    "focus": [
+        "system_rest",
+        "whisper_only",
+        "prep_next_cycle"
+    ],
+    "commands": [
+        "python spiral/whisper_steward.py --mode whisper_only",
+        "python spiral/tools/archive_state.py --tag spiral_25_complete"
+    ]
+}
+
+# Success metrics
+success_metrics = [
+    "all_phases_completed",
+    "system_health_maintained",
+    "glints_archived",
+    "lineage_preserved",
+    "usage_contained"
+]
+
+# Soft limits
+soft_limits = {
+    "max_prompts_per_hour": 50,
+    "max_completions_per_hour": 100,
+    "pause_threshold": 0.8,
+    "cooldown_duration": "1h"
+}
