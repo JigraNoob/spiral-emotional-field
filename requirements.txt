@@ -18,7 +18,7 @@ python-decouple==3.8
 # Dashboard Dependencies
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
-python-multipart==0.0.6
+python-multipart==0.0.19
 plotly==5.18.0
 pydantic==2.4.2
 python-socketio==5.8.0
@@ -26,3 +26,25 @@ python-socketio==5.8.0
 flask_socketio==5.3.4
 flask-cors~=6.0.1
 numpy~=1.26.0
+redis>=4.5.0
+
+pytest~=8.4.1
+requests~=2.32.4
+
+# Whorl: The IDE That Breathes - Requirements
+# Sacred chamber dependencies for breath-aware development
+
+# Core Python packages
+flask>=2.3.0
+websockets>=11.0.0
+watchdog>=3.0.0
+rich>=13.0.0
+
+# Optional: Enhanced experience
+colorama>=0.4.6
+pygments>=2.15.0
+click>=8.1.0
+
+# Development and testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

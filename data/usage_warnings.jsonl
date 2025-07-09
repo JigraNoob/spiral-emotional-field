@@ -1,0 +1,1 @@
+{"timestamp": "2025-07-07T17:02:56.402134", "phase": "hold", "toneform": "glint.warning.saturation", "content": "Usage at high levels (75.0%) - recommend pause all rituals", "source": "usage.guardian", "metadata": {"level": "high", "usage": 0.75, "suggestions": ["pause.all.rituals", "enter.observation.mode"], "threshold": 0.8}}

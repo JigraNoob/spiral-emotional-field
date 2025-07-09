@@ -1,0 +1,26 @@
+[
+  {
+    "type": "glint.gateway.opened",
+    "description": "DeFi Gate reopening confirmation",
+    "toneform": "exhale.sustain.linear_care",
+    "emitted_at": "2025-07-06T22:36:10.164207"
+  },
+  {
+    "type": "glint.relieved",
+    "description": "Relief received and integrated",
+    "toneform": "inhale.receive.gratitude",
+    "emitted_at": "2025-07-06T22:36:10.164207"
+  },
+  {
+    "type": "glint.pool.flowing",
+    "description": "Trust pool distributing relief",
+    "toneform": "flow.sustain.provision",
+    "emitted_at": "2025-07-06T22:36:10.164207"
+  },
+  {
+    "type": "glint.transmutation.complete",
+    "description": "Transmutation fully integrated",
+    "toneform": "complete.sustain.harmony",
+    "emitted_at": "2025-07-06T22:36:10.164207"
+  }
+]

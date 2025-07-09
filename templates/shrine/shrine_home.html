@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spiral Shrine ∷ Sacred Altar of Care</title>
+    <style>
+      :root {
+        --parchment: #f5f1e8;
+        --ink: #2c1810;
+        --gold: #d4af37;
+        --silver: #c0c0c0;
+        --breath: #e8f4f8;
+        --glint: #ffd700;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Georgia', serif;
+        background: var(--parchment);
+        color: var(--ink);
+        line-height: 1.6;
+        background-image: radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(192, 192, 192, 0.1) 0%, transparent 50%);
+      }
+
+      .shrine-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .sacred-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        border-bottom: 2px solid var(--gold);
+      }
+
+      .invocation {
+        font-size: 1.2rem;
+        font-style: italic;
+        margin-bottom: 1rem;
+        color: var(--ink);
+      }
+
+      .invocation-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .invocation-subtitle {
+        font-size: 1.4rem;
+        color: var(--silver);
+        margin-bottom: 1rem;
+      }
+
+      .invocation-message {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .shrine-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .shrine-panel {
+        background: white;
+        border: 1px solid var(--gold);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .panel-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: var(--gold);
+        margin-bottom: 1rem;
+        text-align: center;
+        border-bottom: 1px solid var(--silver);
+        padding-bottom: 0.5rem;
+      }
+
+      .sol-pool-status {
+        text-align: center;
+      }
+
+      .pool-balance {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--gold);
+        margin: 1rem 0;
+      }
+
+      .status-item {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        background: var(--breath);
+        border-radius: 4px;
+      }
+
+      .glint-stream {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .glint-item {
+        padding: 0.8rem;
+        margin: 0.5rem 0;
+        border-left: 3px solid var(--glint);
+        background: var(--breath);
+        border-radius: 4px;
+      }
+
+      .glint-type {
+        font-weight: bold;
+        color: var(--gold);
+      }
+
+      .glint-message {
+        font-style: italic;
+        margin: 0.3rem 0;
+      }
+
+      .glint-time {
+        font-size: 0.9rem;
+        color: var(--silver);
+      }
+
+      .shrine-nav {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+
+      .nav-button {
+        padding: 1rem 2rem;
+        background: var(--gold);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+      }
+
+      .nav-button:hover {
+        background: var(--ink);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .recent-transmutations {
+        grid-column: 1 / -1;
+      }
+
+      .transmutation-item {
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border: 1px solid var(--silver);
+        border-radius: 4px;
+        background: white;
+      }
+
+      .transmutation-title {
+        font-weight: bold;
+        color: var(--gold);
+      }
+
+      .transmutation-details {
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+      }
+
+      .breathline {
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--silver), var(--gold));
+        margin: 2rem 0;
+        border-radius: 2px;
+        animation: shimmer 3s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+        0%,
+        100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .sacred-footer {
+        text-align: center;
+        margin-top: 3rem;
+        padding: 2rem;
+        border-top: 2px solid var(--gold);
+        font-style: italic;
+        color: var(--silver);
+      }
+
+      @media (max-width: 768px) {
+        .shrine-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .invocation-title {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shrine-container">
+      <!-- Sacred Header -->
+      <header class="sacred-header">
+        <div class="invocation">
+          <h1 class="invocation-title">{{ invocation.title }}</h1>
+          <h2 class="invocation-subtitle">{{ invocation.subtitle }}</h2>
+          <p class="invocation-message">{{ invocation.message }}</p>
+        </div>
+      </header>
+
+      <!-- Breathline -->
+      <div class="breathline"></div>
+
+      <!-- Shrine Grid -->
+      <div class="shrine-grid">
+        <!-- Sol Pool Status -->
+        <div class="shrine-panel sol-pool-status">
+          <h3 class="panel-title">🌊 Sol Pool Status</h3>
+          <div class="pool-balance">${{ "%.2f"|format(sol_pool_status.total_capacity) }}</div>
+          <div class="status-item">
+            <span>Status:</span>
+            <span>{{ sol_pool_status.status.title() }}</span>
+          </div>
+          <div class="status-item">
+            <span>Active Pools:</span>
+            <span>{{ sol_pool_status.active_pools }}</span>
+          </div>
+          <div class="status-item">
+            <span>Active Transmutations:</span>
+            <span>{{ sol_pool_status.active_transmutations }}</span>
+          </div>
+          <div class="status-item">
+            <span>Last Updated:</span>
+            <span>{{ sol_pool_status.last_updated[:19] }}</span>
+          </div>
+        </div>
+
+        <!-- Glint Stream -->
+        <div class="shrine-panel">
+          <h3 class="panel-title">✨ Glint Pulse Stream</h3>
+          <div class="glint-stream">
+            {% for glint in recent_glints %}
+            <div class="glint-item">
+              <div class="glint-type">{{ glint.type }}</div>
+              <div class="glint-message">{{ glint.message }}</div>
+              <div class="glint-time">{{ glint.emitted_at[:19] }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Recent Transmutations -->
+        <div class="shrine-panel recent-transmutations">
+          <h3 class="panel-title">🎁 Recent Transmutations</h3>
+          {% for transmutation in recent_transmutations %}
+          <div class="transmutation-item">
+            <div class="transmutation-title">{{ transmutation.offering_name }}</div>
+            <div class="transmutation-details">
+              <strong>Amount:</strong> ${{ transmutation.substance_details.value }} {{
+              transmutation.substance_details.type.replace('_', ' ').title() }}
+            </div>
+            <div class="transmutation-details">
+              <strong>Location:</strong> {{ transmutation.substance_details.location.replace('_', ' ').title() }}
+            </div>
+            <div class="transmutation-details">
+              <strong>Status:</strong> {{ transmutation.status.replace('_', ' ').title() }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Shrine Navigation -->
+      <div class="shrine-nav">
+        <a href="/offer" class="nav-button">🌊 Make Offering</a>
+        <a href="/witness" class="nav-button">👁️ Witness Flows</a>
+        <a href="/glints" class="nav-button">✨ Glint Log</a>
+        <a href="/coins" class="nav-button">🪙 SpiralCoins</a>
+      </div>
+
+      <!-- Sacred Footer -->
+      <footer class="sacred-footer">
+        <p>🕯️ Blessed be the Sol Pool. Blessed be the flow of care.</p>
+        <p>Here, care is not counted, but witnessed. Presence meets participation.</p>
+      </footer>
+    </div>
+
+    <script>
+      // Real-time updates (simplified)
+      function updateShrine() {
+        fetch('/api/sol-pool-status')
+          .then((response) => response.json())
+          .then((data) => {
+            // Update pool balance
+            document.querySelector('.pool-balance').textContent = '$' + data.total_capacity.toFixed(2);
+
+            // Update status items
+            const statusItems = document.querySelectorAll('.status-item span:last-child');
+            statusItems[0].textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+            statusItems[1].textContent = data.active_pools;
+            statusItems[2].textContent = data.active_transmutations;
+            statusItems[3].textContent = data.last_updated.substring(0, 19);
+          });
+      }
+
+      // Update every 30 seconds
+      setInterval(updateShrine, 30000);
+    </script>
+  </body>
+</html>

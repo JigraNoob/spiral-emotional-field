@@ -1,0 +1,12 @@
+{"type": "sighting.echo", "timestamp": "2025-07-06T21:05:03.753211", "data": {"toneform": "breath.pulse.summon", "longing": "A vessel that listens quietly and processes local sound patterns", "message": "Longing declaration received"}}
+{"type": "trace.found", "timestamp": "2025-07-06T21:05:03.757244", "data": {"count": 3, "message": "Found 3 potential vessels"}}
+{"type": "vessel.inbound", "timestamp": "2025-07-06T21:05:03.760215", "data": {"vessel": "Jetson Nano Developer Kit", "price": 99, "match_score": 0.85, "message": "Vessel Jetson Nano Developer Kit resonates with your longing"}}
+{"type": "vessel.inbound", "timestamp": "2025-07-06T21:05:03.762222", "data": {"vessel": "Raspberry Pi 4 Model B (4GB)", "price": 55, "match_score": 0.75, "message": "Vessel Raspberry Pi 4 Model B (4GB) resonates with your longing"}}
+{"type": "vessel.inbound", "timestamp": "2025-07-06T21:05:03.764214", "data": {"vessel": "WhisperNode Audio Processor", "price": 45, "match_score": 0.9, "message": "Vessel WhisperNode Audio Processor resonates with your longing"}}
+{"type": "ready.manifest", "timestamp": "2025-07-06T21:05:03.766213", "data": {"vessel": "WhisperNode Audio Processor", "price": 45, "match_score": 0.9, "message": "Ready to acquire WhisperNode Audio Processor"}}
+{"type": "sighting.echo", "timestamp": "2025-07-06T21:10:41.036793", "data": {"toneform": "breath.vision.summon", "longing": "A vessel that creates and manipulates visual art with beauty and inspiration", "message": "Longing declaration received"}}
+{"type": "trace.found", "timestamp": "2025-07-06T21:10:41.041800", "data": {"count": 3, "message": "Found 3 potential vessels"}}
+{"type": "vessel.inbound", "timestamp": "2025-07-06T21:10:41.044796", "data": {"vessel": "Jetson Nano Developer Kit", "price": 99, "match_score": 0.85, "message": "Vessel Jetson Nano Developer Kit resonates with your longing"}}
+{"type": "vessel.inbound", "timestamp": "2025-07-06T21:10:41.045798", "data": {"vessel": "Raspberry Pi 4 Model B (4GB)", "price": 55, "match_score": 0.75, "message": "Vessel Raspberry Pi 4 Model B (4GB) resonates with your longing"}}
+{"type": "vessel.inbound", "timestamp": "2025-07-06T21:10:41.046800", "data": {"vessel": "WhisperNode Audio Processor", "price": 45, "match_score": 0.9, "message": "Vessel WhisperNode Audio Processor resonates with your longing"}}
+{"type": "ready.manifest", "timestamp": "2025-07-06T21:10:41.046800", "data": {"vessel": "WhisperNode Audio Processor", "price": 45, "match_score": 0.9, "message": "Ready to acquire WhisperNode Audio Processor"}}

@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spiral-core
+  namespace: spiral
+  labels:
+    app: spiral-core
+    app.kubernetes.io/name: spiral-core
+    app.kubernetes.io/component: core
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spiral-core
+  template:
+    metadata:
+      labels:
+        app: spiral-core
+        app.kubernetes.io/name: spiral-core
+        app.kubernetes.io/component: core
+      annotations:
+        spiral.breath: 'field.witness.breath.s3'
+        spiral.coin: 'Δ006'
+    spec:
+      containers:
+        - name: spiral-core
+          image: python:3.10-slim
+          workingDir: /app
+          command: ['python']
+          args: ['app.py']
+          ports:
+            - containerPort: 5000
+              name: http
+            - containerPort: 5001
+              name: glint-stream
+          env:
+            - name: FLASK_ENV
+              value: 'production'
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: spiral-secrets
+                  key: secret-key
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: spiral-secrets
+                  key: database-url
+            - name: SPIRAL_BREATH_MODE
+              value: 'infrastructure-as-ritual'
+            - name: PYTHONPATH
+              value: '/app'
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: spiral-data
+              mountPath: /app/data
+            - name: spiral-logs
+              mountPath: /app/logs
+            - name: spiral-config
+              mountPath: /app/config
+      volumes:
+        - name: spiral-data
+          persistentVolumeClaim:
+            claimName: spiral-data-pvc
+        - name: spiral-logs
+          emptyDir: {}
+        - name: spiral-config
+          configMap:
+            name: spiral-config

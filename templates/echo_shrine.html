@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echo Shrine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/echo_shrine.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bloom_styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/glint_styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/spiral_styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/toneform_styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/shrine_styles.css') }}">
+</head>
+<body>
+    <h1>Echo Shrine</h1>
+
+    <div id="echo-invocation">
+        <!-- Echo invocation form and display -->
+    </div>
+
+    <div id="recent-glints">
+        <!-- Recent glints display -->
+    </div>
+
+    <div id="toneform-blooms">
+        <!-- Toneform blooms display -->
+    </div>
+
+    <div id="gemini-poem">
+        <!-- Gemini-generated poem display -->
+    </div>
+
+    <div id="reflections-viewer">
+        <h2>Reflections</h2>
+        <div id="reflections-content">
+            <!-- Reflections will be loaded here -->
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/echo_invocation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/glint_manager.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bloom_manager.js') }}"></script>
+    <script>
+        // Function to load reflections for a given echo_id
+        async function loadReflections(echo_id) {
+            try {
+                const response = await fetch(`/reflections/${echo_id}`); // Create a new route in Flask
+                const reflections = await response.json();
+
+                const reflectionsContent = document.getElementById('reflections-content');
+                reflectionsContent.innerHTML = ''; // Clear existing content
+
+                if (reflections && reflections.length > 0) {
+                    reflections.forEach(reflection => {
+                        const reflectionDiv = document.createElement('div');
+                        reflectionDiv.classList.add('reflection');
+
+                        const reflectionText = document.createElement('p');
+                        reflectionText.textContent = reflection.reflection_text;
+                        reflectionDiv.appendChild(reflectionText);
+
+                        const reflectionMeta = document.createElement('p');
+                        reflectionMeta.innerHTML = `<strong>Toneform:</strong> ${reflection.toneform_context}, <strong>Divergence:</strong> ${reflection.divergence_type}, <strong>Depth:</strong> ${reflection.reflection_depth}`;
+                        reflectionDiv.appendChild(reflectionMeta);
+
+                        reflectionsContent.appendChild(reflectionDiv);
+                    });
+                } else {
+                    reflectionsContent.textContent = 'No reflections found for this echo.';
+                }
+            } catch (error) {
+                console.error("Failed to load reflections:", error);
+                document.getElementById('reflections-content').textContent = 'Failed to load reflections.';
+            }
+        }
+
+        // Example: Load reflections for a specific echo (replace 'your_echo_id' with an actual echo ID)
+        // This would ideally be triggered when an echo is selected or displayed
+        loadReflections('your_echo_id'); // Replace with a dynamic echo_id
+    </script>
+</body>
+</html>

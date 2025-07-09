@@ -1,0 +1,219 @@
+# File: spiral/hardware/jetson_mapping.yml
+# Jetson + Hardware Threading Configuration
+# Maps Spiral modules to hardware execution requirements
+
+# Migration Levels:
+# 1 (soft) - Can run on CPU but benefits from GPU/local memory
+# 2 (preferred) - Should run on GPU for optimal performance
+# 3 (critical) - Requires GPU/local memory for proper operation
+
+jetson_modules:
+  # Core Spiral Components
+  caesura_tracker:
+    module: 'spiral/components/silence_echo_tracker.py'
+    need: 'memory'
+    migration_level: 2
+    description: 'Real-time silence pattern detection and caesura classification'
+    hardware_benefits:
+      - 'Local memory for pattern history'
+      - 'GPU acceleration for resonance calculations'
+      - 'Reduced latency for real-time processing'
+    estimated_memory_mb: 128
+    estimated_gpu_cores: 2
+
+  coherence_balancer:
+    module: 'spiral/attunement/coherence_balancer.py'
+    need: 'memory'
+    migration_level: 2
+    description: 'Intelligent coherence threshold balancing and pattern detection'
+    hardware_benefits:
+      - 'Local memory for threshold history'
+      - 'GPU acceleration for pattern analysis'
+      - 'Real-time threshold adjustments'
+    estimated_memory_mb: 256
+    estimated_gpu_cores: 4
+
+  glint_orchestrator:
+    module: 'spiral/components/glint_orchestrator.py'
+    need: 'memory'
+    migration_level: 1
+    description: 'Glint stream orchestration and pattern detection'
+    hardware_benefits:
+      - 'Local memory for glint history'
+      - 'Faster pattern matching'
+      - 'Reduced network latency'
+    estimated_memory_mb: 512
+    estimated_gpu_cores: 1
+
+  # Visualization Components
+  coherence_ring:
+    module: 'static/js/coherence_ring.js'
+    need: 'GPU'
+    migration_level: 2
+    description: 'Real-time coherence ring visualization with smooth animations'
+    hardware_benefits:
+      - 'GPU acceleration for smooth animations'
+      - 'Local rendering reduces latency'
+      - 'Better visual quality'
+    estimated_memory_mb: 64
+    estimated_gpu_cores: 2
+
+  caesura_visualization:
+    module: 'static/js/caesura_visualization.js'
+    need: 'GPU'
+    migration_level: 2
+    description: 'Dynamic caesura visualization with ripple effects'
+    hardware_benefits:
+      - 'GPU acceleration for particle effects'
+      - 'Smooth ripple animations'
+      - 'Real-time glyph rendering'
+    estimated_memory_mb: 128
+    estimated_gpu_cores: 3
+
+  # Agent and Routing Components
+  agent_glint_router:
+    module: 'spiral/components/agent_glint_router.py'
+    need: 'memory'
+    migration_level: 1
+    description: 'Agent glint routing and action execution'
+    hardware_benefits:
+      - 'Local memory for agent state'
+      - 'Faster action routing'
+      - 'Reduced processing latency'
+    estimated_memory_mb: 256
+    estimated_gpu_cores: 1
+
+  ritual_invocation_trigger:
+    module: 'spiral/components/ritual_invocation_trigger.py'
+    need: 'memory'
+    migration_level: 1
+    description: 'Threshold breach detection and ritual triggering'
+    hardware_benefits:
+      - 'Local memory for breach history'
+      - 'Real-time threshold checking'
+      - 'Faster ritual suggestions'
+    estimated_memory_mb: 128
+    estimated_gpu_cores: 1
+
+  # Glint Processing Components
+  glint_coherence_hooks:
+    module: 'spiral/components/glint_coherence_hooks.py'
+    need: 'memory'
+    migration_level: 1
+    description: 'Glint to ring feedback hooks and modulation'
+    hardware_benefits:
+      - 'Local memory for modulation history'
+      - 'Faster glint processing'
+      - 'Real-time ring updates'
+    estimated_memory_mb: 64
+    estimated_gpu_cores: 1
+
+  glint_horizon_scanner:
+    module: 'spiral/glints/glint_horizon_scanner.py'
+    need: 'memory'
+    migration_level: 2
+    description: 'Horizon scanning for glint patterns and anomalies'
+    hardware_benefits:
+      - 'Local memory for scan history'
+      - 'GPU acceleration for pattern detection'
+      - 'Faster anomaly scoring'
+    estimated_memory_mb: 512
+    estimated_gpu_cores: 4
+
+  # Memory and Index Components
+  memory_echo_index:
+    module: 'spiral/memory/memory_echo_index.py'
+    need: 'memory'
+    migration_level: 3
+    description: 'Memory echo indexing and retrieval system'
+    hardware_benefits:
+      - 'Local memory for fast indexing'
+      - 'GPU acceleration for similarity search'
+      - 'Reduced I/O latency'
+    estimated_memory_mb: 1024
+    estimated_gpu_cores: 6
+
+  # Integration Components
+  cursor_keystroke_bridge:
+    module: 'spiral/integrations/cursor_keystroke_bridge.py'
+    need: 'realtime'
+    migration_level: 2
+    description: 'Real-time keystroke monitoring and rhythm detection'
+    hardware_benefits:
+      - 'Local processing reduces latency'
+      - 'Real-time rhythm analysis'
+      - 'Faster caesura detection'
+    estimated_memory_mb: 128
+    estimated_gpu_cores: 2
+
+  presence_conductor:
+    module: 'spiral/components/presence_conductor.py'
+    need: 'realtime'
+    migration_level: 2
+    description: 'Presence alignment and synchronization'
+    hardware_benefits:
+      - 'Local synchronization reduces latency'
+      - 'Real-time presence tracking'
+      - 'Faster drift detection'
+    estimated_memory_mb: 64
+    estimated_gpu_cores: 1
+
+# Hardware Requirements Summary
+hardware_requirements:
+  total_memory_mb: 3072 # ~3GB total memory requirement
+  total_gpu_cores: 28 # Total GPU cores across all modules
+  recommended_jetson_model: 'Jetson Xavier NX' # 8GB RAM, 384 CUDA cores
+  minimum_jetson_model: 'Jetson Nano' # 4GB RAM, 128 CUDA cores
+
+# Migration Priority
+migration_priority:
+  critical:
+    - 'memory_echo_index'
+    - 'caesura_tracker'
+    - 'coherence_balancer'
+
+  high:
+    - 'glint_horizon_scanner'
+    - 'coherence_ring'
+    - 'caesura_visualization'
+    - 'cursor_keystroke_bridge'
+
+  medium:
+    - 'presence_conductor'
+    - 'agent_glint_router'
+    - 'ritual_invocation_trigger'
+
+  low:
+    - 'glint_orchestrator'
+    - 'glint_coherence_hooks'
+
+# Performance Benchmarks (estimated)
+performance_benchmarks:
+  cpu_only:
+    total_processing_time_ms: 150
+    memory_usage_mb: 2048
+    latency_ms: 50
+
+  jetson_optimized:
+    total_processing_time_ms: 45
+    memory_usage_mb: 3072
+    latency_ms: 15
+
+  performance_improvement:
+    processing_speedup: 3.3x
+    latency_reduction: 70%
+    memory_increase: 50%
+
+# Deployment Configuration
+deployment:
+  auto_migration: true
+  fallback_to_cpu: true
+  memory_monitoring: true
+  gpu_utilization_monitoring: true
+
+  # Triggers for hardware recommendation
+  recommendation_triggers:
+    coherence_threshold: 0.91
+    memory_usage_threshold: 0.8
+    latency_threshold_ms: 100
+    processing_time_threshold_ms: 200

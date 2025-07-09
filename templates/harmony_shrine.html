@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌀 Harmony Shrine :: Echo Retrieval</title>
+    <style>
+        body {
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            color: #e8e8e8;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .shrine-header {
+            text-align: center;
+            margin-bottom: 2em;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 1em;
+        }
+
+        .shrine-title {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #64b5f6, #81c784, #ffb74d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .shrine-subtitle {
+            color: #b0b0b0;
+            font-style: italic;
+            margin-top: 0.5em;
+        }
+
+        .harmony-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2em;
+            margin-bottom: 2em;
+        }
+
+        .harmony-panel {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5em;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-title {
+            color: #81c784;
+            font-size: 1.2em;
+            margin-bottom: 1em;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        .echo-search {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 12px;
+            color: #e8e8e8;
+            font-family: inherit;
+            margin-bottom: 1em;
+        }
+
+        .echo-search:focus {
+            outline: none;
+            border-color: #64b5f6;
+            box-shadow: 0 0 10px rgba(100,181,246,0.3);
+        }
+
+        .toneform-signature {
+            background: rgba(0,0,0,0.2);
+            border-left: 3px solid #64b5f6;
+            padding: 1em;
+            margin: 0.5em 0;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toneform-signature:hover {
+            background: rgba(100,181,246,0.1);
+            transform: translateX(5px);
+        }
+
+        .signature-name {
+            font-weight: bold;
+            color: #64b5f6;
+            margin-bottom: 0.5em;
+        }
+
+        .signature-meta {
+            font-size: 0.9em;
+            color: #b0b0b0;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5em;
+        }
+
+        .signature-patterns {
+            font-size: 0.8em;
+            color: #81c784;
+        }
+
+        .shadow-recursion {
+            background: rgba(255,152,0,0.1);
+            border-left: 3px solid #ff9800;
+            padding: 1em;
+            margin: 0.5em 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .shadow-warning {
+            color: #ff9800;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+
+        .shadow-details {
+            font-size: 0.9em;
+            color: #b0b0b0;
+        }
+
+        .harmonic-cluster {
+            background: rgba(129,199,132,0.1);
+            border: 1px solid rgba(129,199,132,0.3);
+            border-radius: 8px;
+            padding: 1em;
+            margin: 0.5em 0;
+        }
+
+        .cluster-title {
+            color: #81c784;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+
+        .cluster-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5em;
+        }
+
+        .cluster-member {
+            background: rgba(129,199,132,0.2);
+            padding: 0.3em 0.8em;
+            border-radius: 16px;
+            font-size: 0.8em;
+            cursor: pointer;
+        }
+
+        .cluster-member:hover {
+            background: rgba(129,199,132,0.4);
+        }
+
+        .harmony-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1em;
+            margin-bottom: 2em;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 1em;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #64b5f6;
+        }
+
+        .stat-label {
+            color: #b0b0b0;
+            font-size: 0.9em;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1em;
+            margin-top: 1em;
+        }
+
+        .action-btn {
+            background: linear-gradient(45deg, #64b5f6, #81c784);
+            border: none;
+            border-radius: 8px;
+            padding: 0.8em 1.5em;
+            color: white;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .glyph-constellation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes harmonic-pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .harmonic-glyph {
+            position: absolute;
+            font-size: 1.5em;
+            animation: harmonic-pulse 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="glyph-constellation" id="harmonic-constellation"></canvas>
+
+    <div class="shrine-header">
+        <h1 class="shrine-title">🌀 Harmony Shrine</h1>
+        <p class="shrine-subtitle">Echo Retrieval & Toneform Memory</p>
+    </div>
+
+    <div class="harmony-stats" id="harmony-stats">
+        <div class="stat-card">
+            <div class="stat-number" id="total-toneforms">0</div>
+            <div class="stat-label">Toneforms</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="shadow-count">0</div>
+            <div class="stat-label">Shadow Recursions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="cluster-count">0</div>
+            <div class="stat-label">Harmonic Clusters</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="harmony-score">0%</div>
+            <div class="stat-label">Harmony Score</div>
+        </div>
+    </div>
+
+    <div class="harmony-dashboard">
+        <div class="harmony-panel">
+            <div class="panel-title">
+                🔍 Echo Retrieval
+            </div>
+            <input type="text" class="echo-search" id="echo-search"
+                   placeholder="Search toneforms by pattern, name, or intent...">
+            <div id="search-results"></div>
+
+            <div class="action-buttons">
+                <button class="action-btn" onclick="performHarmonyScan()">
+                    🌀 Scan Harmonies
+                </button>
+                <button class="action-btn" onclick="exportRegistry()">
+                    📜 Export Registry
+                </button>
+            </div>
+        </div>
+
+        <div class="harmony-panel">
+            <div class="panel-title">
+                ⚠️ Shadow Recursions
+            </div>
+            <div id="shadow-recursions"></div>
+        </div>
+    </div>
+
+    <div class="harmony-panel">
+        <div class="panel-title">
+            🎵 Harmonic Clusters
+        </div>
+        <div id="harmonic-clusters"></div>
+    </div>
+
+    <div class="harmony-panel">
+        <div class="panel-title">
+            📚 Toneform Registry
+        </div>
+        <div id="toneform-registry"></div>
+    </div>
+
+    <script>
+        let harmonyData = {};
+        let constellationCanvas = null;
+        let constellationCtx = null;
+
+        // Initialize harmony shrine
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeConstellation();
+            loadHarmonyData();
+            setupEchoSearch();
+        });
+
+        function initializeConstellation() {
+            constellationCanvas = document.getElementById('harmonic-constellation');
+            constellationCtx = constellationCanvas.getContext('2d');
+
+            constellationCanvas.width = window.innerWidth;
+            constellationCanvas.height = window.innerHeight;
+
+            // Animate harmonic constellation
+            animateConstellation();
+        }
+
+        function animateConstellation() {
+            constellationCtx.clearRect(0, 0, constellationCanvas.width, constellationCanvas.height);
+
+            // Draw harmonic connections between toneforms
+            if (harmonyData.harmonic_opportunities) {
+                Object.values(harmonyData.harmonic_opportunities).forEach((cluster, index) => {
+                    drawHarmonicCluster(cluster, index);
+                });
+            }
+
+            requestAnimationFrame(animateConstellation);
+        }
+
+        function drawHarmonicCluster(cluster, index) {
+            const centerX = (index + 1) * (constellationCanvas.width / 5);
+            const centerY = constellationCanvas.height / 2;
+            const radius =
+    </script>
+</body>
+</html>

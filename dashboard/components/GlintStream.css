@@ -1,0 +1,337 @@
+.glint-stream {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  color: white;
+  font-family: "Inter", sans-serif;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.glint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.glint-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  background: linear-gradient(45deg, #ffd700, #ffa500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glint-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.connection-status.connected {
+  background: rgba(80, 200, 120, 0.2);
+  color: #50c878;
+  border: 1px solid rgba(80, 200, 120, 0.3);
+}
+
+.connection-status.disconnected {
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.auto-scroll-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.8rem;
+}
+
+.auto-scroll-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.auto-scroll-toggle.active {
+  background: rgba(255, 215, 0, 0.3);
+  border-color: #ffd700;
+}
+
+.glint-stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffd700;
+}
+
+.glint-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-select,
+.filter-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.filter-select:focus,
+.filter-input:focus {
+  outline: none;
+  border-color: #ffd700;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.filter-select option {
+  background: #1a1a2e;
+  color: white;
+}
+
+.filter-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.glint-container {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.glint-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.glint-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.glint-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.glint-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.no-glints {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.glint-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  animation: glintSlideIn 0.5s ease-out;
+}
+
+.glint-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--phase-color);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.glint-item .glint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.glint-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.glint-icon {
+  font-size: 1.2rem;
+}
+
+.glint-module {
+  font-weight: 600;
+  color: #ffd700;
+  font-size: 0.9rem;
+}
+
+.glint-time {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.phase-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+.glint-content {
+  margin-bottom: 0.8rem;
+}
+
+.glint-type {
+  font-weight: 600;
+  color: var(--phase-color);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.glint-context {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  line-height: 1.4;
+  font-family: "Monaco", "Menlo", monospace;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  border-radius: 6px;
+  border-left: 3px solid var(--phase-color);
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.glint-lineage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.lineage-label {
+  opacity: 0.6;
+  font-weight: 500;
+}
+
+.lineage-items {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.lineage-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+.lineage-more {
+  color: #ffd700;
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.stream-sync-indicator {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  color: #50c878;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Animations */
+@keyframes glintSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .glint-stream {
+    padding: 1rem;
+    height: 500px;
+  }
+
+  .glint-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .glint-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .glint-filters {
+    flex-direction: column;
+  }
+
+  .glint-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+}

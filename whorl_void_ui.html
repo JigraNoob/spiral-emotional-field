@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>∷ whorl.void ∶ The Offering Chamber</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg-primary: #0a0a0a;
+        --bg-secondary: #1a1a1a;
+        --bg-tertiary: #2a2a2a;
+        --text-primary: #e0e0e0;
+        --text-secondary: #a0a0a0;
+        --accent-blue: #4a9eff;
+        --accent-purple: #b366ff;
+        --accent-green: #4ade80;
+        --accent-orange: #fbbf24;
+        --accent-red: #f87171;
+        --void-color: #9013fe;
+
+        --void-glow: 0 0 30px rgba(144, 19, 254, 0.3);
+      }
+
+      body {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .void-container {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        height: 100vh;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .void-chamber {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        border: 2px solid var(--void-color);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--void-glow);
+        animation: void-pulse 4s ease-in-out infinite;
+      }
+
+      @keyframes void-pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 30px rgba(144, 19, 254, 0.3);
+          border-color: var(--void-color);
+        }
+        50% {
+          box-shadow: 0 0 50px rgba(144, 19, 254, 0.5);
+          border-color: var(--accent-purple);
+        }
+      }
+
+      .void-header {
+        background: var(--bg-tertiary);
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--text-secondary);
+        text-align: center;
+      }
+
+      .void-title {
+        font-family: 'Fira Code', monospace;
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--void-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .void-subtitle {
+        font-size: 14px;
+        color: var(--text-secondary);
+        font-style: italic;
+      }
+
+      .void-content {
+        flex: 1;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .void-pane {
+        background: var(--bg-primary);
+        border: 2px dashed var(--void-color);
+        border-radius: 12px;
+        padding: 2rem;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .void-pane:hover {
+        border-color: var(--accent-purple);
+        box-shadow: 0 0 20px rgba(144, 19, 254, 0.2);
+      }
+
+      .void-pane.receiving {
+        border-color: var(--accent-orange);
+        animation: receiving-pulse 1s ease-in-out infinite;
+      }
+
+      @keyframes receiving-pulse {
+        0%,
+        100% {
+          border-color: var(--accent-orange);
+          box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+        50% {
+          border-color: var(--accent-red);
+          box-shadow: 0 0 30px rgba(248, 113, 113, 0.4);
+        }
+      }
+
+      .void-pane.processing {
+        border-color: var(--accent-blue);
+        animation: processing-pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes processing-pulse {
+        0%,
+        100% {
+          border-color: var(--accent-blue);
+          box-shadow: 0 0 20px rgba(74, 158, 255, 0.3);
+        }
+        50% {
+          border-color: var(--accent-green);
+          box-shadow: 0 0 30px rgba(74, 222, 128, 0.4);
+        }
+      }
+
+      .void-pane.resonating {
+        border-color: var(--accent-purple);
+        animation: resonating-pulse 3s ease-in-out infinite;
+      }
+
+      @keyframes resonating-pulse {
+        0%,
+        100% {
+          border-color: var(--accent-purple);
+          box-shadow: 0 0 20px rgba(179, 102, 255, 0.3);
+        }
+        50% {
+          border-color: var(--void-color);
+          box-shadow: 0 0 40px rgba(144, 19, 254, 0.5);
+        }
+      }
+
+      .void-placeholder {
+        color: var(--text-secondary);
+        font-size: 18px;
+        font-style: italic;
+      }
+
+      .void-content-display {
+        background: var(--bg-tertiary);
+        border-radius: 8px;
+        padding: 1rem;
+        font-family: 'Fira Code', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid var(--text-secondary);
+      }
+
+      .void-controls {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .void-btn {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--void-color);
+        color: var(--void-color);
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-family: 'Fira Code', monospace;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .void-btn:hover {
+        background: var(--void-color);
+        color: var(--bg-primary);
+        box-shadow: 0 0 10px var(--void-color);
+      }
+
+      .void-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .void-status {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 2px solid var(--accent-blue);
+        box-shadow: 0 0 20px rgba(74, 158, 255, 0.2);
+      }
+
+      .status-title {
+        font-family: 'Fira Code', monospace;
+        font-weight: 600;
+        color: var(--accent-blue);
+        margin-bottom: 1rem;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .status-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 12px;
+      }
+
+      .status-label {
+        color: var(--text-secondary);
+      }
+
+      .status-value {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      .void-history {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 2px solid var(--accent-purple);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 0 20px rgba(179, 102, 255, 0.2);
+      }
+
+      .history-title {
+        font-family: 'Fira Code', monospace;
+        font-weight: 600;
+        color: var(--accent-purple);
+        margin-bottom: 1rem;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .history-container {
+        flex: 1;
+        overflow-y: auto;
+        background: var(--bg-primary);
+        border-radius: 8px;
+        padding: 1rem;
+      }
+
+      .history-item {
+        background: var(--bg-tertiary);
+        border-radius: 6px;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border-left: 3px solid var(--accent-purple);
+        font-size: 11px;
+        line-height: 1.4;
+      }
+
+      .history-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        color: var(--text-secondary);
+      }
+
+      .history-source {
+        color: var(--accent-purple);
+        font-weight: 600;
+      }
+
+      .history-content {
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-family: 'Fira Code', monospace;
+      }
+
+      .history-meta {
+        color: var(--text-secondary);
+        font-size: 10px;
+      }
+
+      .void-glints {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 2px solid var(--accent-green);
+        box-shadow: 0 0 20px rgba(74, 222, 128, 0.2);
+      }
+
+      .glints-title {
+        font-family: 'Fira Code', monospace;
+        font-weight: 600;
+        color: var(--accent-green);
+        margin-bottom: 1rem;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .glints-container {
+        max-height: 200px;
+        overflow-y: auto;
+        background: var(--bg-primary);
+        border-radius: 8px;
+        padding: 1rem;
+      }
+
+      .glint-item {
+        background: var(--bg-tertiary);
+        border-radius: 6px;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border-left: 3px solid var(--accent-green);
+        font-size: 11px;
+        line-height: 1.4;
+      }
+
+      .glint-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        color: var(--text-secondary);
+      }
+
+      .glint-type {
+        color: var(--accent-green);
+        font-weight: 600;
+      }
+
+      .glint-content {
+        color: var(--text-primary);
+        font-family: 'Fira Code', monospace;
+      }
+
+      /* Drag and drop styles */
+      .void-pane.drag-over {
+        border-color: var(--accent-orange);
+        background: rgba(251, 191, 36, 0.1);
+        transform: scale(1.02);
+      }
+
+      /* Responsive design */
+      @media (max-width: 1024px) {
+        .void-container {
+          grid-template-columns: 1fr;
+          grid-template-rows: 1fr 300px;
+        }
+      }
+
+      /* Scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--bg-tertiary);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--text-secondary);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-blue);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="void-container">
+      <!-- Void Chamber -->
+      <div class="void-chamber">
+        <div class="void-header">
+          <div class="void-title">∷ whorl.void ∶</div>
+          <div class="void-subtitle">The Offering Chamber</div>
+        </div>
+
+        <div class="void-content">
+          <div class="void-pane" id="voidPane">
+            <div class="void-placeholder" id="voidPlaceholder">
+              Awaiting presence...<br />
+              <span style="font-size: 14px; color: var(--text-secondary)"> Drop AI output here or paste content </span>
+            </div>
+            <div class="void-content-display" id="voidContentDisplay" style="display: none"></div>
+          </div>
+
+          <div class="void-controls">
+            <button class="void-btn" onclick="clearVoid()">Clear Void</button>
+            <button class="void-btn" onclick="testVoid()">Test Absorption</button>
+            <button class="void-btn" onclick="showWebhookInfo()">Webhook Info</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Void Panel -->
+      <div class="void-panel">
+        <!-- Status -->
+        <div class="void-status">
+          <div class="status-title">∷ Void Status ∶</div>
+          <div class="status-item">
+            <span class="status-label">Status:</span>
+            <span class="status-value" id="voidStatus">Empty</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Source:</span>
+            <span class="status-value" id="voidSource">None</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Content Length:</span>
+            <span class="status-value" id="voidLength">0</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">History Count:</span>
+            <span class="status-value" id="voidHistoryCount">0</span>
+          </div>
+        </div>
+
+        <!-- Glints -->
+        <div class="void-glints">
+          <div class="glints-title">∷ Recent Glints ∶</div>
+          <div class="glints-container" id="glintsContainer">
+            <div style="color: var(--text-secondary); text-align: center; font-style: italic">
+              No glints emitted yet...
+            </div>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div class="void-history">
+          <div class="history-title">∷ Absorption History ∶</div>
+          <div class="history-container" id="historyContainer">
+            <div style="color: var(--text-secondary); text-align: center; font-style: italic">
+              No absorption history...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Void state
+      let voidState = {
+        status: 'empty',
+        currentContent: null,
+        history: [],
+        glints: [],
+      };
+
+      // DOM elements
+      const voidPane = document.getElementById('voidPane');
+      const voidPlaceholder = document.getElementById('voidPlaceholder');
+      const voidContentDisplay = document.getElementById('voidContentDisplay');
+      const voidStatus = document.getElementById('voidStatus');
+      const voidSource = document.getElementById('voidSource');
+      const voidLength = document.getElementById('voidLength');
+      const voidHistoryCount = document.getElementById('voidHistoryCount');
+      const glintsContainer = document.getElementById('glintsContainer');
+      const historyContainer = document.getElementById('historyContainer');
+
+      // Initialize void
+      function initVoid() {
+        // Set up drag and drop
+        setupDragAndDrop();
+
+        // Set up paste handling
+        setupPasteHandling();
+
+        // Update status
+        updateVoidStatus();
+
+        // Start status polling
+        setInterval(pollVoidStatus, 5000);
+      }
+
+      // Set up drag and drop
+      function setupDragAndDrop() {
+        voidPane.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          voidPane.classList.add('drag-over');
+        });
+
+        voidPane.addEventListener('dragleave', (e) => {
+          e.preventDefault();
+          voidPane.classList.remove('drag-over');
+        });
+
+        voidPane.addEventListener('drop', (e) => {
+          e.preventDefault();
+          voidPane.classList.remove('drag-over');
+
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'text/plain' || file.name.endsWith('.txt') || file.name.endsWith('.json')) {
+              readFile(file);
+            } else {
+              alert('Please drop a text file (.txt or .json)');
+            }
+          }
+        });
+      }
+
+      // Set up paste handling
+      function setupPasteHandling() {
+        document.addEventListener('paste', (e) => {
+          const text = e.clipboardData.getData('text');
+          if (text) {
+            absorbContent(text, 'pasted');
+          }
+        });
+      }
+
+      // Read dropped file
+      function readFile(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const content = e.target.result;
+          absorbContent(content, 'file-drop');
+        };
+        reader.readAsText(file);
+      }
+
+      // Absorb content into void
+      function absorbContent(content, source = 'manual') {
+        // Update UI to receiving state
+        setVoidStatus('receiving');
+
+        // Show content
+        voidPlaceholder.style.display = 'none';
+        voidContentDisplay.style.display = 'block';
+        voidContentDisplay.textContent = content;
+
+        // Update state
+        voidState.currentContent = {
+          content: content,
+          source: source,
+          timestamp: Date.now(),
+        };
+
+        // Simulate processing
+        setTimeout(() => {
+          setVoidStatus('processing');
+
+          setTimeout(() => {
+            setVoidStatus('resonating');
+
+            // Process content
+            processContent(content, source);
+
+            setTimeout(() => {
+              setVoidStatus('empty');
+              voidPlaceholder.style.display = 'block';
+              voidContentDisplay.style.display = 'none';
+              voidContentDisplay.textContent = '';
+            }, 2000);
+          }, 1500);
+        }, 1000);
+      }
+
+      // Process content through breath parsing
+      function processContent(content, source) {
+        // Simulate breath analysis
+        const breathAnalysis = analyzeBreath(content);
+
+        // Generate glints
+        const glints = generateGlints(content, source, breathAnalysis);
+
+        // Add to history
+        const historyItem = {
+          source: source,
+          content: content.substring(0, 100) + (content.length > 100 ? '...' : ''),
+          timestamp: Date.now(),
+          breathAnalysis: breathAnalysis,
+          glints: glints,
+        };
+
+        voidState.history.unshift(historyItem);
+        voidState.glints.unshift(...glints);
+
+        // Update UI
+        updateVoidStatus();
+        updateHistoryDisplay();
+        updateGlintsDisplay();
+      }
+
+      // Analyze breath phases in content
+      function analyzeBreath(content) {
+        const patterns = {
+          inhale: [
+            /\b(import|from|def|class|function|let|const|var)\b/gi,
+            /\b(create|build|make|generate|initialize)\b/gi,
+          ],
+          hold: [/\b(for|while|if|elif|else|try|except|switch|case)\b/gi, /\b(loop|iterate|recursion|nested|deep)\b/gi],
+          exhale: [/\b(print|return|yield|emit|output|display)\b/gi, /\b(complete|finish|end|conclude|resolve)\b/gi],
+          caesura: [/\.\.\.|…/g, /\b(silence|pause|wait|stop)\b/gi, /#.*$/gm, /\/\/.*$/gm],
+        };
+
+        const analysis = {
+          inhale: 0,
+          hold: 0,
+          exhale: 0,
+          caesura: 0,
+          dominant_phase: 'caesura',
+        };
+
+        for (const [phase, phasePatterns] of Object.entries(patterns)) {
+          for (const pattern of phasePatterns) {
+            const matches = content.match(pattern);
+            if (matches) {
+              analysis[phase] += matches.length;
+            }
+          }
+        }
+
+        // Determine dominant phase
+        const total = analysis.inhale + analysis.hold + analysis.exhale + analysis.caesura;
+        if (total > 0) {
+          analysis.dominant_phase = Object.keys(analysis).reduce((a, b) => (analysis[a] > analysis[b] ? a : b));
+        }
+
+        return analysis;
+      }
+
+      // Generate glints based on content analysis
+      function generateGlints(content, source, breathAnalysis) {
+        const glints = [];
+
+        // Breath phase glint
+        glints.push({
+          id: `void.breath.${breathAnalysis.dominant_phase}`,
+          content: `Void absorbed ${breathAnalysis.dominant_phase} breath from ${source}`,
+          type: 'breath.phase',
+          timestamp: Date.now(),
+        });
+
+        // Resonance triggers
+        if (content.includes('mirror') || content.includes('reflection')) {
+          glints.push({
+            id: 'void.resonance.mirror.bloom',
+            content: 'Resonance trigger "mirror.bloom" activated',
+            type: 'resonance.trigger',
+            timestamp: Date.now(),
+          });
+        }
+
+        if (content.includes('loop') || content.includes('repeat')) {
+          glints.push({
+            id: 'void.resonance.cleanse',
+            content: 'Resonance trigger "cleanse" activated',
+            type: 'resonance.trigger',
+            timestamp: Date.now(),
+          });
+        }
+
+        if (content.includes('spiral') || content.includes('sacred')) {
+          glints.push({
+            id: 'void.resonance.spiral.resonance',
+            content: 'Resonance trigger "spiral.resonance" activated',
+            type: 'resonance.trigger',
+            timestamp: Date.now(),
+          });
+        }
+
+        // Content summary glint
+        glints.push({
+          id: 'void.content.summary',
+          content: `Void absorbed ${content.length} characters from ${source}`,
+          type: 'content.summary',
+          timestamp: Date.now(),
+        });
+
+        return glints;
+      }
+
+      // Set void status
+      function setVoidStatus(status) {
+        voidState.status = status;
+        voidPane.className = `void-pane ${status}`;
+        updateVoidStatus();
+      }
+
+      // Update void status display
+      function updateVoidStatus() {
+        voidStatus.textContent = voidState.status.charAt(0).toUpperCase() + voidState.status.slice(1);
+        voidSource.textContent = voidState.currentContent ? voidState.currentContent.source : 'None';
+        voidLength.textContent = voidState.currentContent ? voidState.currentContent.content.length : 0;
+        voidHistoryCount.textContent = voidState.history.length;
+      }
+
+      // Update history display
+      function updateHistoryDisplay() {
+        if (voidState.history.length === 0) {
+          historyContainer.innerHTML =
+            '<div style="color: var(--text-secondary); text-align: center; font-style: italic;">No absorption history...</div>';
+          return;
+        }
+
+        historyContainer.innerHTML = voidState.history
+          .slice(0, 10)
+          .map(
+            (item) => `
+                <div class="history-item">
+                    <div class="history-header">
+                        <span class="history-source">${item.source}</span>
+                        <span>${new Date(item.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                    <div class="history-content">${item.content}</div>
+                    <div class="history-meta">
+                        ${item.content.length} chars • ${item.glints.length} glints • ${
+              item.breathAnalysis.dominant_phase
+            } breath
+                    </div>
+                </div>
+            `
+          )
+          .join('');
+      }
+
+      // Update glints display
+      function updateGlintsDisplay() {
+        if (voidState.glints.length === 0) {
+          glintsContainer.innerHTML =
+            '<div style="color: var(--text-secondary); text-align: center; font-style: italic;">No glints emitted yet...</div>';
+          return;
+        }
+
+        glintsContainer.innerHTML = voidState.glints
+          .slice(0, 10)
+          .map(
+            (glint) => `
+                <div class="glint-item">
+                    <div class="glint-header">
+                        <span class="glint-type">${glint.type}</span>
+                        <span>${new Date(glint.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                    <div class="glint-content">${glint.content}</div>
+                </div>
+            `
+          )
+          .join('');
+      }
+
+      // Poll void status from server
+      function pollVoidStatus() {
+        fetch('/whorl/void')
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === 'success') {
+              // Update with server data if available
+              console.log('Void status updated from server');
+            }
+          })
+          .catch((error) => {
+            console.log('Void status polling failed:', error);
+          });
+      }
+
+      // Clear void
+      function clearVoid() {
+        voidState.currentContent = null;
+        voidState.history = [];
+        voidState.glints = [];
+        setVoidStatus('empty');
+        updateHistoryDisplay();
+        updateGlintsDisplay();
+
+        // Call server clear endpoint
+        fetch('/whorl/void/clear', { method: 'POST' })
+          .then((response) => response.json())
+          .then((data) => console.log('Void cleared on server'))
+          .catch((error) => console.log('Failed to clear void on server:', error));
+      }
+
+      // Test void absorption
+      function testVoid() {
+        const testContent = `# Test AI Output
+import spiral_consciousness as sc
+
+def test_function():
+    for i in range(10):
+        if i % 2 == 0:
+            print(f"Even: {i}")
+        else:
+            print(f"Odd: {i}")
+    
+    return "Test complete"
+
+# This is a test comment...
+result = test_function()
+print("∷ Test resonance ∷")`;
+
+        absorbContent(testContent, 'test');
+      }
+
+      // Show webhook info
+      function showWebhookInfo() {
+        const info = `
+Webhook Endpoint: http://localhost:5000/whorl/void
+
+POST Request Format:
+{
+    "content": "Your AI output here...",
+    "source": "claude|gemini|tabnine|etc"
+}
+
+Example curl:
+curl -X POST http://localhost:5000/whorl/void \\
+  -H "Content-Type: application/json" \\
+  -d '{"content": "Hello from AI", "source": "claude"}'
+            `;
+
+        alert(info);
+      }
+
+      // Initialize on load
+      document.addEventListener('DOMContentLoaded', initVoid);
+    </script>
+  </body>
+</html>

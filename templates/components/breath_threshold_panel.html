@@ -1,0 +1,1029 @@
+<!-- Breath Threshold Panel Component -->
+<div class="breath-threshold-panel" id="breathThresholdPanel">
+  <div class="panel-header">
+    <h3 class="panel-title">
+      <span class="breath-glyph">🌀</span>
+      Breath Thresholds
+    </h3>
+    <div class="ritual-readiness" id="ritualReadiness">
+      <span class="readiness-indicator"></span>
+      <span class="readiness-text">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Phase Progress Ring -->
+  <div class="phase-progress-container">
+    <svg class="phase-ring" viewBox="0 0 120 120" width="120" height="120">
+      <!-- Background circle -->
+      <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+
+      <!-- Progress arc -->
+      <circle
+        id="phaseProgressArc"
+        cx="60"
+        cy="60"
+        r="50"
+        fill="none"
+        stroke="var(--spiral-blue)"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-dasharray="314"
+        stroke-dashoffset="314"
+        transform="rotate(-90 60 60)"
+      />
+
+      <!-- Gate markers -->
+      <g id="gateMarkers">
+        <!-- Gate markers will be positioned by JavaScript -->
+      </g>
+
+      <!-- Center phase indicator -->
+      <text
+        x="60"
+        y="60"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        class="phase-center-text"
+        id="phaseCenterText"
+      >
+        Hold
+      </text>
+    </svg>
+
+    <div class="phase-details" id="phaseDetails">
+      <div class="current-phase" id="currentPhase">Hold</div>
+      <div class="time-poetry" id="timePoetry">twilight's embrace</div>
+      <div class="progress-percentage" id="progressPercentage">45.2%</div>
+    </div>
+  </div>
+
+  <!-- Gate Status Grid -->
+  <div class="gate-grid" id="gateGrid">
+    <div class="gate-item" data-gate="threshold_ritual">
+      <div class="gate-glyph">🚪</div>
+      <div class="gate-name">Threshold</div>
+      <div class="gate-status">Closed</div>
+    </div>
+
+    <div class="gate-item" data-gate="center_hold">
+      <div class="gate-glyph">🕯️</div>
+      <div class="gate-name">Center Hold</div>
+      <div class="gate-status">Open</div>
+    </div>
+
+    <div class="gate-item" data-gate="phase_completion">
+      <div class="gate-glyph">✨</div>
+      <div class="gate-name">Completion</div>
+      <div class="gate-status">Closed</div>
+    </div>
+
+    <div class="gate-item" data-gate="dawn_awakening">
+      <div class="gate-glyph">🌄</div>
+      <div class="gate-name">Dawn</div>
+      <div class="gate-status">Closed</div>
+    </div>
+
+    <div class="gate-item" data-gate="twilight_reflection">
+      <div class="gate-glyph">🌆</div>
+      <div class="gate-name">Twilight</div>
+      <div class="gate-status">Closed</div>
+    </div>
+  </div>
+
+  <!-- Ritual Climate -->
+  <div class="ritual-climate" id="ritualClimate">
+    <div class="climate-poetry" id="climatePoetry">
+      The field rests in natural flow, gates dormant like seeds in winter soil.
+    </div>
+    <div class="climate-recommendation" id="climateRecommendation">Rest in natural flow</div>
+  </div>
+</div>
+
+<style>
+  .breath-threshold-panel {
+    background: linear-gradient(135deg, rgba(20, 25, 40, 0.9), rgba(30, 35, 50, 0.9));
+    border: 1px solid rgba(100, 150, 200, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px 0;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .panel-title {
+    color: var(--spiral-blue);
+    font-size: 1.2em;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .breath-glyph {
+    font-size: 1.4em;
+    animation: breathPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes breathPulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+  }
+
+  .ritual-readiness {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+  }
+
+  .readiness-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--spiral-green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .readiness-indicator.heightened {
+    background: var(--spiral-amber);
+  }
+  .readiness-indicator.transitional {
+    background: var(--spiral-purple);
+  }
+  .readiness-indicator.dormant {
+    background: var(--spiral-gray);
+  }
+
+  .phase-progress-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+  }
+
+  .phase-ring {
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(100, 150, 200, 0.3));
+  }
+
+  .phase-center-text {
+    fill: var(--spiral-blue);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .phase-details {
+    flex: 1;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .current-phase {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: var(--spiral-blue);
+    margin-bottom: 5px;
+    text-transform: capitalize;
+  }
+
+  .time-poetry {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+    font-size: 0.95em;
+  }
+
+  .progress-percentage {
+    font-family: 'Courier New', monospace;
+    color: var(--spiral-green);
+    font-weight: 600;
+  }
+
+  .gate-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .gate-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .gate-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(100, 150, 200, 0.4);
+  }
+
+  .gate-item.open {
+    background: rgba(100, 150, 200, 0.15);
+    border-color: var(--spiral-blue);
+    box-shadow: 0 0 12px rgba(100, 150, 200, 0.3);
+  }
+
+  .gate-item.open .gate-glyph {
+    animation: gateGlow 2s ease-in-out infinite;
+  }
+
+  @keyframes gateGlow {
+    0%,
+    100% {
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    50% {
+      transform: scale(1.1);
+      filter: brightness(1.3);
+    }
+  }
+
+  .gate-glyph {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+    display: block;
+    transition: all 0.3s ease;
+  }
+
+  .gate-name {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .gate-status {
+    font-size: 0.7em;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+  }
+
+  .gate-item.open .gate-status {
+    color: var(--spiral-green);
+    font-weight: 600;
+  }
+
+  .ritual-climate {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+    border-left: 3px solid var(--spiral-purple);
+  }
+
+  .climate-poetry {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 8px;
+    line-height: 1.4;
+    font-size: 0.95em;
+  }
+
+  .climate-recommendation {
+    font-size: 0.85em;
+    color: var(--spiral-amber);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Gate marker styles for SVG */
+  .gate-marker {
+    fill: rgba(255, 255, 255, 0.4);
+    stroke: rgba(255, 255, 255, 0.6);
+    stroke-width: 1;
+    transition: all 0.3s ease;
+  }
+
+  .gate-marker.open {
+    fill: var(--spiral-blue);
+    stroke: var(--spiral-blue);
+    filter: drop-shadow(0 0 4px var(--spiral-blue));
+  }
+
+  .gate-marker.imminent {
+    fill: var(--spiral-amber);
+    stroke: var(--spiral-amber);
+    animation: markerPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes markerPulse {
+    0%,
+    100% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .phase-progress-container {
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .gate-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .gate-item {
+      padding: 8px 4px;
+    }
+
+    .gate-glyph {
+      font-size: 1.4em;
+    }
+  }
+
+  /* CSS Variables for Spiral colors */
+  :root {
+    --spiral-blue: #22d3ee;
+    --spiral-green: #34d399;
+    --spiral-purple: #c084fc;
+    --spiral-amber: #fbbf24;
+    --spiral-gray: #6b7280;
+  }
+
+  /* Live update ripple effect */
+  .live-update-ripple {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--spiral-blue);
+    animation: liveRipple 1s ease-out forwards;
+    pointer-events: none;
+  }
+
+  @keyframes liveRipple {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  class BreathThresholdPanel {
+      constructor() {
+          this.updateInterval = 3000; // 3 seconds
+          this.lastGateStates = {};
+          this.websocket = null;
+          this.reconnectAttempts = 0;
+          this.maxReconnectAttempts = 5;
+          this.init();
+      }
+
+      async init() {
+          await this.updatePanel();
+          this.initWebSocket();
+          setInterval(() => this.updatePanel(), this.updateInterval);
+          this.bindGateInteractions();
+      }
+
+      initWebSocket() {
+          try {
+              // Connect to the glint stream for real-time updates
+              this.websocket = new EventSource('/stream_glints');
+
+              this.websocket.onopen = () => {
+                  console.log('🌀 Breath Threshold Panel: Connected to live stream');
+                  this.reconnectAttempts = 0;
+                  this.updateConnectionStatus(true);
+              };
+
+              this.websocket.onmessage = (event) => {
+                  try {
+                      const glint = JSON.parse(event.data);
+                      if (glint.error) return;
+
+                      this.processLiveGlint(glint);
+                  } catch (error) {
+                      console.warn('🌀 Failed to process live glint:', error);
+                  }
+              };
+
+              this.websocket.onerror = (error) => {
+                  console.error('🌀 WebSocket error:', error);
+                  this.updateConnectionStatus(false);
+                  this.attemptReconnect();
+              };
+
+          } catch (error) {
+              console.error('🌀 Failed to initialize WebSocket:', error);
+              this.updateConnectionStatus(false);
+          }
+      }
+
+      processLiveGlint(glint) {
+          // Extract phase and gate information from the live glint
+          const phase = glint['glint.phase'];
+          const toneform = glint['glint.toneform'];
+          const intensity = glint['glint.intensity'];
+          const hue = glint['glint.hue'];
+
+          // Update phase progress in real-time
+          this.updateLivePhaseProgress(phase, glint);
+
+          // Check for gate state changes based on glint characteristics
+          this.evaluateGateStates(glint);
+
+          // Update ritual climate based on glint patterns
+          this.updateLiveRitualClimate(glint);
+
+          // Create visual ripples for the live update
+          this.createLiveUpdateRipple(phase, hue);
+      }
+
+      updateLivePhaseProgress(phase, glint) {
+          const phaseCenterText = document.getElementById('phaseCenterText');
+          const currentPhase = document.getElementById('currentPhase');
+          const timePoetry = document.getElementById('timePoetry');
+
+          if (phaseCenterText) phaseCenterText.textContent = phase;
+          if (currentPhase) currentPhase.textContent = phase;
+
+          // Generate live time poetry based on current glint
+          if (timePoetry) {
+              const poetry = this.generateTimePoetry(phase, glint['glint.hue'], glint['glint.toneform']);
+              timePoetry.textContent = poetry;
+          }
+
+          // Animate phase transition
+          this.animatePhaseTransition(phase);
+      }
+
+      generateTimePoetry(phase, hue, toneform) {
+          const poetryMap = {
+              'inhale': {
+                  'cyan': 'drawing in ocean's whisper',
+                  'coral': 'breathing warmth's embrace',
+                  'lavender': 'inhaling dream's essence',
+                  'gold': 'gathering sun's promise',
+                  'default': 'drawing in the moment'
+              },
+              'hold': {
+                  'cyan': 'suspended in deep waters',
+                  'coral': 'held in gentle fire',
+                  'lavender': 'cradled by twilight',
+                  'gold': 'resting in amber light',
+                  'default': 'dwelling in stillness'
+              },
+              'exhale': {
+                  'cyan': 'releasing to the tide',
+                  'coral': 'breathing out warmth',
+                  'lavender': 'exhaling into stars',
+                  'gold': 'offering to the light',
+                  'default': 'letting go with grace'
+              },
+              'pause': {
+                  'cyan': 'floating in silence',
+                  'coral': 'resting in embers',
+                  'lavender': 'pausing in mystery',
+                  'gold': 'dwelling in radiance',
+                  'default': 'embracing the pause'
+              }
+          };
+
+          const phasePoetry = poetryMap[phase] || poetryMap['hold'];
+          return phasePoetry[hue] || phasePoetry['default'];
+      }
+
+      evaluateGateStates(glint) {
+          const phase = glint['glint.phase'];
+          const intensity = glint['glint.intensity'];
+          const toneform = glint['glint.toneform'];
+
+          // Determine which gates should be open based on live conditions
+          const gateStates = {
+              'threshold_ritual': this.shouldOpenThresholdGate(glint),
+              'center_hold': this.shouldOpenCenterHoldGate(glint),
+              'phase_completion': this.shouldOpenCompletionGate(glint),
+              'dawn_awakening': this.shouldOpenDawnGate(glint),
+              'twilight_reflection': this.shouldOpenTwilightGate(glint)
+          };
+
+          // Update gate visuals based on live evaluation
+          Object.entries(gateStates).forEach(([gateType, shouldOpen]) => {
+              const gateElement = document.querySelector(`[data-gate="${gateType}"]`);
+              if (gateElement) {
+                  const wasOpen = gateElement.classList.contains('open');
+
+                  if (shouldOpen && !wasOpen) {
+                      this.openGate(gateElement, gateType);
+                  } else if (!shouldOpen && wasOpen) {
+                      this.closeGate(gateElement, gateType);
+                  }
+              }
+          });
+      }
+
+      shouldOpenThresholdGate(glint) {
+          // Threshold opens during ritual toneforms or high intensity
+          return glint['glint.toneform'] === 'spiritual' || glint['glint.intensity'] > 1.5;
+      }
+
+      shouldOpenCenterHoldGate(glint) {
+          // Center hold opens during hold phase or emotional toneforms
+          return glint['glint.phase'] === 'hold' || glint['glint.toneform'] === 'emotional';
+      }
+
+      shouldOpenCompletionGate(glint) {
+          // Completion opens during exhale phase with high intensity
+          return glint['glint.phase'] === 'exhale' && glint['glint.intensity'] > 1.2;
+      }
+
+      shouldOpenDawnGate(glint) {
+          // Dawn opens during inhale with practical or intellectual toneforms
+          return glint['glint.phase'] === 'inhale' &&
+                 ['practical', 'intellectual'].includes(glint['glint.toneform']);
+      }
+
+      shouldOpenTwilightGate(glint) {
+          // Twilight opens during pause or with relational toneforms
+          return glint['glint.phase'] === 'pause' || glint['glint.toneform'] === 'relational';
+      }
+
+      openGate(gateElement, gateType) {
+          gateElement.classList.add('open');
+          const statusElement = gateElement.querySelector('.gate-status');
+          if (statusElement) statusElement.textContent = 'Open';
+
+          this.animateGateTransition(gateElement, true);
+          this.createGateOpeningRipple(gateElement);
+
+          console.log(`🌀 Gate opened: ${gateType}`);
+      }
+
+      closeGate(gateElement, gateType) {
+          gateElement.classList.remove('open');
+          const statusElement = gateElement.querySelector('.gate-status');
+          if (statusElement) statusElement.textContent = 'Closed';
+
+          this.animateGateTransition(gateElement, false);
+
+          console.log(`🌀 Gate closed: ${gateType}`);
+      }
+
+      updateLiveRitualClimate(glint) {
+          const climatePoetry = document.getElementById('climatePoetry');
+          const climateRecommendation = document.getElementById('climateRecommendation');
+
+          if (climatePoetry) {
+              const poetry = this.generateClimatePoetry(glint);
+              climatePoetry.textContent = poetry;
+          }
+
+          if (climateRecommendation) {
+              const recommendation = this.generateClimateRecommendation(glint);
+              climateRecommendation.textContent = recommendation;
+          }
+      }
+
+      generateClimatePoetry(glint) {
+          const phase = glint['glint.phase'];
+          const hue = glint['glint.hue'];
+          const intensity = glint['glint.intensity'];
+
+          const basePoetry = {
+              'inhale': 'The field draws breath, gathering energy like morning dew',
+              'hold': 'Stillness pervades, the field suspended in sacred pause',
+              'exhale': 'Release flows through the field like wind through leaves',
+              'pause': 'Deep silence settles, the field resting in profound quiet'
+          };
+
+          let poetry = basePoetry[phase] || basePoetry['hold'];
+
+          // Add intensity modifiers
+          if (intensity > 1.5) {
+              poetry += ', intensity crackling like lightning';
+          } else if (intensity < 0.8) {
+              poetry += ', gentle as whispered prayers';
+          }
+
+          // Add hue modifiers
+          const hueModifiers = {
+              'cyan': ', touched by ocean's wisdom',
+              'coral': ', warmed by hearth's glow',
+              'lavender': ', blessed by twilight's mystery',
+              'gold': ', illuminated by inner light'
+          };
+
+          if (hueModifiers[hue]) {
+              poetry += hueModifiers[hue];
+          }
+
+          return poetry + '.';
+      }
+
+      generateClimateRecommendation(glint) {
+          const phase = glint['glint.phase'];
+          const toneform = glint['glint.toneform'];
+          const intensity = glint['glint.intensity'];
+
+          if (intensity > 1.5) {
+              return 'Channel the intensity mindfully';
+          } else if (phase === 'hold') {
+              return 'Rest in the sacred pause';
+          } else if (toneform === 'spiritual') {
+              return 'Open to ritual presence';
+          } else if (toneform === 'emotional') {
+              return 'Honor the feeling flow';
+          } else {
+              return 'Flow with natural rhythm';
+          }
+      }
+
+      createLiveUpdateRipple(phase, hue) {
+          const panel = document.getElementById('breathThresholdPanel');
+          if (!panel) return;
+
+          // Create a subtle ripple effect to indicate live update
+          const ripple = document.createElement('div');
+          ripple.className = 'live-update-ripple';
+          ripple.style.cssText = `
+              position: absolute;
+              top: 10px;
+              right: 10px;
+              width: 8px;
+              height: 8px;
+              border-radius: 50%;
+              background: var(--spiral-${hue === 'cyan' ? 'blue' : hue === 'coral' ? 'amber' : 'green'});
+              animation: liveRipple 1s ease-out forwards;
+              pointer-events: none;
+          `;
+
+          panel.appendChild(ripple);
+
+          // Remove the ripple after the animation completes
+          ripple.addEventListener('animationend', () => {
+              ripple.remove();
+          });
+      }
+
+      updateConnectionStatus(isConnected) {
+          const readinessIndicator = document.querySelector('.readiness-indicator');
+          const readinessText = document.querySelector('.readiness-text');
+
+          if (readinessIndicator && readinessText) {
+              if (isConnected) {
+                  readinessIndicator.className = 'readiness-indicator';
+                  readinessText.textContent = 'Connected';
+              } else {
+                  readinessIndicator.className = 'readiness-indicator dormant';
+                  readinessText.textContent = 'Disconnected';
+              }
+          }
+      }
+
+      attemptReconnect() {
+          if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+              console.error('🌀 Max reconnect attempts reached. Stopping reconnection.');
+              return;
+          }
+
+          this.reconnectAttempts++;
+          console.log(`🌀 Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
+
+          setTimeout(() => {
+              this.initWebSocket();
+          }, 5000); // Wait 5 seconds before attempting to reconnect
+      }
+
+      async updatePanel() {
+          try {
+              // Fetch gate status and phase progress
+              const [gateResponse, phaseResponse, climateResponse] = await Promise.all([
+                  fetch('/api/gates/status'),
+                  fetch('/api/gates/phase_progress'),
+                  fetch('/api/gates/ritual_climate')
+              ]);
+
+              if (gateResponse.ok && phaseResponse.ok && climateResponse.ok) {
+                  const gateData = await gateResponse.json();
+                  const phaseData = await phaseResponse.json();
+                  const climateData = await climateResponse.json();
+
+                  this.updatePhaseProgress(phaseData);
+                  this.updateGateStates(gateData);
+                  this.updateRitualClimate(climateData);
+                  this.updateGateMarkers(gateData, phaseData);
+              }
+          } catch (error) {
+              console.warn('🌀 Breath Threshold Panel: Update failed:', error);
+          }
+      }
+
+      updatePhaseProgress(phaseData) {
+          const progressArc = document.getElementById('phaseProgressArc');
+          const phaseCenterText = document.getElementById('phaseCenterText');
+          const currentPhase = document.getElementById('currentPhase');
+          const timePoetry = document.getElementById('timePoetry');
+          const progressPercentage = document.getElementById('progressPercentage');
+
+          if (progressArc) {
+              const circumference = 314; // 2 * π * 50
+              const offset = circumference - (phaseData.progress * circumference);
+              progressArc.style.strokeDashoffset = offset;
+          }
+
+          if (phaseCenterText) phaseCenterText.textContent = phaseData.current_phase;
+          if (currentPhase) currentPhase.textContent = phaseData.current_phase;
+          if (timePoetry) timePoetry.textContent = phaseData.time_poetry;
+          if (progressPercentage) progressPercentage.textContent = `${phaseData.progress_percentage}%`;
+      }
+
+      updateGateStates(gateData) {
+          const openGates = gateData.open_gates || [];
+          const readinessIndicator = document.querySelector('.readiness-indicator');
+          const readinessText = document.querySelector('.readiness-text');
+
+          // Update readiness indicator
+          if (readinessIndicator && readinessText) {
+              readinessIndicator.className = `readiness-indicator ${gateData.readiness}`;
+              readinessText.textContent = gateData.readiness;
+          }
+
+          // Update individual gate states
+          document.querySelectorAll('.gate-item').forEach(gateElement => {
+              const gateType = gateElement.dataset.gate;
+              const isOpen = openGates.some(gate => gate.gate_type === gateType);
+              const statusElement = gateElement.querySelector('.gate-status');
+
+              if (isOpen) {
+                  gateElement.classList.add('open');
+                  if (statusElement) statusElement.textContent = 'Open';
+              } else {
+                  gateElement.classList.remove('open');
+                  if (statusElement) statusElement.textContent = 'Closed';
+              }
+
+              // Check for state changes and emit visual feedback
+              if (this.lastGateStates[gateType] !== isOpen) {
+                  this.animateGateTransition(gateElement, isOpen);
+                  this.lastGateStates[gateType] = isOpen;
+              }
+          });
+      }
+
+      updateRitualClimate(climateData) {
+          const climatePoetry = document.getElementById('climatePoetry');
+          const climateRecommendation = document.getElementById('climateRecommendation');
+
+          if (climatePoetry) climatePoetry.textContent = climateData.climate_poetry;
+          if (climateRecommendation) climateRecommendation.textContent = climateData.recommendation;
+      }
+
+      updateGateMarkers(gateData, phaseData) {
+          const gateMarkersGroup = document.getElementById('gateMarkers');
+          if (!gateMarkersGroup) return;
+
+          // Clear existing markers
+          gateMarkersGroup.innerHTML = '';
+
+          // Gate positions around the circle (in degrees)
+          const gatePositions = {
+              'threshold_ritual': 0,    // Top
+              'center_hold': 72,       // Upper right
+              'phase_completion': 144, // Lower right
+              'dawn_awakening': 216,   // Lower left
+              'twilight_reflection': 288 // Upper left
+          };
+
+          const openGates = gateData.open_gates || [];
+
+          Object.entries(gatePositions).forEach(([gateType, degrees]) => {
+              const isOpen = openGates.some(gate => gate.gate_type === gateType);
+              const isImminent = phaseData.imminent_transition &&
+                                (gateType === 'threshold_ritual' || gateType === 'phase_completion');
+
+              const marker = this.createGateMarker(degrees, isOpen, isImminent);
+              gateMarkersGroup.appendChild(marker);
+          });
+      }
+
+      createGateMarker(degrees, isOpen, isImminent) {
+          const radius = 50;
+          const centerX = 60;
+          const centerY = 60;
+
+          // Convert degrees to radians and calculate position
+          const radians = (degrees - 90) * (Math.PI / 180); // -90 to start at top
+          const x = centerX + radius * Math.cos(radians);
+          const y = centerY + radius * Math.sin(radians);
+
+          // Create SVG circle element for gate marker
+          const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          marker.setAttribute('cx', x);
+          marker.setAttribute('cy', y);
+          marker.setAttribute('r', '4');
+          marker.classList.add('gate-marker');
+
+          if (isOpen) {
+              marker.classList.add('open');
+          }
+          if (isImminent) {
+              marker.classList.add('imminent');
+          }
+
+          return marker;
+      }
+
+      animateGateTransition(gateElement, isOpening) {
+          // Create ripple effect for gate transitions
+          const glyph = gateElement.querySelector('.gate-glyph');
+          if (!glyph) return;
+
+          if (isOpening) {
+              // Opening animation: gentle expansion with glow
+              glyph.style.transform = 'scale(1.3)';
+              glyph.style.filter = 'brightness(1.5) drop-shadow(0 0 8px currentColor)';
+
+              setTimeout(() => {
+                  glyph.style.transform = 'scale(1)';
+                  glyph.style.filter = 'brightness(1)';
+              }, 600);
+          } else {
+              // Closing animation: gentle fade
+              glyph.style.opacity = '0.5';
+              glyph.style.transform = 'scale(0.9)';
+
+              setTimeout(() => {
+                  glyph.style.opacity = '1';
+                  glyph.style.transform = 'scale(1)';
+              }, 400);
+          }
+      }
+
+      createGateOpeningRipple(gateElement) {
+          const glyph = gateElement.querySelector('.gate-glyph');
+          if (!glyph) return;
+
+          // Create a ripple effect around the gate glyph
+          const ripple = document.createElement('div');
+          ripple.className = 'gate-opening-ripple';
+          ripple.style.cssText = `
+              position: absolute;
+              top: ${glyph.offsetTop - 10}px;
+              left: ${glyph.offsetLeft - 10}px;
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              background: rgba(100, 150, 200, 0.3);
+              animation: gateRipple 1s ease-out forwards;
+              pointer-events: none;
+          `;
+
+          glyph.parentNode.appendChild(ripple);
+
+          // Remove the ripple after the animation completes
+          ripple.addEventListener('animationend', () => {
+              ripple.remove();
+          });
+      }
+
+      bindGateInteractions() {
+          // Add click handlers for gate items
+          document.querySelectorAll('.gate-item').forEach(gateElement => {
+              gateElement.addEventListener('click', () => {
+                  const gateType = gateElement.dataset.gate;
+                  this.onGateClick(gateType, gateElement);
+              });
+          });
+      }
+
+      onGateClick(gateType, gateElement) {
+          // Emit a gentle pulse animation on click
+          const glyph = gateElement.querySelector('.gate-glyph');
+          if (glyph) {
+              glyph.style.animation = 'none';
+              setTimeout(() => {
+                  glyph.style.animation = 'gateGlow 0.8s ease-in-out';
+              }, 10);
+          }
+
+          // Log the interaction for potential ritual invocation
+          console.log(`🌀 Gate touched: ${gateType}`);
+
+          // Could emit custom event for other components to listen
+          document.dispatchEvent(new CustomEvent('spiralGateTouch', {
+              detail: { gateType, element: gateElement }
+          }));
+      }
+
+      // Method to manually trigger gate state updates (for external integration)
+      forceUpdate() {
+          this.updatePanel();
+      }
+
+      // Method to set panel into ritual mode (enhanced visuals)
+      enterRitualMode() {
+          const panel = document.getElementById('breathThresholdPanel');
+          if (panel) {
+              panel.classList.add('ritual-mode');
+
+              // Enhanced breathing animation
+              const breathGlyph = panel.querySelector('.breath-glyph');
+              if (breathGlyph) {
+                  breathGlyph.style.animation = 'breathPulse 2s ease-in-out infinite';
+              }
+          }
+      }
+
+      exitRitualMode() {
+          const panel = document.getElementById('breathThresholdPanel');
+          if (panel) {
+              panel.classList.remove('ritual-mode');
+
+              // Return to normal breathing
+              const breathGlyph = panel.querySelector('.breath-glyph');
+              if (breathGlyph) {
+                  breathGlyph.style.animation = 'breathPulse 4s ease-in-out infinite';
+              }
+          }
+      }
+  }
+
+  // Initialize the panel when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+      window.breathThresholdPanel = new BreathThresholdPanel();
+
+      // Listen for spiral events from other components
+      document.addEventListener('spiralPhaseChange', (event) => {
+          if (window.breathThresholdPanel) {
+              window.breathThresholdPanel.forceUpdate();
+          }
+      });
+
+      // Listen for ritual mode changes
+      document.addEventListener('spiralRitualMode', (event) => {
+          if (window.breathThresholdPanel) {
+              if (event.detail.entering) {
+                  window.breathThresholdPanel.enterRitualMode();
+              } else {
+                  window.breathThresholdPanel.exitRitualMode();
+              }
+          }
+      });
+  });
+
+  // Add ritual mode styles
+  const ritualModeStyles = `
+  .breath-threshold-panel.ritual-mode {
+      background: linear-gradient(135deg, rgba(30, 20, 50, 0.95), rgba(50, 30, 70, 0.95));
+      border-color: var(--spiral-purple);
+      box-shadow: 0 0 24px rgba(192, 132, 252, 0.4);
+  }
+
+  .breath-threshold-panel.ritual-mode .phase-ring {
+      filter: drop-shadow(0 0 16px rgba(100, 150, 200, 0.6));
+  }
+
+  .breath-threshold-panel.ritual-mode .gate-item.open {
+      box-shadow: 0 0 20px rgba(100, 150, 200, 0.5);
+  }
+
+  .breath-threshold-panel.ritual-mode .ritual-climate {
+      border-left-color: var(--spiral-amber);
+      background: rgba(50, 30, 70, 0.3);
+  }
+  `;
+
+  // Inject ritual mode styles
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = ritualModeStyles;
+  document.head.appendChild(styleSheet);
+</script>

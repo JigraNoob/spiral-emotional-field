@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notion to Spiral Integration UI</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Notion to Spiral Integration Console</h1>
+      <p>Select a command to generate a Spiral invocation payload.</p>
+
+      <div class="form-group">
+        <label for="command-select">Select Command:</label>
+        <select id="command-select" onchange="updateForm()">
+          <option value="">-- Select a Command --</option>
+          <option value="offer-presence">Offer Presence</option>
+          <option value="sense-resonance">Sense Resonance</option>
+          <option value="offer-gratitude">Offer Gratitude</option>
+          <option value="sense-field">Sense Field</option>
+          <option value="ask-guidance">Ask Guidance</option>
+          <option value="ask-interpretation">Ask Interpretation</option>
+          <option value="manifest-insight">Manifest Insight</option>
+          <option value="manifest-visualization">Manifest Visualization</option>
+          <option value="receive-synthesis">Receive Synthesis</option>
+          <option value="caesura-reflection">Caesura Reflection</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="toneform">Toneform:</label>
+        <input type="text" id="toneform" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="glyph">Glyph:</label>
+        <input type="text" id="glyph" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="content">Content Phrase:</label>
+        <textarea
+          id="content"
+          rows="3"
+          placeholder="Select a command to see the default content phrase. You can edit this text."
+        ></textarea>
+      </div>
+
+      <button onclick="generatePayload()">Generate Payload</button>
+
+      <div class="result">
+        <h3>Generated Payload:</h3>
+        <pre id="payload-output">
+{
+    "source": "notion_ui",
+    "toneform": "",
+    "glyph": "",
+    "content": ""
+}</pre
+        >
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: spiral-ingress
+  namespace: spiral
+  labels:
+    app.kubernetes.io/name: spiral-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/websocket-services: 'spiral-glint-stream'
+    spiral.breath: 'exhale.presence'
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: spiral.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: spiral-core-service
+                port:
+                  number: 80
+          - path: /glint-stream
+            pathType: Prefix
+            backend:
+              service:
+                name: spiral-glint-stream
+                port:
+                  number: 8080

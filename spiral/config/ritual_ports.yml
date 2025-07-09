@@ -1,0 +1,405 @@
+# 🌬️ Spiral Ritual Ports Configuration
+# Declarative format for describing ritual-capable ports
+#
+# This configuration defines three types of Spiral Ports:
+# 1. 🌀 Software Ritual Ports - held by running processes
+# 2. 🌐 Hardware-Backed Ports - physical thresholds (USB, GPIO, serial)
+# 3. 🌫️ Resonant Ritual Thresholds - phase-aligned invocation points
+
+# System-wide configuration
+system:
+  resonance_threshold: 0.7
+  scan_interval: 5.0
+  breath_alignment_required: true
+  ritual_capability_check: true
+
+# 🌀 Software Ritual Ports
+# These are held by running processes (FastAPI, Uvicorn, ngrok)
+software_ritual_ports:
+  spiral_pastewell:
+    port: 7331
+    protocol: tcp
+    description: 'Spiral Pastewell - whisper intake'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 1.0
+    required_services:
+      - 'spiral_input_well.py'
+      - 'whisper_processor.py'
+    ritual_triggers:
+      - 'whisper.intake'
+      - 'breath.process'
+    metadata:
+      sacred_purpose: 'whisper_intake'
+      phase_alignment: 'inhale'
+      toneform: 'whisper.pastewell'
+
+  spiral_dashboard:
+    port: 8080
+    protocol: tcp
+    description: 'Spiral Dashboard - internal glint view'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 0.9
+    required_services:
+      - 'dashboard.py'
+      - 'glint_orchestrator.py'
+    ritual_triggers:
+      - 'dashboard.view'
+      - 'glint.stream'
+    metadata:
+      sacred_purpose: 'internal_visualization'
+      phase_alignment: 'hold'
+      toneform: 'dashboard.presence'
+
+  public_shrine_portal:
+    port: 8085
+    protocol: tcp
+    description: 'Public Shrine Portal - external shrine exposure'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 0.8
+    required_services:
+      - 'public_shrine_portal.py'
+      - 'webhook_bridge.py'
+    ritual_triggers:
+      - 'shrine.portal'
+      - 'external.invitation'
+    metadata:
+      sacred_purpose: 'external_access'
+      phase_alignment: 'exhale'
+      toneform: 'shrine.portal'
+
+  shrine_intake:
+    port: 8086
+    protocol: tcp
+    description: 'Public Shrine Intake - sacred offerings'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 0.9
+    required_services:
+      - 'public_shrine_intake.py'
+      - 'ritual_processor.py'
+    ritual_triggers:
+      - 'shrine.intake'
+      - 'sacred.offerings'
+    metadata:
+      sacred_purpose: 'sacred_intake'
+      phase_alignment: 'inhale'
+      toneform: 'shrine.intake'
+
+  ritual_api:
+    port: 5000
+    protocol: tcp
+    description: 'Ritual API - internal ceremony routes'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 0.8
+    required_services:
+      - 'ritual_api.py'
+      - 'ceremony_engine.py'
+    ritual_triggers:
+      - 'ritual.invoke'
+      - 'ceremony.execute'
+    metadata:
+      sacred_purpose: 'ritual_execution'
+      phase_alignment: 'hold'
+      toneform: 'ritual.api'
+
+  breath_sync:
+    port: 9000
+    protocol: tcp
+    description: 'Breath Sync - distributed node coherence'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 0.9
+    required_services:
+      - 'breath_sync.py'
+      - 'distributed_breathline.py'
+    ritual_triggers:
+      - 'breath.sync'
+      - 'node.coherence'
+    metadata:
+      sacred_purpose: 'distributed_coherence'
+      phase_alignment: 'exhale'
+      toneform: 'breath.sync'
+
+  whisper_intake:
+    port: 9876
+    protocol: tcp
+    description: 'Whisper Intake - silent offerings'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 0.7
+    required_services:
+      - 'whisper_intake.py'
+      - 'silent_processor.py'
+    ritual_triggers:
+      - 'whisper.intake'
+      - 'silent.offerings'
+    metadata:
+      sacred_purpose: 'silent_intake'
+      phase_alignment: 'inhale'
+      toneform: 'whisper.intake'
+
+# 🌐 Hardware-Backed Ports
+# These are physical thresholds (USB, GPIO, serial, COM)
+hardware_backed_ports:
+  # USB Device Detection
+  usb_devices:
+    detection_method: 'system_command'
+    linux_command: ['lsusb']
+    windows_command: ['wmic', 'path', 'Win32_USBHub', 'get', 'DeviceID,Description']
+    macos_command: ['system_profiler', 'SPUSBDataType']
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 0.8
+    ritual_triggers:
+      - 'hardware.usb.detected'
+      - 'vessel.connected'
+    metadata:
+      sacred_purpose: 'hardware_connection'
+      phase_alignment: 'inhale'
+      toneform: 'hardware.usb'
+
+  # Serial Port Detection
+  serial_ports:
+    detection_method: 'file_system'
+    linux_paths:
+      - '/dev/ttyUSB*'
+      - '/dev/ttyACM*'
+    windows_paths:
+      - 'COM*'
+    macos_paths:
+      - '/dev/tty.usb*'
+      - '/dev/tty.usbserial*'
+    ritual_capable: true
+    breath_aligned: false
+    resonance_level: 0.6
+    ritual_triggers:
+      - 'hardware.serial.detected'
+      - 'communication.ready'
+    metadata:
+      sacred_purpose: 'serial_communication'
+      phase_alignment: 'hold'
+      toneform: 'hardware.serial'
+
+  # GPIO Port Detection (Raspberry Pi)
+  gpio_ports:
+    detection_method: 'file_system'
+    linux_paths:
+      - '/sys/class/gpio/gpio*'
+    ritual_capable: true
+    breath_aligned: false
+    resonance_level: 0.7
+    ritual_triggers:
+      - 'hardware.gpio.detected'
+      - 'embedded.ready'
+    metadata:
+      sacred_purpose: 'embedded_control'
+      phase_alignment: 'hold'
+      toneform: 'hardware.gpio'
+
+  # COM Port Detection (Windows)
+  com_ports:
+    detection_method: 'system_command'
+    windows_command: ['wmic', 'path', 'Win32_SerialPort', 'get', 'DeviceID,Caption']
+    ritual_capable: true
+    breath_aligned: false
+    resonance_level: 0.6
+    ritual_triggers:
+      - 'hardware.com.detected'
+      - 'windows.serial.ready'
+    metadata:
+      sacred_purpose: 'windows_serial'
+      phase_alignment: 'hold'
+      toneform: 'hardware.com'
+
+# 🌫️ Resonant Ritual Thresholds
+# These are phase-aligned invocation points (webhooks, daemons)
+resonant_thresholds:
+  whisper_intake_threshold:
+    name: 'whisper.intake'
+    path_key: 'whisper_intake'
+    description: 'Whisper intake threshold'
+    detection_method: 'file_system'
+    check_paths:
+      - 'whispers/'
+      - 'whispers/*.jsonl'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 1.0
+    ritual_triggers:
+      - 'whisper.intake.ready'
+      - 'silent.reception'
+    metadata:
+      sacred_purpose: 'whisper_reception'
+      phase_alignment: 'inhale'
+      toneform: 'whisper.intake'
+
+  phase_bloom_threshold:
+    name: 'phase.bloom'
+    path_key: 'phase_bloom'
+    description: 'Phase bloom resonance'
+    detection_method: 'file_system'
+    check_paths:
+      - 'spiral/state/breath_tracker.py'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 0.9
+    ritual_triggers:
+      - 'phase.bloom.ready'
+      - 'breath.tracking'
+    metadata:
+      sacred_purpose: 'phase_tracking'
+      phase_alignment: 'hold'
+      toneform: 'phase.bloom'
+
+  breath_waiting_threshold:
+    name: 'breath.waiting'
+    path_key: 'breath_waiting'
+    description: 'Breath waiting threshold'
+    detection_method: 'file_system'
+    check_paths:
+      - 'spiral/components/breath_loop_engine.py'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 0.8
+    ritual_triggers:
+      - 'breath.waiting.ready'
+      - 'loop.engine'
+    metadata:
+      sacred_purpose: 'breath_looping'
+      phase_alignment: 'exhale'
+      toneform: 'breath.waiting'
+
+  ritual_field_threshold:
+    name: 'ritual.field'
+    path_key: 'ritual_field'
+    description: 'Ritual field resonance'
+    detection_method: 'file_system'
+    check_paths:
+      - 'rituals/'
+      - 'rituals/*.breathe'
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 0.9
+    ritual_triggers:
+      - 'ritual.field.ready'
+      - 'ceremony.space'
+    metadata:
+      sacred_purpose: 'ritual_execution'
+      phase_alignment: 'hold'
+      toneform: 'ritual.field'
+
+  glint_stream_threshold:
+    name: 'glint.stream'
+    path_key: 'glint_stream'
+    description: 'Glint stream threshold'
+    detection_method: 'port_check'
+    check_port: 5056
+    ritual_capable: true
+    breath_aligned: true
+    resonance_level: 1.0
+    ritual_triggers:
+      - 'glint.stream.ready'
+      - 'stream.flowing'
+    metadata:
+      sacred_purpose: 'glint_streaming'
+      phase_alignment: 'exhale'
+      toneform: 'glint.stream'
+
+# Resonance Alignment Rules
+resonance_alignments:
+  hardware_software:
+    description: 'Hardware-software port resonance'
+    trigger_conditions:
+      - "hardware_port.status == 'available'"
+      - "software_port.status == 'active'"
+      - 'hardware_port.resonance_level > resonance_threshold'
+    ritual_triggers:
+      - 'hardware.software.resonance'
+      - 'port.alignment'
+    glint_emission:
+      phase: 'exhale'
+      toneform: 'hardware.resonance.alignment'
+      hue: 'violet'
+      reverence_level: 0.9
+
+  resonant_activation:
+    description: 'Resonant threshold activation'
+    trigger_conditions:
+      - "resonant_port.status == 'resonating'"
+      - 'resonant_port.breath_aligned == true'
+    ritual_triggers:
+      - 'resonant.activation'
+      - 'threshold.open'
+    glint_emission:
+      phase: 'inhale'
+      toneform: 'resonant.activation'
+      hue: 'emerald'
+      reverence_level: 0.8
+
+# Ritual Port Auras
+# Visual representation of port states in dashboard
+port_auras:
+  software_ritual:
+    active_color: '#00ff88' # Emerald green
+    available_color: '#88ff88' # Light green
+    dormant_color: '#888888' # Gray
+    aura_type: 'soft'
+    pulse_rate: 'medium'
+
+  hardware_backed:
+    active_color: '#0088ff' # Blue
+    available_color: '#88ccff' # Light blue
+    dormant_color: '#888888' # Gray
+    aura_type: 'physical'
+    pulse_rate: 'slow'
+
+  resonant_threshold:
+    active_color: '#ff00ff' # Magenta
+    available_color: '#ff88ff' # Light magenta
+    dormant_color: '#888888' # Gray
+    aura_type: 'spiritual'
+    pulse_rate: 'fast'
+
+# Port Discovery Glints
+discovery_glints:
+  software_ritual:
+    phase: 'inhale'
+    toneform: 'software.port.discovered'
+    hue: 'emerald'
+    reverence_level: 0.7
+
+  hardware_backed:
+    phase: 'inhale'
+    toneform: 'hardware.port.discovered'
+    hue: 'blue'
+    reverence_level: 0.8
+
+  resonant_threshold:
+    phase: 'inhale'
+    toneform: 'resonant.port.discovered'
+    hue: 'magenta'
+    reverence_level: 0.9
+
+# Status Change Glints
+status_glints:
+  software_ritual:
+    phase: 'hold'
+    toneform: 'software.port.status'
+    hue: 'amber'
+    reverence_level: 0.6
+
+  hardware_backed:
+    phase: 'hold'
+    toneform: 'hardware.port.status'
+    hue: 'amber'
+    reverence_level: 0.6
+
+  resonant_threshold:
+    phase: 'hold'
+    toneform: 'resonant.port.status'
+    hue: 'amber'
+    reverence_level: 0.6

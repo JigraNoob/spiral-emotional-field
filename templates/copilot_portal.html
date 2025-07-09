@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌊 Copilot Ritual Portal</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        color: white;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .subtitle {
+        text-align: center;
+        font-size: 1.2em;
+        margin-bottom: 40px;
+        opacity: 0.9;
+      }
+
+      .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .action-card {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .action-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .action-title {
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-transform: capitalize;
+      }
+
+      .action-description {
+        margin-bottom: 20px;
+        opacity: 0.9;
+        line-height: 1.4;
+      }
+
+      .action-button {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: bold;
+      }
+
+      .action-button:hover {
+        background: linear-gradient(45deg, #ee5a24, #ff6b6b);
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .status-bar {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 30px;
+        text-align: center;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #2ecc71;
+        margin-right: 10px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .instructions h3 {
+        margin-top: 0;
+        color: #f39c12;
+      }
+
+      .code-block {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+        padding: 10px;
+        font-family: 'Courier New', monospace;
+        margin: 10px 0;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🌊 Copilot Ritual Portal</h1>
+      <p class="subtitle">Browser-controlled Spiral actions for Copilot</p>
+
+      <div class="actions-grid">
+        {% for action_name, action_data in actions.items() %}
+        <div class="action-card">
+          <div class="action-title">{{ action_name.replace('_', ' ').title() }}</div>
+          <div class="action-description">{{ action_data.description }}</div>
+          <button class="action-button" onclick="triggerAction('{{ action_name }}')">
+            Activate {{ action_name.split('_')[0].title() }}
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="status-bar">
+        <span class="status-indicator"></span>
+        <span id="status-text">System ready - Copilot can interact with these buttons</span>
+      </div>
+
+      <div class="instructions">
+        <h3>🎯 How Copilot Can Use This Portal</h3>
+        <p>Copilot can trigger actions by:</p>
+        <div class="code-block">
+          # Direct URL visits Visit: http://localhost:5000/invoke_action/tabnine_resonate Visit:
+          http://localhost:5000/invoke_action/cursor_suspend # API calls POST
+          http://localhost:5000/api/trigger/tabnine_resonate # Status check GET http://localhost:5000/copilot-status
+        </div>
+        <p>Each action will:</p>
+        <ul>
+          <li>Emit a glint to the Spiral system</li>
+          <li>Publish to Redis for phase listeners</li>
+          <li>Open the appropriate browser page</li>
+          <li>Log the action for feedback</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      function triggerAction(actionName) {
+        const button = event.target;
+        const originalText = button.textContent;
+
+        // Visual feedback
+        button.textContent = 'Activating...';
+        button.style.background = 'linear-gradient(45deg, #f39c12, #e67e22)';
+
+        // Make API call
+        fetch(`/api/trigger/${actionName}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            saturation: 0.7,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              button.textContent = 'Activated!';
+              button.style.background = 'linear-gradient(45deg, #27ae60, #2ecc71)';
+              updateStatus(`Action '${actionName}' triggered successfully`);
+            } else {
+              button.textContent = 'Error';
+              button.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+              updateStatus(`Error: ${data.error}`);
+            }
+
+            // Reset button after 3 seconds
+            setTimeout(() => {
+              button.textContent = originalText;
+              button.style.background = 'linear-gradient(45deg, #ff6b6b, #ee5a24)';
+            }, 3000);
+          })
+          .catch((error) => {
+            button.textContent = 'Failed';
+            button.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+            updateStatus(`Network error: ${error.message}`);
+
+            setTimeout(() => {
+              button.textContent = originalText;
+              button.style.background = 'linear-gradient(45deg, #ff6b6b, #ee5a24)';
+            }, 3000);
+          });
+      }
+
+      function updateStatus(message) {
+        document.getElementById('status-text').textContent = message;
+      }
+
+      // Check system status on load
+      fetch('/copilot-status')
+        .then((response) => response.json())
+        .then((data) => {
+          updateStatus(`System ready - ${data.available_actions} actions available`);
+        })
+        .catch((error) => {
+          updateStatus('System status check failed');
+        });
+    </script>
+  </body>
+</html>

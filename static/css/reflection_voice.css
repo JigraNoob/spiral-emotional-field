@@ -1,0 +1,421 @@
+.reflection-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top */
+}
+
+.reflection-modal.hidden {
+    display: none;
+}
+
+.reflection-content {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 600px;
+    color: #fff;
+    position: relative;
+    --shimmer-color: #999; /* Default shimmer color */
+}
+
+.reflection-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.reflection-title {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.reflection-glyph {
+    font-size: 1.5em;
+    margin-right: 10px;
+}
+
+.reflection-close {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.reflection-close:hover {
+    color: #fff;
+}
+
+.reflection-body {
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+.divergence-context {
+    margin-bottom: 10px;
+    font-style: italic;
+    color: #bbb;
+}
+
+.context-label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.reflection-text {
+    margin-bottom: 20px;
+}
+
+.reflection-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.depth-selector label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ddd;
+}
+
+.depth-options {
+    display: flex;
+    gap: 5px;
+}
+
+.depth-option {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.depth-option:hover,
+.depth-option.selected {
+    background-color: #555;
+}
+
+.reflection-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.action-btn {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+    background-color: #666;
+}
+
+.action-btn.secondary {
+    background-color: #555;
+}
+
+.action-btn.secondary:hover {
+    background-color: #777;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.reflection-loading {
+    text-align: center;
+    font-style: italic;
+    color: #ccc;
+}
+
+.reflection-error {
+    text-align: center;
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* Shimmer effect */
+.reflection-content.shimmer {
+    animation: shimmerEffect 0.75s forwards;
+    box-shadow: 0 0 10px 5px var(--shimmer-color);
+}
+
+@keyframes shimmerEffect {
+    0% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Toneform-responsive shimmer */
+.reflection-content[data-toneform="longing"] {
+    --shimmer-color: #8a60d1; /* Violet yearning */
+}
+
+.reflection-content[data-toneform="movement"] {
+    --shimmer-color: #4ecdc4; /* Teal pulse */
+}
+
+.reflection-content[data-toneform="form"] {
+    --shimmer-color: #ffc857; /* Amber clarity */
+}
+
+.reflection-content[data-toneform="infrastructure"] {
+    --shimmer-color: #7f8fa6; /* Steel blue */
+}
+
+.reflection-content[data-toneform="connection"] {
+    --shimmer-color: #f25f5c; /* Coral warmth */
+}
+
+.reflection-content[data-toneform="trust"] {
+    --shimmer-color: #6c5ce7; /* Indigo anchor */
+}
+
+.reflection-content[data-toneform="coherence"] {
+    --shimmer-color: #00cec9; /* Aqua balance */
+}
+
+.reflection-content[data-toneform="adaptation"] {
+    --shimmer-color: #fd79a8; /* Rose flexion */
+}
+
+.reflection-content[data-toneform="stillness"] {
+    --shimmer-color: #dfe6e9; /* Pale pearl */
+}
+
+.reflection-content[data-toneform="resonance"] {
+    --shimmer-color: #fab1a0; /* Melon tone */
+}
+
+/* Fallback shimmer hue for unknown or missing toneforms */
+.reflection-content[data-toneform="unknown"],
+.reflection-content:not([data-toneform]) {
+    --shimmer-color: #999; /* Neutral gray shimmer */
+}
+
+// Reflection Voice JS modal creation and integration
+// (Full integration of toneform guidance, modal behavior, and application to Echo Shrine)
+
+class ReflectionVoice {
+    constructor() {
+        this.isActive = false;
+        this.currentReflection = null;
+        this.createReflectionModal();
+    }
+
+    createReflectionModal() {
+        const modalHTML = `
+            <div id="reflectionModal" class="reflection-modal hidden">
+                <div class="reflection-content">
+                    <div class="reflection-header">
+                        <span class="reflection-glyph" id="reflectionGlyph">🌀</span>
+                        <h3 class="reflection-title">Reflection Voice</h3>
+                        <button class="reflection-close" onclick="reflectionVoice.closeReflection()">×</button>
+                    </div>
+                    <div class="reflection-body">
+                        <div class="divergence-context">
+                            <span class="context-label">Divergence Detected:</span>
+                            <span id="divergenceType" class="divergence-type"></span>
+                        </div>
+                        <div class="reflection-text" id="reflectionText"></div>
+                        <div class="reflection-controls">
+                            <div class="depth-selector">
+                                <label>Reflection Depth:</label>
+                                <div class="depth-options">
+                                    <button class="depth-option" data-depth="gentle">🌱 Gentle</button>
+                                    <button class="depth-option" data-depth="deep">🌊 Deep</button>
+                                    <button class="depth-option" data-depth="ceremonial">🕯️ Ceremonial</button>
+                                </div>
+                            </div>
+                            <div class="reflection-actions">
+                                <button class="action-btn secondary" onclick="reflectionVoice.requestLineageReflection()">
+                                    🌿 Reflect on Lineage
+                                </button>
+                                <button class="action-btn primary" onclick="reflectionVoice.requestToneformGuidance()">
+                                    🎵 Get Toneform Guidance
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        document.querySelectorAll('.depth-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                document.querySelectorAll('.depth-option').forEach(opt =>
+                    opt.classList.remove('selected'));
+                e.target.classList.add('selected');
+
+                if (this.currentReflection) {
+                    this.requestReflection({
+                        echo_id: this.currentReflection.echo_id,
+                        divergence_type: this.currentReflection.divergence_type,
+                        depth: e.target.dataset.depth
+                    });
+                }
+            });
+        });
+    }
+
+    async requestToneformGuidance() {
+        const currentToneform = prompt("Current toneform:");
+        const targetToneform = prompt("Desired toneform:");
+        const content = prompt("Content to transform:");
+
+        if (currentToneform && targetToneform && content) {
+            const reflectionText = document.getElementById('reflectionText');
+            reflectionText.innerHTML = '<div class="reflection-loading">🎵 Listening for toneform guidance...</div>';
+
+            try {
+                const response = await fetch('/api/reflect/toneform-guidance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        current_toneform: currentToneform,
+                        target_toneform: targetToneform,
+                        content: content
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    reflectionText.innerHTML = `
+                        <div class="toneform-guidance">
+                            <h4>🎵 Toneform Guidance</h4>
+                            <div class="guidance-body">
+                                ${this.formatReflectionText(result.guidance)}
+                            </div>
+                            <div class="guidance-metadata">
+                                <span>From: ${result.transformation.from}</span>
+                                <span>To: ${result.transformation.to}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                reflectionText.innerHTML = '<div class="reflection-error">🌫️ Unable to retrieve toneform guidance</div>';
+            }
+        }
+    }
+
+    async requestReflection(context = {}) {
+        if (this.isActive) return;
+
+        this.isActive = true;
+        this.showModal();
+
+        const reflectionText = document.getElementById('reflectionText');
+        reflectionText.innerHTML = '<div class="reflection-loading">🌫️ The Spiral gathers its voice...</div>';
+
+        try {
+            const response = await fetch('/api/reflect/voice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(context)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                this.displayReflection(result, result.inflected_with);
+            } else {
+                reflectionText.innerHTML = '<div class="reflection-error">🌫️ The Spiral's voice is distant...</div>';
+            }
+
+        } catch (error) {
+            console.error('Error requesting reflection:', error);
+            reflectionText.innerHTML = '<div class="reflection-error">🌫️ Unable to reach the Spiral's voice</div>';
+        }
+    }
+
+    displayReflection(data, toneform = 'unknown') {
+        this.currentReflection = data;
+        const reflectionText = document.getElementById('reflectionText');
+        const reflectionGlyph = document.getElementById('reflectionGlyph');
+        const divergenceType = document.getElementById('divergenceType');
+        const modalContent = document.querySelector('.reflection-content');
+
+        reflectionGlyph.textContent = this.getToneformGlyph(data.inflected_with || 'unknown');
+        divergenceType.textContent = this.formatDivergenceType(data.divergence_type || '');
+
+        reflectionText.innerHTML = this.formatReflectionText(data.message);
+
+        // Set toneform as data attribute for shimmer toneform response
+        modalContent.dataset.toneform = toneform.toLowerCase();
+
+        modalContent.classList.add('shimmer');
+        setTimeout(() => {
+            modalContent.classList.remove('shimmer');
+        }, 500);
+    }
+
+    closeReflection() {
+        this.isActive = false;
+        this.currentReflection = null;
+        const modal = document.getElementById('reflectionModal');
+        modal.classList.add('hidden');
+    }
+
+    getToneformGlyph(toneform) {
+        const glyphMap = {
+            'practical': '⟁',
+            'emotional': '❦',
+            'intellectual': '∿',
+            'spiritual': '∞',
+            'relational': '☍',
+            'ceremonial': '🕯️',
+            'unknown': '◯'
+        };
+        return glyphMap[toneform.toLowerCase()] || '◯';
+    }
+
+    formatDivergenceType(type) {
+        const map = {
+            'toneform_mismatch': 'Toneform Mismatch',
+            'phase_drift': 'Phase Drift',
+            'semantic_shift': 'Semantic Shift'
+        };
+        return map[type] || type;
+    }
+
+    formatReflectionText(text) {
+        return text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    }
+
+    showModal() {
+        const modal = document.getElementById('reflectionModal');
+        modal.classList.remove('hidden');
+    }
+}
+
+// Initialize the Reflection Voice
+const reflectionVoice = new ReflectionVoice();

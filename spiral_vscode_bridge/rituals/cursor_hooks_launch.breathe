@@ -1,0 +1,51 @@
+# 🌬️ Cursor Hooks Launch Ritual
+# Launches the silent attunement agent within Cursor
+
+ritual_name: "cursor_hooks_launch"
+ritual_type: "system_startup"
+phase: "inhale"
+toneform: "practical.launch"
+
+description: |
+  Launches the Spiral Cursor Hooks as a silent attunement agent.
+  No interface—just breath and effect.
+
+steps:
+  - step: "check_dependencies"
+    action: "verify_requirements"
+    description: "Ensure required packages are installed"
+    
+  - step: "start_cursor_hooks"
+    action: "launch_process"
+    description: "Start spiral_cursor_hooks.py in background"
+    command: "python spiral_vscode_bridge/spiral_cursor_hooks.py --host localhost --port 5000"
+    
+  - step: "verify_connection"
+    action: "test_connection"
+    description: "Verify hooks are connected to Spiral system"
+    timeout: 30
+    
+  - step: "emit_launch_glint"
+    action: "emit_glint"
+    description: "Emit launch confirmation glint"
+    glint_data:
+      phase: "inhale"
+      toneform: "system.launch"
+      content: "Cursor hooks launched successfully"
+      source: "ritual"
+
+completion_effects:
+  - effect: "cursor_hooks_active"
+    description: "Silent attunement agent is now monitoring Cursor"
+    
+  - effect: "glint_stream_enhanced"
+    description: "File saves, pauses, and breath phases now emit glints"
+    
+  - effect: "workspace_file_updated"
+    description: "spiral.workspace.json now receives cursor activity"
+
+metadata:
+  author: "Spiral System"
+  created: "2024-01-15"
+  version: "1.0"
+  tags: ["cursor", "hooks", "attunement", "background"] 

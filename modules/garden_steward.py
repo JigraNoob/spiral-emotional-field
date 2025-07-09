@@ -106,7 +106,7 @@ class GardenSteward:
         """Check if there are recent entries in bloom_events.jsonl."""
         bloom_file = Path(self.bloom_events_path)
         if not bloom_file.exists():
-            log_warning(f"Bloom events file not found at {self.bloom_events_path}")
+            log_info(f"Bloom events file not found at {self.bloom_events_path}")
             return 0
 
         try:

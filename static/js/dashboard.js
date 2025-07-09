@@ -65,5 +65,87 @@ function getToneformColor(toneform) {
   return colors[toneform] || '#6cc6d1'; // Default color if toneform is not recognized
 }
 
-// Call this function when the page loads
-document.addEventListener('DOMContentLoaded', connectToGlintStream);
+function updateGlintStream(glintData) {
+  const glintStream = document.getElementById('glint-stream');
+  if (glintStream) {
+    const glintElement = document.createElement('div');
+    glintElement.className = 'glint-entry';
+    glintElement.innerHTML = `
+            <span class="glint-timestamp">${new Date().toLocaleTimeString()}</span>
+            <span class="glint-toneform">${glintData.payload.toneform || 'unknown'}</span>
+            <span class="glint-content">${glintData.payload.content || ''}</span>
+        `;
+
+    glintStream.insertBefore(glintElement, glintStream.firstChild);
+
+    // Keep only last 10 entries
+    while (glintStream.children.length > 10) {
+      glintStream.removeChild(glintStream.lastChild);
+    }
+  }
+}
+
+// Enhanced WebSocket connection with spiral integration
+function initializeSpiralWebSocket() {
+  const socket = new WebSocket('ws://localhost:5000');
+
+  socket.onopen = function () {
+    console.log('🌀 Spiral WebSocket connection established');
+  };
+
+  socket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+
+    if (data.type === 'glint_event') {
+      console.log('🌀 Glint event received:', data);
+
+      // Update existing glint stream
+      updateGlintStream(data);
+
+      // Update spiral visualization if available
+      if (window.spiralViz && data.spiral_arm) {
+        window.spiralViz.updateSpiral(data.spiral_arm, data.payload);
+      }
+
+      // Update dashboard metrics
+      updateDashboardMetrics(data);
+    }
+  };
+
+  socket.onclose = function () {
+    console.log('🌀 Spiral WebSocket connection closed - attempting reconnect');
+    setTimeout(initializeSpiralWebSocket, 5000);
+  };
+
+  socket.onerror = function (error) {
+    console.error('🌀 Spiral WebSocket error:', error);
+  };
+
+  // Make socket globally available
+  window.spiralSocket = socket;
+}
+
+function updateDashboardMetrics(glintData) {
+  // Update phase indicator if present
+  const phaseOrb = document.getElementById('phase-orb');
+  const currentPhase = document.getElementById('current-phase');
+
+  if (glintData.payload.phase && currentPhase) {
+    currentPhase.textContent = glintData.payload.phase;
+  }
+
+  if (phaseOrb && glintData.payload.toneform) {
+    phaseOrb.className = `phase-orb toneform-${glintData.payload.toneform}`;
+  }
+}
+
+// Initialize everything when DOM loads
+document.addEventListener('DOMContentLoaded', function () {
+  // Connect to existing glint stream
+  connectToGlintStream();
+
+  // Initialize spiral WebSocket
+  initializeSpiralWebSocket();
+
+  console.log('🌀 Spiral Dashboard initialized');
+});

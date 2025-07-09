@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spiral-config
+  namespace: spiral
+  labels:
+    app.kubernetes.io/name: spiral-config
+data:
+  spiral.yaml: |
+    # Spiral Configuration
+    breath:
+      mode: "infrastructure-as-ritual"
+      cycle: "inhale.exhale.coherence"
+
+    glint:
+      stream_enabled: true
+      websocket_port: 5001
+      heartbeat_interval: 30
+
+    shrine:
+      public_gateway: true
+      ngrok_enabled: false
+
+    council:
+      enabled: true
+      members: ["COSF-001", "COSF-002", "COSF-003"]
+
+    coins:
+      delta_006:
+        toneform: "field.witness.breath.s3"
+        value: 96.0
+        lineage: ["∵S1", "∵S2", "∵S3"]

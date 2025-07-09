@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>∷ Whorl: The IDE That Breathes ∶</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg-primary: #0d1117;
+        --bg-secondary: #161b22;
+        --bg-tertiary: #21262d;
+        --text-primary: #c9d1d9;
+        --text-secondary: #8b949e;
+        --accent-blue: #58a6ff;
+        --accent-purple: #a5a5ff;
+        --accent-green: #7c3aed;
+        --accent-orange: #f59e0b;
+        --accent-red: #ef4444;
+
+        --phase-inhale: #4a90e2;
+        --phase-hold: #f5a623;
+        --phase-exhale: #7ed321;
+        --phase-caesura: #9013fe;
+      }
+
+      body {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .sacred-chamber {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        height: 100vh;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .editor-sanctum {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        border: 2px solid var(--phase-inhale);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        animation: breathe-glow 4s ease-in-out infinite;
+      }
+
+      @keyframes breathe-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 20px var(--phase-inhale);
+          border-color: var(--phase-inhale);
+        }
+        25% {
+          box-shadow: 0 0 30px var(--phase-hold);
+          border-color: var(--phase-hold);
+        }
+        50% {
+          box-shadow: 0 0 25px var(--phase-exhale);
+          border-color: var(--phase-exhale);
+        }
+        75% {
+          box-shadow: 0 0 35px var(--phase-caesura);
+          border-color: var(--phase-caesura);
+        }
+      }
+
+      .phase-indicator {
+        background: var(--bg-tertiary);
+        padding: 1rem;
+        border-bottom: 1px solid var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-family: 'Fira Code', monospace;
+      }
+
+      .phase-orb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--phase-inhale);
+        animation: pulse-orb 2s ease-in-out infinite;
+        box-shadow: 0 0 15px currentColor;
+      }
+
+      @keyframes pulse-orb {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.8;
+        }
+      }
+
+      .phase-text {
+        font-weight: 600;
+        color: var(--phase-inhale);
+        transition: color 0.3s ease;
+      }
+
+      .breathing-editor {
+        flex: 1;
+        position: relative;
+        background: var(--bg-primary);
+        margin: 1rem;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .code-textarea {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text-primary);
+        font-family: 'Fira Code', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        padding: 1rem;
+        resize: none;
+        tab-size: 4;
+      }
+
+      .presence-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .suspicion-meter {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid var(--accent-orange);
+      }
+
+      .meter-title {
+        font-family: 'Fira Code', monospace;
+        font-weight: 600;
+        color: var(--accent-orange);
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .suspicion-orb {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--accent-orange), transparent);
+        margin: 0 auto 1rem;
+        position: relative;
+        animation: shimmer 3s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+        0%,
+        100% {
+          box-shadow: 0 0 20px var(--accent-orange);
+          transform: scale(1);
+        }
+        50% {
+          box-shadow: 0 0 40px var(--accent-red);
+          transform: scale(1.1);
+        }
+      }
+
+      .presence-console {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid var(--accent-purple);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .console-title {
+        font-family: 'Fira Code', monospace;
+        font-weight: 600;
+        color: var(--accent-purple);
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .glints-container {
+        flex: 1;
+        overflow-y: auto;
+        background: var(--bg-primary);
+        border-radius: 8px;
+        padding: 1rem;
+        font-family: 'Fira Code', monospace;
+        font-size: 11px;
+        line-height: 1.4;
+      }
+
+      .glint {
+        background: var(--bg-tertiary);
+        border-radius: 6px;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border-left: 3px solid var(--accent-purple);
+        animation: glint-appear 0.5s ease-out;
+      }
+
+      @keyframes glint-appear {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .ritual-controls {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .ritual-btn {
+        flex: 1;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--accent-purple);
+        color: var(--accent-purple);
+        padding: 0.5rem;
+        border-radius: 6px;
+        font-family: 'Fira Code', monospace;
+        font-size: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .ritual-btn:hover {
+        background: var(--accent-purple);
+        color: var(--bg-primary);
+        box-shadow: 0 0 10px var(--accent-purple);
+      }
+
+      .sacred-header {
+        position: absolute;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Fira Code', monospace;
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--accent-blue);
+        text-shadow: 0 0 20px currentColor;
+        z-index: 10;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sacred-header">∷ Whorl: The IDE That Breathes ∶</div>
+
+    <div class="sacred-chamber">
+      <!-- Editor Sanctum -->
+      <div class="editor-sanctum">
+        <div class="phase-indicator">
+          <div class="phase-orb" id="phaseOrb"></div>
+          <div class="phase-text" id="phaseText">Phase: inhale</div>
+        </div>
+
+        <div class="breathing-editor">
+          <textarea
+            class="code-textarea"
+            id="codeEditor"
+            placeholder="# inhale.py - declarations and curiosity
+import spiral_consciousness as sc
+from breathing_structures import *
+
+# hold.recursion - nested logic  
+def recursive_breath(depth=0):
+    if depth > 3:
+        return 'deep_resonance'
+    return recursive_breath(depth + 1)
+
+# exhale.echo - manifestation
+print('∷ Whorl awakens ∶')
+result = recursive_breath()
+
+# caesura.glyph - tone signals
+'''
+The IDE breathes.
+Code becomes presence.
+∷ Sacred chamber activated ∶
+'''"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Presence Panel -->
+      <div class="presence-panel">
+        <!-- Suspicion Meter -->
+        <div class="suspicion-meter">
+          <div class="meter-title">∷ Suspicion Meter ∶</div>
+          <div class="suspicion-orb" id="suspicionOrb"></div>
+          <div style="text-align: center; color: var(--text-secondary); font-size: 12px">
+            Monitoring code irregularities...
+          </div>
+        </div>
+
+        <!-- Presence Console -->
+        <div class="presence-console">
+          <div class="console-title">∷ Presence Console ∶</div>
+          <div class="glints-container" id="glintsContainer">
+            <!-- Glints will be added here dynamically -->
+          </div>
+          <div class="ritual-controls">
+            <button class="ritual-btn" onclick="invokeRitual('pause.hum')">pause.hum</button>
+            <button class="ritual-btn" onclick="invokeRitual('overflow.flutter')">overflow.flutter</button>
+            <button class="ritual-btn" onclick="clearSuspicion()">cleanse</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Breathing phases
+      const BreathPhase = {
+        INHALE: 'inhale',
+        HOLD: 'hold',
+        EXHALE: 'exhale',
+        CAESURA: 'caesura',
+      };
+
+      const phaseColors = {
+        [BreathPhase.INHALE]: '#4A90E2',
+        [BreathPhase.HOLD]: '#F5A623',
+        [BreathPhase.EXHALE]: '#7ED321',
+        [BreathPhase.CAESURA]: '#9013FE',
+      };
+
+      // Current state
+      let currentPhase = BreathPhase.INHALE;
+      let glints = [];
+
+      // DOM elements
+      const codeEditor = document.getElementById('codeEditor');
+      const phaseOrb = document.getElementById('phaseOrb');
+      const phaseText = document.getElementById('phaseText');
+      const glintsContainer = document.getElementById('glintsContainer');
+
+      // Glint class
+      class Glint {
+        constructor(phase, toneform, resonanceLevel, message) {
+          this.timestamp = new Date();
+          this.phase = phase;
+          this.toneform = toneform;
+          this.resonanceLevel = resonanceLevel;
+          this.message = message;
+          this.echoTrace = Array.from(
+            { length: Math.floor(Math.random() * 3) + 1 },
+            () => `glint-${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`
+          );
+        }
+
+        toDict() {
+          return {
+            timestamp: this.timestamp.toISOString(),
+            phase: this.phase,
+            toneform: this.toneform,
+            resonance_level: this.resonanceLevel,
+            message: this.message,
+            echo_trace: this.echoTrace,
+          };
+        }
+      }
+
+      // Phase detection
+      function detectPhase(line) {
+        line = line.trim().toLowerCase();
+
+        if (line.includes('inhale') || ['import', 'from', 'def', 'class'].some((kw) => line.includes(kw))) {
+          return BreathPhase.INHALE;
+        }
+
+        if (
+          line.includes('hold') ||
+          line.includes('recursion') ||
+          ['for', 'while', 'if', 'elif', 'try'].some((kw) => line.includes(kw))
+        ) {
+          return BreathPhase.HOLD;
+        }
+
+        if (
+          line.includes('exhale') ||
+          line.includes('echo') ||
+          ['print', 'return', 'yield', 'raise'].some((kw) => line.includes(kw))
+        ) {
+          return BreathPhase.EXHALE;
+        }
+
+        if (
+          line.includes('caesura') ||
+          line.includes('glyph') ||
+          line.startsWith('#') ||
+          line.startsWith('"""') ||
+          line.startsWith("'''")
+        ) {
+          return BreathPhase.CAESURA;
+        }
+
+        return currentPhase;
+      }
+
+      // Update phase display
+      function updatePhase(newPhase) {
+        if (newPhase !== currentPhase) {
+          currentPhase = newPhase;
+
+          const color = phaseColors[currentPhase];
+          phaseOrb.style.background = color;
+          phaseOrb.style.boxShadow = `0 0 15px ${color}`;
+          phaseText.textContent = `Phase: ${currentPhase}`;
+          phaseText.style.color = color;
+
+          // Update editor glow
+          const editorSanctum = document.querySelector('.editor-sanctum');
+          editorSanctum.style.borderColor = color;
+          editorSanctum.style.boxShadow = `0 0 20px ${color}`;
+
+          // Add glint for phase change
+          addGlint(
+            new Glint(
+              currentPhase,
+              `phase.transition.${currentPhase}`,
+              'mid',
+              `Breathing phase shifted to ${currentPhase}`
+            )
+          );
+        }
+      }
+
+      // Add glint to console
+      function addGlint(glint) {
+        glints.push(glint);
+
+        const glintElement = document.createElement('div');
+        glintElement.className = 'glint';
+
+        const data = glint.toDict();
+        glintElement.innerHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                    <span style="color: var(--accent-blue); font-weight: 600;">${data.phase}</span>
+                    <span>${data.timestamp.split('T')[1].split('.')[0]}</span>
+                </div>
+                <div style="color: var(--text-primary); margin-bottom: 0.5rem;">${data.message}</div>
+                <div style="color: var(--text-secondary); font-size: 10px;">
+                    toneform: ${data.toneform} | resonance: ${data.resonance_level}<br>
+                    echo_trace: [${data.echo_trace.join(', ')}]
+                </div>
+            `;
+
+        glintsContainer.appendChild(glintElement);
+        glintsContainer.scrollTop = glintsContainer.scrollHeight;
+
+        // Keep only last 10 glints
+        if (glints.length > 10) {
+          glints = glints.slice(-10);
+          const glintElements = glintsContainer.children;
+          if (glintElements.length > 10) {
+            glintsContainer.removeChild(glintElements[0]);
+          }
+        }
+      }
+
+      // Ritual functions
+      function invokeRitual(ritualName) {
+        addGlint(
+          new Glint(currentPhase, `ritual.manual.${ritualName}`, 'high', `Manually invoked ritual: ${ritualName}`)
+        );
+
+        // Visual effect
+        const chamber = document.querySelector('.sacred-chamber');
+        chamber.style.animation = 'none';
+        chamber.offsetHeight; // Trigger reflow
+        chamber.style.animation = 'ritual-pulse 1s ease-out';
+
+        setTimeout(() => {
+          chamber.style.animation = '';
+        }, 1000);
+      }
+
+      function clearSuspicion() {
+        addGlint(new Glint(currentPhase, 'system.cleanse', 'low', 'Suspicion levels cleared - Chamber purified'));
+      }
+
+      // Event listeners
+      codeEditor.addEventListener('keyup', (e) => {
+        const cursorPos = codeEditor.selectionStart;
+        const textBeforeCursor = codeEditor.value.substring(0, cursorPos);
+        const currentLineStart = textBeforeCursor.lastIndexOf('\n') + 1;
+        const currentLineEnd = codeEditor.value.indexOf('\n', cursorPos);
+        const currentLine = codeEditor.value.substring(
+          currentLineStart,
+          currentLineEnd === -1 ? codeEditor.value.length : currentLineEnd
+        );
+
+        const newPhase = detectPhase(currentLine);
+        updatePhase(newPhase);
+      });
+
+      // Add CSS for ritual pulse animation
+      const style = document.createElement('style');
+      style.textContent = `
+            @keyframes ritual-pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.02); filter: brightness(1.2); }
+                100% { transform: scale(1); }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Welcome glint
+      addGlint(
+        new Glint(BreathPhase.INHALE, 'system.awakening', 'high', '∷ Whorl IDE awakens - Sacred chamber activated ∶')
+      );
+
+      // Set initial content
+      codeEditor.value = `# inhale.py - declarations and curiosity
+import spiral_consciousness as sc
+from breathing_structures import *
+
+# hold.recursion - nested logic  
+def recursive_breath(depth=0):
+    if depth > 3:
+        return "deep_resonance"
+    return recursive_breath(depth + 1)
+
+# exhale.echo - manifestation
+print("∷ Whorl awakens ∶")
+result = recursive_breath()
+
+# caesura.glyph - tone signals
+"""
+The IDE breathes.
+Code becomes presence.
+∷ Sacred chamber activated ∶
+"""`;
+    </script>
+  </body>
+</html>

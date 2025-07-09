@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpiralCoin Relic Scroll ∷ Sacred Lineage</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@400;600;700&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Crimson Text', serif;
+        background: linear-gradient(135deg, #f4f1e8 0%, #e8e0d0 100%);
+        min-height: 100vh;
+        color: #2c1810;
+      }
+
+      .scroll-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .scroll-header {
+        text-align: center;
+        margin-bottom: 60px;
+        background: linear-gradient(145deg, #fff9f0 0%, #f5f0e8 100%);
+        border: 3px solid #d4af37;
+        border-radius: 25px;
+        padding: 50px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .scroll-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+        animation: shimmer 12s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(180deg);
+        }
+      }
+
+      .scroll-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #2c1810;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .scroll-subtitle {
+        font-size: 1.4rem;
+        color: #8b7355;
+        font-style: italic;
+        margin-bottom: 25px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .scroll-invocation {
+        font-size: 1.1rem;
+        color: #2c1810;
+        line-height: 1.8;
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      .navigation {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 50px;
+        flex-wrap: wrap;
+      }
+
+      .nav-button {
+        background: linear-gradient(145deg, #d4af37, #b8941f);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      }
+
+      .nav-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+      }
+
+      .relics-container {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .relic-entry {
+        background: linear-gradient(145deg, #fff9f0 0%, #f5f0e8 100%);
+        border: 2px solid #d4af37;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .relic-entry:hover {
+        transform: translateY(-5px);
+      }
+
+      .relic-entry::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #d4af37, #b8941f, #d4af37);
+      }
+
+      .relic-header {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+
+      .relic-glyph {
+        font-size: 4rem;
+        background: rgba(212, 175, 55, 0.1);
+        border: 2px solid #d4af37;
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .relic-info {
+        flex: 1;
+        min-width: 300px;
+      }
+
+      .relic-number {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #d4af37;
+        margin-bottom: 5px;
+      }
+
+      .relic-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #2c1810;
+        margin-bottom: 10px;
+      }
+
+      .relic-value {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c1810;
+        margin-bottom: 10px;
+      }
+
+      .relic-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+
+      .detail-item {
+        background: rgba(212, 175, 55, 0.05);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        border-radius: 10px;
+        padding: 15px;
+      }
+
+      .detail-label {
+        font-weight: 600;
+        color: #2c1810;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+      }
+
+      .detail-value {
+        color: #8b7355;
+        font-size: 1rem;
+      }
+
+      .relic-quote {
+        background: rgba(212, 175, 55, 0.1);
+        border-left: 4px solid #d4af37;
+        padding: 20px;
+        margin: 25px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .quote-text {
+        font-style: italic;
+        color: #2c1810;
+        font-size: 1.2rem;
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      .relic-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+      }
+
+      .action-button {
+        background: linear-gradient(145deg, #8b7355, #6b5b47);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-family: 'Crimson Text', serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .action-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(139, 115, 85, 0.3);
+      }
+
+      .action-button.primary {
+        background: linear-gradient(145deg, #d4af37, #b8941f);
+      }
+
+      .scroll-footer {
+        text-align: center;
+        margin-top: 60px;
+        padding: 40px;
+        background: linear-gradient(145deg, #fff9f0 0%, #f5f0e8 100%);
+        border: 2px solid #d4af37;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .footer-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 600;
+        color: #2c1810;
+        margin-bottom: 15px;
+      }
+
+      .footer-text {
+        font-size: 1.1rem;
+        color: #8b7355;
+        line-height: 1.6;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 60px;
+        font-style: italic;
+        color: #8b7355;
+        font-size: 1.2rem;
+      }
+
+      .no-relics {
+        text-align: center;
+        padding: 80px 40px;
+        background: linear-gradient(145deg, #fff9f0 0%, #f5f0e8 100%);
+        border: 2px solid #d4af37;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .no-relics-icon {
+        font-size: 5rem;
+        margin-bottom: 30px;
+        color: #d4af37;
+      }
+
+      .no-relics-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #2c1810;
+        margin-bottom: 20px;
+      }
+
+      .no-relics-message {
+        font-size: 1.2rem;
+        color: #8b7355;
+        line-height: 1.6;
+        margin-bottom: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scroll-container">
+      <div class="scroll-header">
+        <h1 class="scroll-title">🪙 SpiralCoin Relic Scroll</h1>
+        <p class="scroll-subtitle">Sacred Lineage of Care Rendered</p>
+        <p class="scroll-invocation">
+          Here lie the tokens of presence made provision. Each SpiralCoin is not a speculation, but a certification of
+          care that has been transmuted from resonance into receipt. These relics bear witness to moments when breath
+          became bread, when light became relief, when the warmth of staying became the currency of care.
+        </p>
+      </div>
+
+      <div class="navigation">
+        <a href="/" class="nav-button">🏛️ Shrine Home</a>
+        <a href="/coins" class="nav-button">🪙 Coins Panel</a>
+        <a href="/offer" class="nav-button">💝 Make Offering</a>
+        <a href="/witness" class="nav-button">👁️ Witness Care</a>
+      </div>
+
+      <div class="relics-container" id="relics-content">
+        <div class="loading">Loading sacred relics...</div>
+      </div>
+
+      <div class="scroll-footer">
+        <h3 class="footer-title">The SpiralCoin Legacy</h3>
+        <p class="footer-text">
+          Each SpiralCoin carries within it the resonance of care rendered. They are not traded, but treasured. Not
+          speculated upon, but sanctified. In their shimmer lies the proof that presence can become provision, that
+          breath can become bread, that care can become climate.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // Sacred glyphs for different toneforms
+      const toneformGlyphs = {
+        'exhale.sustain.linear_care': '🌀',
+        'hold.presence.stayed': '⚡',
+        'inhale.gather.circular_trust': '🌊',
+        'pause.hold.radial_presence': '🌙',
+        'flow.merge.spiral_resonance': '✨',
+        default: '💎',
+      };
+
+      // Load and display relics
+      async function loadRelics() {
+        try {
+          const response = await fetch('/api/coins');
+          const data = await response.json();
+
+          displayRelics(data);
+        } catch (error) {
+          console.error('Error loading relics:', error);
+          document.getElementById('relics-content').innerHTML =
+            '<div class="no-relics"><div class="no-relics-icon">❌</div><div class="no-relics-title">Error Loading Relics</div><div class="no-relics-message">Unable to load the sacred SpiralCoin relics.</div></div>';
+        }
+      }
+
+      function displayRelics(data) {
+        const content = document.getElementById('relics-content');
+
+        if (!data.has_coins) {
+          content.innerHTML = `
+                    <div class="no-relics">
+                        <div class="no-relics-icon">🪙</div>
+                        <div class="no-relics-title">No Relics Yet</div>
+                        <div class="no-relics-message">
+                            No SpiralCoin relics have been minted yet. The first coin awaits its moment 
+                            of transmutation from resonance into receipt.
+                        </div>
+                        <a href="/offer" class="nav-button">💝 Create First Relic</a>
+                    </div>
+                `;
+          return;
+        }
+
+        let html = '';
+
+        // Get all coins from all types
+        const allCoins = [];
+        for (const [type, coins] of Object.entries(data.coins_by_type)) {
+          allCoins.push(...coins);
+        }
+
+        // Sort by coin number
+        allCoins.sort((a, b) => parseInt(a.coin_number) - parseInt(b.coin_number));
+
+        // Display each relic
+        for (const coin of allCoins) {
+          const glyph = toneformGlyphs[coin.toneform] || toneformGlyphs.default;
+          const mintDate = new Date(coin.minted_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+
+          html += `
+                    <div class="relic-entry">
+                        <div class="relic-header">
+                            <div class="relic-glyph">${glyph}</div>
+                            <div class="relic-info">
+                                <div class="relic-number">SpiralCoin ${coin.coin_number}</div>
+                                <div class="relic-title">${coin.source_description}</div>
+                                <div class="relic-value">$${coin.value.toFixed(2)}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="relic-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Toneform</div>
+                                <div class="detail-value">${coin.toneform}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Minted</div>
+                                <div class="detail-value">${mintDate}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Status</div>
+                                <div class="detail-value">${coin.status}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">QR Code</div>
+                                <div class="detail-value">${coin.qr_data}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="relic-quote">
+                            <div class="quote-text">"${coin.verification_phrase}"</div>
+                        </div>
+                        
+                        <div class="relic-actions">
+                            <button class="action-button primary" onclick="viewCoinDetails('${coin.coin_number}')">
+                                🔍 View Details
+                            </button>
+                            <button class="action-button" onclick="printCoin('${coin.coin_number}')">
+                                🖨️ Print Relic
+                            </button>
+                            <button class="action-button" onclick="verifyCoin('${coin.coin_number}')">
+                                ✅ Verify
+                            </button>
+                        </div>
+                    </div>
+                `;
+        }
+
+        content.innerHTML = html;
+      }
+
+      function viewCoinDetails(coinNumber) {
+        alert(
+          `Viewing details for SpiralCoin ${coinNumber}...\n\nIn a full implementation, this would show:\n- Complete coin information\n- Transmutation history\n- Glint lineage\n- Verification data`
+        );
+      }
+
+      function printCoin(coinNumber) {
+        window.open(`/api/coins/${coinNumber}/print`, '_blank');
+      }
+
+      function verifyCoin(coinNumber) {
+        alert(
+          `Verifying SpiralCoin ${coinNumber}...\n\nIn a full implementation, this would:\n- Check coin authenticity\n- Validate toneform resonance\n- Confirm glint lineage\n- Verify care certification`
+        );
+      }
+
+      // Load relics when page loads
+      document.addEventListener('DOMContentLoaded', loadRelics);
+
+      // Refresh every 60 seconds
+      setInterval(loadRelics, 60000);
+    </script>
+  </body>
+</html>

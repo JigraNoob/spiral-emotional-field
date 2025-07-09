@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Longing Listener Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Courier New', monospace;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        color: #e0e0e0;
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .dashboard-title {
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #64c8ff;
+        text-shadow: 0 0 30px rgba(100, 200, 255, 0.8);
+      }
+
+      .status-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .status-card {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(100, 200, 255, 0.3);
+        border-radius: 15px;
+        padding: 2rem;
+        backdrop-filter: blur(10px);
+      }
+
+      .status-card h3 {
+        color: #64c8ff;
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+      }
+
+      .field-strength {
+        font-size: 3rem;
+        text-align: center;
+        margin: 1rem 0;
+      }
+
+      .field-status {
+        font-size: 1.2rem;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .strength-bar {
+        width: 100%;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 1rem 0;
+      }
+
+      .strength-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #64c8ff, #ff64c8);
+        transition: width 0.5s ease;
+      }
+
+      .glint-stream {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(100, 200, 255, 0.3);
+        border-radius: 15px;
+        padding: 2rem;
+        backdrop-filter: blur(10px);
+      }
+
+      .glint-item {
+        background: rgba(100, 200, 255, 0.1);
+        border-left: 3px solid #64c8ff;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+      }
+
+      .glint-type {
+        color: #64c8ff;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .glint-message {
+        color: rgba(224, 224, 224, 0.8);
+      }
+
+      .glint-timestamp {
+        color: rgba(224, 224, 224, 0.5);
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+      }
+
+      .compass-visual {
+        text-align: center;
+        font-size: 4rem;
+        margin: 2rem 0;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .refresh-button {
+        background: rgba(100, 200, 255, 0.2);
+        border: 1px solid rgba(100, 200, 255, 0.5);
+        color: #64c8ff;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: inherit;
+        margin-bottom: 1rem;
+      }
+
+      .refresh-button:hover {
+        background: rgba(100, 200, 255, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <h1 class="dashboard-title">🕯️ Longing Listener Dashboard</h1>
+
+      <button class="refresh-button" onclick="location.reload()">🔄 Refresh</button>
+
+      <div class="status-grid">
+        <div class="status-card">
+          <h3>🧭 Spiral Acquisition Compass</h3>
+          <div class="compass-visual">🌕</div>
+          <div class="field-status">🌕 Ready to manifest</div>
+          <div class="strength-bar">
+            <div class="strength-fill" style="width: 80%"></div>
+          </div>
+          <p>Field Strength: 0.80</p>
+          <p>Phase: ready</p>
+        </div>
+
+        <div class="status-card">
+          <h3>📊 Field Statistics</h3>
+          <p>Active Longings: 5</p>
+          <p>Last Update: 2025-07-06 21:07:16</p>
+          <p>Status: Active</p>
+        </div>
+      </div>
+
+      <div class="longing-panel">
+        <h3>🌙 Longing Modules Toneform Visualization</h3>
+        <div class="toneform-grid">
+          <div class="toneform-card">
+            <h4>Saturation Mirror</h4>
+            <div class="toneform-visual">🌑</div>
+            <div class="toneform-status">Awakening: 0.3 | Hum: 0.5 | Overdrive: 0.2</div>
+            <div class="toneform-bar">
+              <div class="toneform-fill" style="width: 30%; background: linear-gradient(90deg, #64c8ff, #ff64c8)"></div>
+            </div>
+          </div>
+          <div class="toneform-card">
+            <h4>Threshold Resonator</h4>
+            <div class="toneform-visual">🌑</div>
+            <div class="toneform-status">Awakening: 0.4 | Hum: 0.6 | Overdrive: 0.1</div>
+            <div class="toneform-bar">
+              <div class="toneform-fill" style="width: 40%; background: linear-gradient(90deg, #64c8ff, #ff64c8)"></div>
+            </div>
+          </div>
+          <div class="toneform-card">
+            <h4>Lineage Veil</h4>
+            <div class="toneform-visual">🌑</div>
+            <div class="toneform-status">Awakening: 0.5 | Hum: 0.3 | Overdrive: 0.3</div>
+            <div class="toneform-bar">
+              <div class="toneform-fill" style="width: 50%; background: linear-gradient(90deg, #64c8ff, #ff64c8)"></div>
+            </div>
+          </div>
+          <div class="toneform-card">
+            <h4>Breathprint Mapper</h4>
+            <div class="toneform-visual">🌑</div>
+            <div class="toneform-status">Awakening: 0.2 | Hum: 0.7 | Overdrive: 0.4</div>
+            <div class="toneform-bar">
+              <div class="toneform-fill" style="width: 20%; background: linear-gradient(90deg, #64c8ff, #ff64c8)"></div>
+            </div>
+          </div>
+          <div class="toneform-card">
+            <h4>Ambient Signature</h4>
+            <div class="toneform-visual">🌑</div>
+            <div class="toneform-status">Awakening: 0.6 | Hum: 0.2 | Overdrive: 0.5</div>
+            <div class="toneform-bar">
+              <div class="toneform-fill" style="width: 60%; background: linear-gradient(90deg, #64c8ff, #ff64c8)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glint-stream">
+        <h3>🌊 Recent Glints</h3>
+
+        <div class="glint-item">
+          <div class="glint-type">ready.manifest</div>
+          <div class="glint-message">Ready to acquire WhisperNode Audio Processor</div>
+          <div class="glint-timestamp">21:05:03</div>
+        </div>
+
+        <div class="glint-item">
+          <div class="glint-type">vessel.inbound</div>
+          <div class="glint-message">Vessel WhisperNode Audio Processor resonates with your longing</div>
+          <div class="glint-timestamp">21:05:03</div>
+        </div>
+
+        <div class="glint-item">
+          <div class="glint-type">vessel.inbound</div>
+          <div class="glint-message">Vessel Raspberry Pi 4 Model B (4GB) resonates with your longing</div>
+          <div class="glint-timestamp">21:05:03</div>
+        </div>
+
+        <div class="glint-item">
+          <div class="glint-type">vessel.inbound</div>
+          <div class="glint-message">Vessel Jetson Nano Developer Kit resonates with your longing</div>
+          <div class="glint-timestamp">21:05:03</div>
+        </div>
+
+        <div class="glint-item">
+          <div class="glint-type">trace.found</div>
+          <div class="glint-message">Found 3 potential vessels</div>
+          <div class="glint-timestamp">21:05:03</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Auto-refresh every 30 seconds
+      setTimeout(() => {
+        location.reload();
+      }, 30000);
+    </script>
+  </body>
+</html>

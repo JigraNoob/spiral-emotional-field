@@ -6,11 +6,15 @@ Spiral's memory system, including integration with the Whisper Steward
 and other memory-aware components.
 """
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Set
+from typing import Dict, List, Optional, Any, Set, TYPE_CHECKING
+from collections import defaultdict
 import json
 import os
 from pathlib import Path
 import logging
+
+if TYPE_CHECKING:
+    from .glint_trace import GlintTrace
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

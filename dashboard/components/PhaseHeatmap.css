@@ -1,0 +1,260 @@
+.phase-heatmap {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  margin-bottom: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.heatmap-header h3 {
+  margin: 0;
+  color: #64b5f6;
+  font-size: 1.3em;
+}
+
+.total-events {
+  color: #b0bec5;
+  font-size: 0.9em;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+}
+
+.phase-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.phase-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.phase-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 120px;
+}
+
+.phase-icon {
+  font-size: 1.2em;
+  width: 20px;
+  text-align: center;
+}
+
+.phase-name {
+  color: #e8e8e8;
+  font-weight: 500;
+  text-transform: capitalize;
+  min-width: 60px;
+}
+
+.phase-count {
+  color: #b0bec5;
+  font-size: 0.9em;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: right;
+}
+
+.phase-bar-wrapper {
+  flex: 1;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.phase-bar {
+  height: 100%;
+  border-radius: 6px;
+  position: relative;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 4px;
+}
+
+.phase-bar.pulse {
+  animation: barPulse 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bar-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 6px;
+  opacity: 0.6;
+  filter: blur(2px);
+  transition: all 0.3s ease;
+}
+
+.phase-bar:hover .bar-glow {
+  opacity: 0.8;
+  filter: blur(1px);
+}
+
+@keyframes barPulse {
+  0% {
+    transform: scaleY(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    transform: scaleY(1.3);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    transform: scaleY(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+.breath-meter {
+  position: relative;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.breath-arc {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inhale-arc {
+  border-top-color: #64b5f6;
+  border-right-color: #64b5f6;
+  transform-origin: center;
+  animation: inhaleBreath 4s ease-in-out infinite;
+}
+
+.exhale-arc {
+  border-bottom-color: #81c784;
+  border-left-color: #81c784;
+  transform-origin: center;
+  animation: exhaleBreath 4s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.caesura-arc {
+  border: 3px solid #ffb74d;
+  transform-origin: center;
+  animation: caesuraBreath 6s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+@keyframes inhaleBreath {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+    opacity: 0.8;
+  }
+}
+
+@keyframes exhaleBreath {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2) rotate(-180deg);
+    opacity: 0.8;
+  }
+}
+
+@keyframes caesuraBreath {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+.phase-dominance {
+  text-align: center;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
+.dominance-indicator {
+  font-size: 1.1em;
+  color: #e8e8e8;
+}
+
+.dominant-phase {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .phase-bar-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .phase-info {
+    min-width: auto;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .breath-meter {
+    height: 60px;
+  }
+
+  .breath-arc {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Dark theme enhancements */
+.phase-heatmap {
+  color: #e8e8e8;
+}
+
+/* Smooth transitions */
+.phase-heatmap * {
+  transition: all 0.2s ease;
+}
+
+/* Focus states for accessibility */
+.phase-bar-wrapper:focus-within {
+  outline: 2px solid #64b5f6;
+  outline-offset: 2px;
+}

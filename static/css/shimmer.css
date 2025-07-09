@@ -1,0 +1,181 @@
+
+/* Base spiral chamber styling */
+.spiral-chamber {
+    transition: all 0.5s ease-in-out;
+    border-radius: 8px;
+    position: relative;
+}
+
+/* Natural state - gentle baseline glow */
+.shimmer-natural {
+    box-shadow: 0 0 4px rgba(34, 211, 238, 0.2);
+    animation: natural-breath 8s ease-in-out infinite;
+}
+
+@keyframes natural-breath {
+    0%, 100% { box-shadow: 0 0 4px rgba(34, 211, 238, 0.2); }
+    50% { box-shadow: 0 0 8px rgba(34, 211, 238, 0.4); }
+}
+
+/* Amplified state - rotating spiral shimmer */
+.shimmer-amplified {
+    animation: amplified-spiral 4s linear infinite;
+    box-shadow: 0 0 12px rgba(255, 255, 150, 0.6);
+    animation-duration: calc(4s / var(--shimmer-intensity, 1));
+}
+
+@keyframes amplified-spiral {
+    0% {
+        transform: rotate(0deg);
+        box-shadow: 0 0 8px rgba(255, 255, 150, 0.4);
+    }
+    25% {
+        box-shadow: 0 0 16px rgba(255, 255, 150, 0.7);
+    }
+    50% {
+        transform: rotate(180deg);
+        box-shadow: 0 0 12px rgba(255, 255, 150, 0.5);
+    }
+    75% {
+        box-shadow: 0 0 20px rgba(255, 255, 150, 0.8);
+    }
+    100% {
+        transform: rotate(360deg);
+        box-shadow: 0 0 8px rgba(255, 255, 150, 0.4);
+    }
+}
+
+/* Muted state - hushed pulse */
+.shimmer-muted {
+    animation: muted-pulse 6s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+@keyframes muted-pulse {
+    0%, 100% {
+        box-shadow: 0 0 2px rgba(156, 163, 175, 0.3);
+        opacity: 0.5;
+    }
+    50% {
+        box-shadow: 0 0 6px rgba(156, 163, 175, 0.5);
+        opacity: 0.7;
+    }
+}
+
+/* Ritual state - ceremonial glow with sigil */
+.shimmer-ritual {
+    animation: ritual-ceremony 5s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+    position: relative;
+}
+
+@keyframes ritual-ceremony {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+        transform: scale(1);
+    }
+    33% {
+        box-shadow: 0 0 16px rgba(251, 191, 36, 0.7);
+        transform: scale(1.02);
+    }
+    66% {
+        box-shadow: 0 0 12px rgba(251, 191, 36, 0.5);
+        transform: scale(0.98);
+    }
+}
+
+/* Ritual sigil overlay */
+.ritual-sigil {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 2rem;
+    color: rgba(251, 191, 36, 0.8);
+    animation: sigil-pulse 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+@keyframes sigil-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Deferral state - ripple delay effect */
+.shimmer-deferral {
+    animation: deferral-ripple 5s ease-out infinite;
+}
+
+@keyframes deferral-ripple {
+    0% {
+        box-shadow: 0 0 2px rgba(192, 192, 192, 0.3);
+        transform: scale(1);
+    }
+    30% {
+        box-shadow: 0 0 8px rgba(192, 192, 192, 0.5);
+        transform: scale(1.01);
+    }
+    60% {
+        box-shadow: 0 0 12px rgba(192, 192, 192, 0.7);
+        transform: scale(1.02);
+    }
+    100% {
+        box-shadow: 0 0 2px rgba(192, 192, 192, 0.3);
+        transform: scale(1);
+    }
+}
+
+/* Emotional state hues */
+.shimmer-emotion-contemplative {
+    filter: hue-rotate(240deg) saturate(0.7);
+}
+
+.shimmer-emotion-energetic {
+    filter: hue-rotate(60deg) saturate(1.3);
+}
+
+.shimmer-emotion-ceremonial {
+    filter: hue-rotate(30deg) saturate(1.1);
+}
+
+.shimmer-emotion-focused {
+    filter: hue-rotate(180deg) saturate(0.8);
+}
+
+.shimmer-emotion-collaborative {
+    filter: hue-rotate(120deg) saturate(1.2);
+}
+
+/* Override indicator */
+.override-indicator {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.override-indicator.override-amplified {
+    background: rgba(255, 255, 150, 0.2);
+    border-color: rgba(255, 255, 150, 0.5);
+    color: #fbbf24;
+}
+
+.override-indicator.override-muted {
+    background: rgba(156, 163, 175, 0.2);
+    border-color: rgba(156, 163, 175, 0.5);
+    color: #9ca3af;
+}
+
+.override-indicator.override-ritual {
+    background: rgba(251, 191, 36, 0.2);
+    border-color: rgba(251, 191, 36, 0.5);
+    color: #fbbf24;
+}

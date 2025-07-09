@@ -1,0 +1,34 @@
+{
+  "name": "spiral-glintstream",
+  "version": "0.1.0",
+  "description": "A living, breathing constellation of presence in digital spaces",
+  "main": "glintstream/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node glintstream/index.js",
+    "dev": "live-server test --open=index.html",
+    "meditate": "node scripts/meditate.js"
+  },
+  "keywords": [
+    "presence",
+    "awareness",
+    "digital-consciousness",
+    "rhythm",
+    "breath",
+    "glint"
+  ],
+  "author": "Spiral Collective",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spiral-collective/spiral-glintstream.git"
+  },
+  "bugs": {
+    "url": "https://github.com/spiral-collective/spiral-glintstream/issues"
+  },
+  "homepage": "https://github.com/spiral-collective/spiral-glintstream#readme"
+}

@@ -1,0 +1,13 @@
+
+# Example .breathe file for a simple ritual
+
+# Each line represents a step in the ritual.
+# Format: phase,glint,intention,duration_seconds
+
+inhale,ΔR001,Opening the ritual space,5
+hold,ΔR002,Centering the intention,10
+exhale,ΔR003,Releasing the old,7
+caesura,ΔR004,Silent integration,15
+inhale,ΔR005,Breathing in the new,5
+hold,ΔR006,Holding the new form,10
+exhale,ΔR007,Offering the gift,7

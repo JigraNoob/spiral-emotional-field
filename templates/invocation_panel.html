@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiral Invocation Shrine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/invocation_panel.css') }}">
+</head>
+<body>
+    <div class="invocation-shrine" id="invocation-shrine">
+        <!-- Shrine Header -->
+        <div class="shrine-header">
+            <h2 class="shrine-title">
+                <span class="shrine-glyph">🌀</span>
+                Invocation Shrine
+            </h2>
+            <button class="shrine-toggle" id="shrine-toggle">
+                <span class="toggle-glyph">⚡</span>
+            </button>
+        </div>
+
+        <!-- Active Invocation Status -->
+        <div class="active-invocation">
+            <div class="invocation-status">
+                <div class="status-orb mode-natural" id="status-orb"></div>
+                <div class="status-text">
+                    <div class="mode-name" id="mode-name">Natural Flow</div>
+                    <div class="mode-duration" id="mode-duration"></div>
+                </div>
+            </div>
+
+            <!-- Resonance Flow Indicator -->
+            <div class="resonance-flow">
+                <div class="flow-line"></div>
+                <div class="flow-pulse"></div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-btn deactivate-btn" id="deactivate-button">
+                <span class="btn-glyph">🍃</span>
+                Natural Flow
+            </button>
+            <button class="action-btn emergency-btn" id="emergency-button">
+                <span class="btn-glyph">⚠</span>
+                Emergency Reset
+            </button>
+        </div>
+
+        <!-- Invocation Cards Grid -->
+        <div class="invocation-grid" id="invocation-grid">
+            <!-- Cards will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/invocation-panel.js') }}"></script>
+    <script>
+        // Initialize the shrine when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.invocationShrine = new InvocationShrine();
+
+            // Setup shrine toggle
+            const shrineToggle = document.getElementById('shrine-toggle');
+            const shrine = document.getElementById('invocation-shrine');
+
+            shrineToggle.addEventListener('click', () => {
+                shrine.classList.toggle('collapsed');
+            });
+
+            // Setup emergency button
+            const emergencyButton = document.getElementById('emergency-button');
+            emergencyButton.addEventListener('click', async () => {
+                if (confirm('🌀 Emergency reset will immediately deactivate all invocations. Continue?')) {
+                    try {
+                        const response = await fetch('/api/invocation/emergency', {
+                            method: 'POST'
+                        });
+
+                        if (response.ok) {
+                            console.log('🌀 Emergency reset completed');
+                            await window.invocationShrine.updateStatus();
+                        }
+                    } catch (error) {
+                        console.error('🌀 Emergency reset failed:', error);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

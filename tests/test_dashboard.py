@@ -1,143 +1,122 @@
+"""
+Tests for the Spiral Breath Dashboard API
+"""
+
 import pytest
-import sys
-import os
 import json
-import random
-from unittest.mock import patch, MagicMock
-from datetime import datetime, timezone
-from flask import Flask
-from flask_socketio import SocketIO
+from datetime import datetime
+from routes.dashboard_api import dashboard_api, DASHBOARD_DATA
 
-# Add the spiral directory to the Python path
-spiral_path = 'c:/spiral'
-if spiral_path not in sys.path:
-    sys.path.insert(0, spiral_path)
+@pytest.fixture
+def client():
+    """Create a test client for the dashboard API"""
+    from flask import Flask
+    app = Flask(__name__)
+    app.register_blueprint(dashboard_api)
+    return app.test_client()
 
-# Define a simple handle_request_metrics function for testing
-def handle_request_metrics():
-    """Send current metrics to the connected client."""
-    try:
-        # In a real implementation, you would get this from SpiralMetrics
-        metrics = dict(phase=random.choice(['inhale', 'hold', 'exhale']), tone=round(random.uniform(0.3, 0.9), 2),
-                       deferral=round(random.uniform(0.1, 0.8), 2), saturation=round(random.uniform(0.2, 0.95), 2),
-                       toneforms={
-                           'natural': round(random.uniform(0.1, 0.9), 2),
-                           'emotional': round(random.uniform(0.1, 0.9), 2),
-                           'temporal': round(random.uniform(0.1, 0.9), 2),
-                           'spatial': round(random.uniform(0.1, 0.9), 2)
-                       }, timestamp=datetime.now(timezone.utc).isoformat())
-        return metrics
-    except Exception as e:
-        print(f"Error sending metrics: {e}")
-        return {"error": str(e)}
+def test_get_breath_state(client):
+    """Test getting current breath state"""
+    response = client.get('/api/breath/state')
+    assert response.status_code == 200
+    
+    data = json.loads(response.data)
+    assert 'phase' in data
+    assert 'progress' in data
+    assert 'climate' in data
+    assert 'last_update' in data
 
-# Create a simple Flask app for testing
-app = Flask(__name__)
-app.config['TESTING'] = True
-sio = SocketIO(app)
+def test_get_glint_lineage(client):
+    """Test getting glint lineage"""
+    response = client.get('/api/glint/lineage')
+    assert response.status_code == 200
+    
+    data = json.loads(response.data)
+    assert isinstance(data, list)
 
-# Set up simple routes for testing
-@app.route('/dashboard')
-def dashboard():
-    """Render the main dashboard page."""
-    return "Dashboard"
+def test_get_glint_stats(client):
+    """Test getting glint statistics"""
+    response = client.get('/api/glint/stats')
+    assert response.status_code == 200
+    
+    data = json.loads(response.data)
+    assert 'total' in data
+    assert 'by_phase' in data
+    assert 'by_module' in data
+    assert 'stream_sync_enabled' in data
 
-@app.route('/dashboard/glint')
-def get_glints():
-    """Serve glint data from the glint_stream.jsonl file."""
-    try:
-        # Use a dummy path for testing
-        glint_stream_path = 'dummy/path/glint_stream.jsonl'
+def test_get_ritual_alerts(client):
+    """Test getting ritual alerts"""
+    response = client.get('/api/ritual/alerts')
+    assert response.status_code == 200
+    
+    data = json.loads(response.data)
+    assert isinstance(data, list)
 
-        # Check if the file exists
-        if not os.path.exists(glint_stream_path):
-            return json.dumps({"error": f"Glint stream file not found"}), 404, {'Content-Type': 'application/json'}
+def test_get_ritual_stats(client):
+    """Test getting ritual statistics"""
+    response = client.get('/api/ritual/stats')
+    assert response.status_code == 200
+    
+    data = json.loads(response.data)
+    assert 'total_triggered' in data
+    assert 'active_rituals' in data
+    assert 'completed_today' in data
+    assert 'success_rate' in data
 
-        with open(glint_stream_path, 'r', encoding='utf-8') as f:
-            entries = [json.loads(line) for line in f if line.strip()]
-        return json.dumps(entries), 200, {'Content-Type': 'application/json'}
-    except Exception as e:
-        # Log the error
-        print(f"Error in /dashboard/glint: {str(e)}")
-        return json.dumps({"error": "Unable to load glint stream"}), 500, {'Content-Type': 'application/json'}
+def test_ritual_action_activate(client):
+    """Test ritual activation"""
+    response = client.post('/api/ritual/activate', 
+                          json={'ritual_id': 'test_ritual_123'})
+    assert response.status_code == 200
+    
+    data = json.loads(response.data)
+    assert data['success'] == True
+    assert data['action'] == 'activate'
+    assert data['ritual_id'] == 'test_ritual_123'
 
-# Set APP_AVAILABLE to True since we're creating our own app
-APP_AVAILABLE = True
+def test_ritual_action_missing_id(client):
+    """Test ritual action with missing ritual_id"""
+    response = client.post('/api/ritual/activate', json={})
+    assert response.status_code == 400
+    
+    data = json.loads(response.data)
+    assert 'error' in data
 
-# Only run the tests if the app is available
-if APP_AVAILABLE:
-    @pytest.fixture
-    def client():
-        app.config['TESTING'] = True
-        with app.test_client() as client:
-            yield client
+def test_get_dashboard_overview(client):
+    """Test getting comprehensive dashboard overview"""
+    response = client.get('/api/dashboard/overview')
+    assert response.status_code == 200
+    
+    data = json.loads(response.data)
+    assert 'breath_state' in data
+    assert 'glint_stats' in data
+    assert 'ritual_stats' in data
+    assert 'system_health' in data
 
-    def test_dashboard_route(client):
-        """Test that the dashboard route returns a 200 status code."""
-        response = client.get('/dashboard')
-        assert response.status_code == 200
-        # Check that the response contains the expected content
-        assert b'Dashboard' in response.data
+def test_dashboard_stream_headers(client):
+    """Test dashboard stream headers"""
+    response = client.get('/api/dashboard/stream')
+    assert response.status_code == 200
+    assert response.mimetype == 'text/event-stream'
+    assert 'Cache-Control' in response.headers
+    assert 'Connection' in response.headers
 
-    @patch('os.path.exists')
-    @patch('builtins.open')
-    def test_dashboard_glint_route(mock_open, mock_exists, client):
-        """Test that the dashboard glint route returns valid JSON data."""
-        # Mock the file existence check
-        mock_exists.return_value = True
+def test_breath_state_update():
+    """Test breath state update function"""
+    from routes.dashboard_api import update_breath_state
+    
+    # Store original state
+    original_state = DASHBOARD_DATA['breath_state'].copy()
+    
+    # Update state
+    update_breath_state()
+    
+    # Verify state was updated
+    assert DASHBOARD_DATA['breath_state']['last_update'] != original_state['last_update']
+    assert 'phase' in DASHBOARD_DATA['breath_state']
+    assert 'progress' in DASHBOARD_DATA['breath_state']
+    assert 'climate' in DASHBOARD_DATA['breath_state']
 
-        # Mock the file open and read operations
-        mock_file = MagicMock()
-        mock_file.__enter__.return_value.__iter__.return_value = [
-            '{"glint": {"id": "test_glint_1", "content": "Test glint 1"}, "timestamp": "2025-07-02T19:45:18.577469"}\n',
-            '{"glint": {"id": "test_glint_2", "content": "Test glint 2"}, "timestamp": "2025-07-02T19:45:19.079176"}\n'
-        ]
-        mock_open.return_value = mock_file
-
-        # Test the route
-        response = client.get('/dashboard/glint')
-        assert response.status_code == 200
-
-        # Parse the response data as JSON
-        data = json.loads(response.data)
-
-        # Check that the response contains the expected data
-        assert isinstance(data, list)
-        assert len(data) == 2
-        assert data[0]['glint']['id'] == 'test_glint_1'
-        assert data[1]['glint']['id'] == 'test_glint_2'
-
-    @pytest.mark.parametrize("test_id", ["basic_metrics"])
-    def test_request_metrics_handler(test_id):
-        """Test that the request_metrics WebSocket handler returns valid metrics data."""
-        # Call the handler function
-        metrics_data = handle_request_metrics()
-
-        # Check that the metrics data has the expected structure
-        assert 'phase' in metrics_data
-        assert metrics_data['phase'] in ['inhale', 'hold', 'exhale']
-        assert 'tone' in metrics_data
-        assert isinstance(metrics_data['tone'], float)
-        assert 0 <= metrics_data['tone'] <= 1
-        assert 'deferral' in metrics_data
-        assert isinstance(metrics_data['deferral'], float)
-        assert 'saturation' in metrics_data
-        assert isinstance(metrics_data['saturation'], float)
-        assert 'toneforms' in metrics_data
-        assert isinstance(metrics_data['toneforms'], dict)
-        assert 'timestamp' in metrics_data
-
-        # Check that the timestamp is in ISO format and uses timezone.utc
-        timestamp = metrics_data['timestamp']
-        try:
-            # Parse the timestamp to ensure it's a valid ISO format
-            dt = datetime.fromisoformat(timestamp)
-            # Check that it has timezone information
-            assert dt.tzinfo is not None
-        except ValueError:
-            pytest.fail(f"Invalid timestamp format: {timestamp}")
-else:
-    # Skip all tests if the app isn't available
-    @pytest.mark.skip(reason="App module not available for testing")
-    def test_skip_all():
-        pass
+if __name__ == '__main__':
+    pytest.main([__file__])

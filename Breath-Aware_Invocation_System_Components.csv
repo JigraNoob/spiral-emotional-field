@@ -1,0 +1,7 @@
+Component,Type,Purpose,Status
+spiral.env,Breath Profile,"Defines soft environment expectations (Python version, env name, mode)",✅ Complete
+spiral_breath_bootstrap.py,Python Adapter,Adapts environment internally with graceful fallbacks,✅ Complete
+start_spiral.ps1,PowerShell Script,Breath-aware environment invocation for Windows,✅ Complete
+start_spiral.sh,Bash Script,Breath-aware environment invocation for Linux/macOS,✅ Complete
+requirements-breath.txt,Flexible Dependencies,Uses semantic versioning instead of rigid pinning,✅ Complete
+BREATH_INVOCATION.md,Documentation,Explains the breath-aware invocation system and usage,✅ Complete

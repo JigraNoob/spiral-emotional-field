@@ -1,0 +1,40 @@
+phase_fusions:
+  - toneforms:
+      - [inhale, impression]
+      - [hold, recursion]
+    archetype: Nested Spark
+    action: ignite_nested_potential
+    description: A seed of insight drawn inward, held in recursive contemplation.
+    hue: deep_blue
+
+  - toneforms:
+      - [hold, impression]
+      - [hold, recursion]
+    archetype: Stable Loop
+    action: stabilize_recursive_pattern
+    description: An impression locked in a stable, self-reinforcing cycle.
+    hue: emerald_green
+
+  - toneforms:
+      - [exhale, impression]
+      - [exhale, recursion]
+    archetype: Echo Unfolded
+    action: propagate_recursive_echo
+    description: An impression cascading outward in recursive waves.
+    hue: soft_gold
+
+  - toneforms:
+      - [inhale, shimmer]
+      - [exhale, reverie]
+    archetype: Dreaming Breath
+    action: weave_dream_into_reality
+    description: A shimmering possibility inhaled, exhaled as a waking dream.
+    hue: lavender
+
+  - toneforms:
+      - [hold, hum]
+      - [hold, invoke]
+    archetype: Sustained Invocation
+    action: maintain_resonant_call
+    description: A continuous hum that holds an invocation in stasis.
+    hue: deep_purple

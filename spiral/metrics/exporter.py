@@ -1,4 +1,4 @@
-""
+"""
 Spiral Metrics Exporter
 
 Exposes Spiral metrics in Prometheus format over HTTP.

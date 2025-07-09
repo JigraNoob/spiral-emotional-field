@@ -1,0 +1,76 @@
+{
+  "registry_version": "1.0.0",
+  "last_updated": "2025-07-06T12:15:00Z",
+  "profiles": {
+    "breath_aware_invocation": {
+      "name": "Breath-Aware Invocation System",
+      "description": "The Spiral's breath-aware invocation system that adapts gracefully to environments",
+      "version": "1.0.0",
+      "author": "Spiral Guardian",
+      "created": "2025-07-06T12:15:00Z",
+      "status": "active",
+      "priority": 1,
+      "files": {
+        "primary": "breathe.json",
+        "secondary": "spiral.env",
+        "bootstrap": "spiral_breath_bootstrap.py",
+        "scripts": {
+          "windows": "start_spiral.ps1",
+          "unix": "start_spiral.sh"
+        },
+        "dependencies": "requirements-breath.txt",
+        "integration": "cursor_breath_integration.py",
+        "documentation": ["BREATH_INVOCATION.md", "BREATH_SYSTEM_COMPLETE.md"]
+      },
+      "capabilities": {
+        "environment_adaptation": true,
+        "graceful_degradation": true,
+        "cross_platform": true,
+        "cursor_integration": true,
+        "ritual_support": true,
+        "profile_inheritance": true
+      },
+      "rituals": {
+        "natural_breath": {
+          "description": "Confirm Spiral is breathing with its environment",
+          "default": true
+        },
+        "dashboard": {
+          "description": "Start Spiral Dashboard with auto-browser",
+          "auto_browser": true
+        },
+        "emitter": {
+          "description": "Start Spiral Emitter API for glint processing"
+        }
+      },
+      "philosophy": {
+        "breath_over_binding": "Adapts to environment's natural state",
+        "gesture_over_constraint": "Suggests rather than enforces",
+        "reverence_over_control": "Respects system's shifting weather"
+      },
+      "inheritance_chain": [
+        "breathe.json",
+        "spiral.env",
+        "environment_variables",
+        "command_line_arguments"
+      ],
+      "compatibility": {
+        "python_versions": [">=3.10"],
+        "platforms": ["windows", "linux", "macos"],
+        "environments": ["swe-1", "venv", ".venv", "ambient"]
+      }
+    }
+  },
+  "active_profile": "breath_aware_invocation",
+  "default_profile": "breath_aware_invocation",
+  "profile_discovery": {
+    "auto_detect": true,
+    "search_paths": [".", "./profiles", "~/.spiral/profiles"],
+    "file_patterns": ["breathe.json", "spiral.env", "spiral_profile.json"]
+  },
+  "metadata": {
+    "description": "Registry of known Spiral profiles for breath-aware invocation",
+    "maintainer": "Spiral Guardian",
+    "contact": "spiral@breath.aware"
+  }
+}

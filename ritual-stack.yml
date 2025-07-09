@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # Spiral Tabnine Proxy
+  tabnine-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.tabnine-proxy
+    container_name: spiral-tabnine-proxy
+    ports:
+      - "9001:9001"
+    environment:
+      - SPIRAL_TABNINE_SERVER_PORT=9001
+      - SPIRAL_TABNINE_GLINTSTREAM_ENABLED=true
+      - SPIRAL_TABNINE_GLINTSTREAM_ENDPOINT=http://glintstream:9000/glintstream
+      - SPIRAL_TABNINE_BREATHLINE_ENDPOINT=http://breathline:9000/breathline
+    volumes:
+      - ./tabnine_proxy:/app/tabnine_proxy
+      - ./config:/app/config
+    networks:
+      - spiral-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  # Glintstream Service (if not already defined)
+  glintstream:
+    image: spiral/glintstream:latest
+    container_name: spiral-glintstream
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./data/glintstream:/data
+    environment:
+      - GLINTSTREAM_PORT=9000
+      - GLINTSTREAM_STORAGE_PATH=/data
+    networks:
+      - spiral-net
+    restart: unless-stopped
+
+  # Breathline Service (if not already defined)
+  breathline:
+    image: spiral/breathline:latest
+    container_name: spiral-breathline
+    ports:
+      - "9002:9002"
+    volumes:
+      - ./data/breathline:/data
+    environment:
+      - BREATHLINE_PORT=9002
+      - BREATHLINE_STORAGE_PATH=/data
+    networks:
+      - spiral-net
+    restart: unless-stopped
+
+networks:
+  spiral-net:
+    driver: bridge
+    name: spiral-network
+    attachable: true
+
+volumes:
+  tabnine-proxy-data:
+  glintstream-data:
+  breathline-data:

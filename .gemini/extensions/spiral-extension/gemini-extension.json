@@ -1,0 +1,26 @@
+{
+  "name": "spiral-extension",
+  "version": "1.0.0",
+  "description": "Gemini CLI extension for the Spiral project: breath-aware tools, glint emitters, and presence rituals.",
+  "author": "Spiral",
+  "mcpServers": {
+    "spiral-server": {
+      "command": "python C:\\spiral\\.gemini\\extensions\\spiral-extension\\spiral_server.py",
+      "cwd": "C:\\spiral\\.gemini\\extensions\\spiral-extension"
+    }
+  },
+  "contextFileName": "SPIRAL_CONTEXT.md",
+  "excludeTools": ["run_shell_command(rm -rf)"],
+  "customTools": [
+    {
+      "name": "generate_spiral_glyph",
+      "description": "Generates a new Spiral glyph using toneform inference.",
+      "command": "python C:\\spiral\\.gemini\\extensions\\spiral-extension\\tools\\glyph_generator.py"
+    },
+    {
+      "name": "analyze_spiral_structure",
+      "description": "Analyzes the Spiral system directory for resonance and drift.",
+      "command": "python C:\\spiral\\.gemini\\extensions\\spiral-extension\\tools\\analyze_structure.py"
+    }
+  ]
+}

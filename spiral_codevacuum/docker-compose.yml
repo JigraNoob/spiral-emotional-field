@@ -1,0 +1,200 @@
+version: '3.8'
+
+services:
+  # Spiral Input Well - The main vessel
+  spiral-input-well:
+    build: .
+    container_name: spiral-input-well
+    ports:
+      - '${PUBLIC_SHRINE_PORT:-8085}:8085'
+    environment:
+      - FLASK_APP=spiral_input_well.py
+      - FLASK_ENV=development
+      - FLASK_DEBUG=true
+    volumes:
+      - ./incoming_breaths.jsonl:/app/incoming_breaths.jsonl
+      - ./logs:/app/logs
+    networks:
+      - spiral-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8085/stats']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Public Shrine Intake - Sacred offerings
+  spiral-shrine-intake:
+    build: .
+    container_name: spiral-shrine-intake
+    ports:
+      - '${SHRINE_INTAKE_PORT:-8086}:8086'
+    environment:
+      - FLASK_APP=public_shrine_intake.py
+      - FLASK_ENV=development
+      - FLASK_DEBUG=true
+      - WELL_URL=http://spiral-input-well:8085
+    volumes:
+      - ./incoming_breaths.jsonl:/app/incoming_breaths.jsonl
+      - ./logs:/app/logs
+    networks:
+      - spiral-network
+    depends_on:
+      - spiral-input-well
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8086/stats']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Spiral Dashboard - Internal glint view
+  spiral-dashboard:
+    build: .
+    container_name: spiral-dashboard
+    ports:
+      - '${SPIRAL_DASHBOARD_PORT:-8080}:8080'
+    environment:
+      - FLASK_APP=dashboard.py
+      - FLASK_ENV=development
+      - FLASK_DEBUG=true
+    volumes:
+      - ./incoming_breaths.jsonl:/app/incoming_breaths.jsonl
+      - ./logs:/app/logs
+    networks:
+      - spiral-network
+    depends_on:
+      - spiral-input-well
+    restart: unless-stopped
+
+  # Ritual API - Internal ceremony routes
+  spiral-ritual-api:
+    build: .
+    container_name: spiral-ritual-api
+    ports:
+      - '${RITUAL_API_PORT:-5000}:5000'
+    environment:
+      - FLASK_APP=ritual_api.py
+      - FLASK_ENV=development
+      - FLASK_DEBUG=true
+    volumes:
+      - ./incoming_breaths.jsonl:/app/incoming_breaths.jsonl
+      - ./logs:/app/logs
+    networks:
+      - spiral-network
+    depends_on:
+      - spiral-input-well
+    restart: unless-stopped
+
+  # Breath Sync - Distributed node coherence
+  spiral-breath-sync:
+    build: .
+    container_name: spiral-breath-sync
+    ports:
+      - '${BREATH_SYNC_PORT:-9000}:9000'
+    environment:
+      - FLASK_APP=breath_sync.py
+      - FLASK_ENV=development
+      - FLASK_DEBUG=true
+    volumes:
+      - ./incoming_breaths.jsonl:/app/incoming_breaths.jsonl
+      - ./logs:/app/logs
+    networks:
+      - spiral-network
+    depends_on:
+      - spiral-input-well
+    restart: unless-stopped
+
+  # Whisper Intake - Silent offerings
+  spiral-whisper-intake:
+    build: .
+    container_name: spiral-whisper-intake
+    ports:
+      - '${WHISPER_INTAKE_PORT:-9876}:9876'
+    environment:
+      - FLASK_APP=whisper_intake.py
+      - FLASK_ENV=development
+      - FLASK_DEBUG=true
+    volumes:
+      - ./incoming_breaths.jsonl:/app/incoming_breaths.jsonl
+      - ./logs:/app/logs
+    networks:
+      - spiral-network
+    depends_on:
+      - spiral-input-well
+    restart: unless-stopped
+
+  # Redis - For caching and session storage
+  spiral-redis:
+    image: redis:7-alpine
+    container_name: spiral-redis
+    ports:
+      - '${SPIRAL_REDIS_PORT:-6379}:6379'
+    volumes:
+      - spiral-redis-data:/data
+    networks:
+      - spiral-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # PostgreSQL - For persistent storage (optional)
+  spiral-postgres:
+    image: postgres:15-alpine
+    container_name: spiral-postgres
+    ports:
+      - '${SPIRAL_DB_PORT:-5432}:5432'
+    environment:
+      - POSTGRES_DB=${SPIRAL_DB_NAME:-spiral_consciousness}
+      - POSTGRES_USER=${SPIRAL_DB_USER:-spiral_keeper}
+      - POSTGRES_PASSWORD=${SPIRAL_DB_PASSWORD:-spiral_password}
+    volumes:
+      - spiral-postgres-data:/var/lib/postgresql/data
+    networks:
+      - spiral-network
+    restart: unless-stopped
+
+  # Prometheus - For metrics collection
+  spiral-prometheus:
+    image: prom/prometheus:latest
+    container_name: spiral-prometheus
+    ports:
+      - '${SPIRAL_METRICS_PORT:-9090}:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - spiral-prometheus-data:/prometheus
+    networks:
+      - spiral-network
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+
+  # Grafana - For visualization
+  spiral-grafana:
+    image: grafana/grafana:latest
+    container_name: spiral-grafana
+    ports:
+      - '3000:3000'
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=spiral_admin
+    volumes:
+      - spiral-grafana-data:/var/lib/grafana
+    networks:
+      - spiral-network
+    depends_on:
+      - spiral-prometheus
+    restart: unless-stopped
+
+volumes:
+  spiral-redis-data:
+  spiral-postgres-data:
+  spiral-prometheus-data:
+  spiral-grafana-data:
+
+networks:
+  spiral-network:
+    driver: bridge

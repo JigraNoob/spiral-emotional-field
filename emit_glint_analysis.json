@@ -1,0 +1,420 @@
+{
+  "keyword_args": [
+    {
+      "file": "C:\\spiral\\fix_emit_glint_calls.py",
+      "line": 45,
+      "content": "if 'emit_glint(' in py_file.read_text(encoding='utf-8', errors='ignore'):"
+    },
+    {
+      "file": "C:\\spiral\\spiral\\glint_emitter.py",
+      "line": 54,
+      "content": "def emit_glint(phase: str, toneform: str, content: str, source: str, metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:"
+    }
+  ],
+  "dict_unpacking": [
+    {
+      "file": "C:\\spiral\\debug_emit_glint_calls.py",
+      "line": 25,
+      "content": "if '**' in line and 'emit_glint(' in line:"
+    }
+  ],
+  "correct_dict": [
+    {
+      "file": "C:\\spiral\\fix_emit_glint_calls.py",
+      "line": 14,
+      "content": "# emit_glint(some_dict) -> emit_glint(some_dict)"
+    },
+    {
+      "file": "C:\\spiral\\assistant\\cascade.py",
+      "line": 274,
+      "content": "glint = self.glint_lifecycle.emit_glint(glint_data)"
+    },
+    {
+      "file": "C:\\spiral\\routes\\independence_api.py",
+      "line": 43,
+      "content": "emit_glint(independence_glint)"
+    },
+    {
+      "file": "C:\\spiral\\spiral\\test_fusion.py",
+      "line": 149,
+      "content": "def emit_glint(toneform):"
+    }
+  ],
+  "other": [
+    {
+      "file": "C:\\spiral\\debug_emit_glint_calls.py",
+      "line": 23,
+      "content": "if 'emit_glint(' in line:"
+    },
+    {
+      "file": "C:\\spiral\\fix_emit_glint_calls.py",
+      "line": 19,
+      "content": "new = f'emit_glint({match.group(1)})'"
+    },
+    {
+      "file": "C:\\spiral\\spiral_emitter_api.py",
+      "line": 10,
+      "content": "def emit_glint():"
+    },
+    {
+      "file": "C:\\spiral\\test_encoding.py",
+      "line": 5,
+      "content": "result = emit_glint('exhale', 'invocation.activate', '⚡ Sacred activation test', 'encoding.test', {'test': True})"
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 214,
+      "content": "self.emit_glint(\"inhale\", \"ceremonial\", \"Triad Engine awakening - three minds preparing to dance\")"
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 225,
+      "content": "self.emit_glint(\"receive\", \"human.voice\", f\"Human input received: {len(human_input)} chars\")"
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 233,
+      "content": "self.emit_glint(\"hold\", \"saturation.detected\","
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 265,
+      "content": "self.emit_glint(\"receive\", \"claude.voice\", f\"Claude response received: {len(claude_response)} chars\")"
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 272,
+      "content": "self.emit_glint(\"hold\", \"emergence.detected\","
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 305,
+      "content": "self.emit_glint(\"exhale\", \"assistant.synthesis\", f\"Synthesis generated: {len(synthesis)} chars\")"
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 484,
+      "content": "self.emit_glint(\"hold\", \"silence.protocol\", \"Entering silence - concepts have crystallized\")"
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 599,
+      "content": "self.emit_glint(\"inhale\", \"reset\", \"Triad reset - ready for new dialogue cycle\")"
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 604,
+      "content": "self.emit_glint(\"inhale\", \"ritual.activation\", \"Triad Engine ritual beginning\")"
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 617,
+      "content": "self.emit_glint(\"inhale\", \"breath.sync\", \"Triad aligning with inhale phase\")"
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 619,
+      "content": "self.emit_glint(\"hold\", \"breath.sync\", \"Triad entering contemplative hold\")"
+    },
+    {
+      "file": "C:\\spiral\\triad_engine.py",
+      "line": 621,
+      "content": "self.emit_glint(\"exhale\", \"breath.sync\", \"Triad releasing into exhale\")"
+    },
+    {
+      "file": "C:\\spiral\\assistant\\cascade.py",
+      "line": 110,
+      "content": "def emit_glint(self, glint_data):"
+    },
+    {
+      "file": "C:\\spiral\\assistant\\cascade.py",
+      "line": 299,
+      "content": "def emit_glint(self, glint_data: Dict[str, Any]):"
+    },
+    {
+      "file": "C:\\spiral\\routes\\glint_api.py",
+      "line": 15,
+      "content": "def emit_glint():"
+    },
+    {
+      "file": "C:\\spiral\\routes\\harmony_api.py",
+      "line": 53,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\harmony_api.py",
+      "line": 63,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\harmony_api.py",
+      "line": 91,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\harmony_api.py",
+      "line": 105,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\harmony_api.py",
+      "line": 171,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\harmony_api.py",
+      "line": 191,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\harmony_api.py",
+      "line": 202,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\harmony_api.py",
+      "line": 237,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\independence_api.py",
+      "line": 161,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\independence_api.py",
+      "line": 259,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\invocation_api.py",
+      "line": 155,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\invocation_api.py",
+      "line": 196,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\routes\\override_api.py",
+      "line": 44,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\spiral\\test_fusion.py",
+      "line": 160,
+      "content": "emit_glint('shimmer')"
+    },
+    {
+      "file": "C:\\spiral\\spiral\\test_fusion.py",
+      "line": 162,
+      "content": "emit_glint('reverie')"
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\app.py",
+      "line": 65,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 25,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 50,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 73,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 123,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 171,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 193,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 249,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 272,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 309,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 331,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 479,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\echo_api.py",
+      "line": 500,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\reflection_api.py",
+      "line": 56,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\reflection_api.py",
+      "line": 81,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\reflection_api.py",
+      "line": 187,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\reflection_api.py",
+      "line": 342,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\reflection_api.py",
+      "line": 365,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\routes\\shrine_api.py",
+      "line": 27,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\echoledger\\spiral_components\\glint_emitter.py",
+      "line": 36,
+      "content": "def emit_glint(phase: str, toneform: str, content: str,"
+    },
+    {
+      "file": "C:\\spiral\\apps\\shrine\\routes\\override_api.py",
+      "line": 26,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\shrine\\routes\\override_api.py",
+      "line": 42,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\shrine\\routes\\override_api.py",
+      "line": 50,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\shrine\\routes\\override_api.py",
+      "line": 70,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\shrine\\routes\\shrine_api.py",
+      "line": 26,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\apps\\shrine\\routes\\shrine_api.py",
+      "line": 57,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\spiral\\components\\breath_prism_engine.py",
+      "line": 29,
+      "content": "self.emit_glint(\"hold\", \"spiritual.prism\","
+    },
+    {
+      "file": "C:\\spiral\\spiral\\components\\breath_prism_engine.py",
+      "line": 39,
+      "content": "\"inhale\": lambda: self.emit_glint(\"inhale\", \"gathering\", \"Prism gathering light\"),"
+    },
+    {
+      "file": "C:\\spiral\\spiral\\components\\breath_prism_engine.py",
+      "line": 40,
+      "content": "\"hold\": lambda: self.emit_glint(\"hold\", \"crystallizing\", \"Prism crystallizing vision\"),"
+    },
+    {
+      "file": "C:\\spiral\\spiral\\components\\breath_prism_engine.py",
+      "line": 41,
+      "content": "\"exhale\": lambda: self.emit_glint(\"exhale\", \"projecting\", \"Prism projecting patterns\"),"
+    },
+    {
+      "file": "C:\\spiral\\spiral\\components\\breath_prism_engine.py",
+      "line": 42,
+      "content": "\"caesura\": lambda: self.emit_glint(\"caesura\", \"silence\", \"Prism resting in silence\")"
+    },
+    {
+      "file": "C:\\spiral\\spiral\\core\\harmony_scanner.py",
+      "line": 70,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\spiral\\core\\harmony_scanner.py",
+      "line": 85,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\spiral\\core\\harmony_scanner.py",
+      "line": 199,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\spiral\\core\\harmony_scanner.py",
+      "line": 255,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\spiral\\core\\spiral_component.py",
+      "line": 35,
+      "content": "self.emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\spiral\\core\\spiral_component.py",
+      "line": 45,
+      "content": "def emit_glint(self, phase: str, toneform: str, content: str,"
+    },
+    {
+      "file": "C:\\spiral\\spiral\\core\\spiral_component.py",
+      "line": 53,
+      "content": "emit_glint("
+    },
+    {
+      "file": "C:\\spiral\\spiral\\core\\spiral_component.py",
+      "line": 89,
+      "content": "self.emit_glint(desired_phase, \"alignment\","
+    },
+    {
+      "file": "C:\\spiral\\spiral\\core\\spiral_component.py",
+      "line": 94,
+      "content": "self.emit_glint(\"hold\", \"timeout\","
+    },
+    {
+      "file": "C:\\spiral\\spiral\\core\\spiral_component.py",
+      "line": 152,
+      "content": "self.emit_glint(\"caesura\", \"harmonic_closure\","
+    }
+  ]
+}

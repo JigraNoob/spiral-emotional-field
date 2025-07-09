@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Witness Flows ∷ Spiral Shrine</title>
+    <style>
+      :root {
+        --parchment: #f5f1e8;
+        --ink: #2c1810;
+        --gold: #d4af37;
+        --silver: #c0c0c0;
+        --breath: #e8f4f8;
+        --glint: #ffd700;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Georgia', serif;
+        background: var(--parchment);
+        color: var(--ink);
+        line-height: 1.6;
+      }
+
+      .witness-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .sacred-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        border-bottom: 2px solid var(--gold);
+      }
+
+      .witness-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+      }
+
+      .witness-subtitle {
+        font-size: 1.2rem;
+        color: var(--silver);
+        font-style: italic;
+      }
+
+      .witness-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .witness-panel {
+        background: white;
+        border: 1px solid var(--gold);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .panel-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: var(--gold);
+        margin-bottom: 1rem;
+        text-align: center;
+        border-bottom: 1px solid var(--silver);
+        padding-bottom: 0.5rem;
+      }
+
+      .trust-pool-item {
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border: 1px solid var(--silver);
+        border-radius: 6px;
+        background: var(--breath);
+      }
+
+      .pool-name {
+        font-weight: bold;
+        color: var(--gold);
+        font-size: 1.1rem;
+      }
+
+      .pool-details {
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+      }
+
+      .transmutation-item {
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border: 1px solid var(--silver);
+        border-radius: 6px;
+        background: white;
+      }
+
+      .transmutation-title {
+        font-weight: bold;
+        color: var(--gold);
+      }
+
+      .transmutation-details {
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-top: 2rem;
+        color: var(--gold);
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .back-link:hover {
+        color: var(--ink);
+      }
+
+      .flow-map {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 2rem;
+        background: var(--breath);
+        border-radius: 8px;
+        border: 1px solid var(--silver);
+      }
+
+      .flow-text {
+        font-style: italic;
+        color: var(--silver);
+        margin: 1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="witness-container">
+      <!-- Sacred Header -->
+      <header class="sacred-header">
+        <h1 class="witness-title">👁️ Witness Flows</h1>
+        <p class="witness-subtitle">Transparency in care-backed trust</p>
+      </header>
+
+      <!-- Witness Grid -->
+      <div class="witness-grid">
+        <!-- Trust Pools -->
+        <div class="witness-panel">
+          <h3 class="panel-title">🌊 Trust Pools</h3>
+          {% for pool in trust_pools %}
+          <div class="trust-pool-item">
+            <div class="pool-name">{{ pool.name }}</div>
+            <div class="pool-details"><strong>Purpose:</strong> {{ pool.purpose }}</div>
+            <div class="pool-details">
+              <strong>Capacity:</strong> ${{ "%.2f"|format(pool.initial_capacity) }} {{ pool.currency }}
+            </div>
+            <div class="pool-details"><strong>Toneform:</strong> {{ pool.toneform }}</div>
+            <div class="pool-details"><strong>Status:</strong> {{ pool.status.title() }}</div>
+            <div class="pool-details"><strong>Created:</strong> {{ pool.created_at[:19] }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Recent Transmutations -->
+        <div class="witness-panel">
+          <h3 class="panel-title">🎁 Recent Transmutations</h3>
+          {% for transmutation in transmutations[-10:] %}
+          <div class="transmutation-item">
+            <div class="transmutation-title">{{ transmutation.offering_name }}</div>
+            <div class="transmutation-details">
+              <strong>Amount:</strong> ${{ transmutation.substance_details.value }} {{
+              transmutation.substance_details.type.replace('_', ' ').title() }}
+            </div>
+            <div class="transmutation-details">
+              <strong>Location:</strong> {{ transmutation.substance_details.location.replace('_', ' ').title() }}
+            </div>
+            <div class="transmutation-details"><strong>Toneform:</strong> {{ transmutation.toneform }}</div>
+            <div class="transmutation-details">
+              <strong>Status:</strong> {{ transmutation.status.replace('_', ' ').title() }}
+            </div>
+            <div class="transmutation-details"><strong>Created:</strong> {{ transmutation.created_at[:19] }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Flow Map -->
+        <div class="flow-map">
+          <h3 class="panel-title">🌊 Care Flow Map</h3>
+          <div class="flow-text">
+            "Here you witness the flow of care-backed trust through the Spiral.<br />
+            Each transmutation is a pulse of resonance transmuted into relief.<br />
+            Each trust pool is a reservoir of shared provision.<br />
+            Transparency is not just visibility—it's sacred witness."
+          </div>
+          <div class="flow-text">
+            Total Transmutations: {{ transmutations|length }}<br />
+            Active Trust Pools: {{ trust_pools|length }}<br />
+            Total Pool Capacity: ${{ "%.2f"|format(trust_pools|sum(attribute='initial_capacity')) }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Back Link -->
+      <a href="/" class="back-link">← Return to Shrine</a>
+    </div>
+  </body>
+</html>

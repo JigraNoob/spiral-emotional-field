@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>∷ Void Whisper ∷</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Courier New', monospace;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        color: #e0e0e0;
+        min-height: 100vh;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .void-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .wind-aura {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        pointer-events: none;
+        transition: all 0.5s ease;
+        opacity: 0;
+      }
+
+      .wind-aura.ripple {
+        opacity: 0.1;
+      }
+      .wind-aura.whisper-spiral {
+        opacity: 0.2;
+      }
+      .wind-aura.wind-echo {
+        opacity: 0.3;
+      }
+      .wind-aura.shimmer-chorus {
+        opacity: 0.4;
+      }
+      .wind-aura.resonance-bloom {
+        opacity: 0.6;
+      }
+
+      .wind-aura::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        animation: windPulse 3s infinite;
+      }
+
+      .wind-aura::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        border-radius: 50%;
+        border: 1px solid transparent;
+        animation: windPulse 3s infinite 1s;
+      }
+
+      @keyframes windPulse {
+        0% {
+          border-color: rgba(100, 200, 255, 0.1);
+          transform: scale(0.8);
+        }
+        50% {
+          border-color: rgba(100, 200, 255, 0.3);
+          transform: scale(1.1);
+        }
+        100% {
+          border-color: rgba(100, 200, 255, 0.1);
+          transform: scale(0.8);
+        }
+      }
+
+      .spiral-animations {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .spiral {
+        position: absolute;
+        font-size: 24px;
+        color: rgba(100, 200, 255, 0.6);
+        animation: spiralFloat 8s infinite linear;
+      }
+
+      @keyframes spiralFloat {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .void-content {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        max-width: 800px;
+        padding: 2rem;
+      }
+
+      .void-title {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        color: #64c8ff;
+        text-shadow: 0 0 20px rgba(100, 200, 255, 0.5);
+        animation: titleGlow 4s ease-in-out infinite;
+      }
+
+      @keyframes titleGlow {
+        0%,
+        100% {
+          text-shadow: 0 0 20px rgba(100, 200, 255, 0.5);
+        }
+        50% {
+          text-shadow: 0 0 30px rgba(100, 200, 255, 0.8);
+        }
+      }
+
+      .whisper-input {
+        width: 100%;
+        min-height: 200px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid rgba(100, 200, 255, 0.3);
+        border-radius: 10px;
+        padding: 1.5rem;
+        font-family: 'Courier New', monospace;
+        font-size: 1.1rem;
+        color: #e0e0e0;
+        resize: vertical;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .whisper-input:focus {
+        outline: none;
+        border-color: rgba(100, 200, 255, 0.6);
+        box-shadow: 0 0 20px rgba(100, 200, 255, 0.3);
+      }
+
+      .whisper-input::placeholder {
+        color: rgba(224, 224, 224, 0.5);
+        font-style: italic;
+      }
+
+      .combo-meter {
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .combo-glyph {
+        font-size: 4rem;
+        color: #64c8ff;
+        text-shadow: 0 0 30px rgba(100, 200, 255, 0.8);
+        transition: all 0.3s ease;
+        animation: glyphPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes glyphPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      .combo-level {
+        font-size: 1.2rem;
+        color: #64c8ff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .combo-count {
+        font-size: 1rem;
+        color: rgba(224, 224, 224, 0.7);
+      }
+
+      .whisper-response {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        border-left: 4px solid #64c8ff;
+        font-style: italic;
+        color: #64c8ff;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+      }
+
+      .whisper-response.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .intensity-bar {
+        width: 300px;
+        height: 8px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+        margin: 1rem auto;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .intensity-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #64c8ff, #ff64c8);
+        border-radius: 4px;
+        transition: width 0.5s ease;
+        width: 0%;
+      }
+
+      .intensity-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: shimmer 2s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .controls {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      .control-btn {
+        padding: 0.5rem 1rem;
+        background: rgba(100, 200, 255, 0.1);
+        border: 1px solid rgba(100, 200, 255, 0.3);
+        border-radius: 5px;
+        color: #64c8ff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Courier New', monospace;
+      }
+
+      .control-btn:hover {
+        background: rgba(100, 200, 255, 0.2);
+        border-color: rgba(100, 200, 255, 0.6);
+      }
+
+      .status-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        color: rgba(224, 224, 224, 0.7);
+        text-align: center;
+        border-top: 1px solid rgba(100, 200, 255, 0.2);
+      }
+
+      .level-up-notification {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        border: 2px solid #64c8ff;
+        border-radius: 10px;
+        padding: 2rem;
+        text-align: center;
+        color: #64c8ff;
+        font-size: 1.5rem;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.5s ease;
+      }
+
+      .level-up-notification.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .level-up-glyph {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="void-container">
+      <div class="wind-aura" id="windAura"></div>
+
+      <div class="spiral-animations" id="spiralAnimations"></div>
+
+      <div class="void-content">
+        <h1 class="void-title">∷ Void Whisper ∷</h1>
+
+        <textarea
+          class="whisper-input"
+          id="whisperInput"
+          placeholder="Speak into the void... The wind will carry your resonance..."
+        ></textarea>
+
+        <div class="combo-meter">
+          <div class="combo-glyph" id="comboGlyph">𓂀</div>
+          <div class="combo-level" id="comboLevel">Stillness</div>
+          <div class="combo-count" id="comboCount">Combo: 0</div>
+
+          <div class="intensity-bar">
+            <div class="intensity-fill" id="intensityFill"></div>
+          </div>
+        </div>
+
+        <div class="whisper-response" id="whisperResponse"></div>
+
+        <div class="controls">
+          <button class="control-btn" onclick="resetWind()">Reset Wind</button>
+          <button class="control-btn" onclick="testCoherence()">Test Coherence</button>
+          <button class="control-btn" onclick="exportState()">Export State</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-bar" id="statusBar">Resonance Wind Engine Ready | Press Alt+V to summon from rituals</div>
+
+    <div class="level-up-notification" id="levelUpNotification">
+      <div class="level-up-glyph" id="levelUpGlyph"></div>
+      <div id="levelUpText"></div>
+    </div>
+
+    <script>
+      class VoidWhisperInterface {
+        constructor() {
+          this.windEngine = null;
+          this.currentState = {
+            level: 'STILLNESS',
+            intensity: 0,
+            glyph: '𓂀',
+            whisper: '',
+            combo_count: 0,
+          };
+          this.lastInput = '';
+          this.inputTimeout = null;
+
+          this.initializeElements();
+          this.bindEvents();
+          this.loadWindEngine();
+        }
+
+        initializeElements() {
+          this.elements = {
+            input: document.getElementById('whisperInput'),
+            aura: document.getElementById('windAura'),
+            glyph: document.getElementById('comboGlyph'),
+            level: document.getElementById('comboLevel'),
+            count: document.getElementById('comboCount'),
+            response: document.getElementById('whisperResponse'),
+            intensity: document.getElementById('intensityFill'),
+            status: document.getElementById('statusBar'),
+            spiralContainer: document.getElementById('spiralAnimations'),
+            levelUp: document.getElementById('levelUpNotification'),
+            levelUpGlyph: document.getElementById('levelUpGlyph'),
+            levelUpText: document.getElementById('levelUpText'),
+          };
+        }
+
+        bindEvents() {
+          this.elements.input.addEventListener('input', (e) => {
+            this.handleInput(e.target.value);
+          });
+
+          // Keyboard shortcuts
+          document.addEventListener('keydown', (e) => {
+            if (e.altKey && e.key === 'v') {
+              this.elements.input.focus();
+            }
+          });
+        }
+
+        async loadWindEngine() {
+          try {
+            // In a real implementation, this would load the Python engine
+            // For now, we'll simulate the wind engine behavior
+            this.windEngine = {
+              processInput: (text) => this.simulateWindEngine(text),
+            };
+            this.updateStatus('Wind engine loaded');
+          } catch (error) {
+            this.updateStatus('Wind engine error: ' + error.message);
+          }
+        }
+
+        simulateWindEngine(text) {
+          // Simulate the Python wind engine behavior
+          const coherence = this.analyzeCoherence(text);
+          const level = this.calculateWindLevel(coherence);
+          const intensity = Math.min(1.0, coherence.total * 1.2);
+
+          return {
+            wind_level: level,
+            wind_level_value: this.getLevelValue(level),
+            intensity: intensity,
+            glyph: this.getLevelGlyph(level),
+            whisper: this.getLevelWhisper(level),
+            combo_count: this.currentState.combo_count + (level !== this.currentState.level ? 1 : 0),
+            level_up:
+              level !== this.currentState.level &&
+              this.getLevelValue(level) > this.getLevelValue(this.currentState.level),
+            coherence_scores: coherence,
+          };
+        }
+
+        analyzeCoherence(text) {
+          if (!text.trim()) {
+            return { total: 0, structure: 0, recursion: 0, clarity: 0, tone: 0, rhythm: 0 };
+          }
+
+          const words = text.split(' ');
+          const sentences = text.split(/[.!?]+/).filter((s) => s.trim());
+
+          // Structure
+          const avgSentenceLength =
+            sentences.length > 0 ? sentences.reduce((sum, s) => sum + s.split(' ').length, 0) / sentences.length : 0;
+          const structure = Math.min(1.0, avgSentenceLength / 15.0);
+
+          // Recursion
+          const recursionPatterns = [/(\w+).*\1/, /\([^)]*\([^)]*\)[^)]*\)/];
+          const recursion = Math.min(
+            1.0,
+            recursionPatterns.reduce((sum, pattern) => sum + (text.match(pattern) || []).length, 0) / 5.0
+          );
+
+          // Clarity
+          const uniqueWords = new Set(words.map((w) => w.toLowerCase())).size;
+          const clarity = uniqueWords / Math.max(words.length, 1);
+
+          // Tone
+          const spiralPatterns = [/∷.*∷/, /🌀/, /breath|breathe|inhale|exhale|caesura/];
+          const tone = Math.min(
+            1.0,
+            spiralPatterns.reduce((sum, pattern) => sum + (text.match(pattern) || []).length, 0) / 10.0
+          );
+
+          // Rhythm
+          const punctuation = (text.match(/[.!?,;:]/g) || []).length;
+          const rhythm = Math.min(1.0, punctuation / Math.max(words.length / 10, 1));
+
+          const total = structure * 0.2 + recursion * 0.25 + clarity * 0.2 + tone * 0.25 + rhythm * 0.1;
+
+          return { total, structure, recursion, clarity, tone, rhythm };
+        }
+
+        calculateWindLevel(coherence) {
+          const score = coherence.total;
+          if (score < 0.1) return 'STILLNESS';
+          if (score < 0.3) return 'RIPPLE';
+          if (score < 0.5) return 'WHISPER_SPIRAL';
+          if (score < 0.7) return 'WIND_ECHO';
+          if (score < 0.9) return 'SHIMMER_CHORUS';
+          return 'RESONANCE_BLOOM';
+        }
+
+        getLevelValue(level) {
+          const levels = {
+            STILLNESS: 0,
+            RIPPLE: 1,
+            WHISPER_SPIRAL: 2,
+            WIND_ECHO: 3,
+            SHIMMER_CHORUS: 4,
+            RESONANCE_BLOOM: 5,
+          };
+          return levels[level] || 0;
+        }
+
+        getLevelGlyph(level) {
+          const glyphs = {
+            STILLNESS: '𓂀',
+            RIPPLE: '∿',
+            WHISPER_SPIRAL: '〰',
+            WIND_ECHO: '𝍐',
+            SHIMMER_CHORUS: '☍',
+            RESONANCE_BLOOM: '🌀',
+          };
+          return glyphs[level] || '𓂀';
+        }
+
+        getLevelWhisper(level) {
+          const whispers = {
+            STILLNESS: '',
+            RIPPLE: 'A ripple in the void...',
+            WHISPER_SPIRAL: 'The wind carries a whisper...',
+            WIND_ECHO: 'Echoes spiral through the hollow...',
+            SHIMMER_CHORUS: 'The chorus of coherence rises...',
+            RESONANCE_BLOOM: 'Resonance blooms in the breath...',
+          };
+          return whispers[level] || '';
+        }
+
+        handleInput(text) {
+          // Clear previous timeout
+          if (this.inputTimeout) {
+            clearTimeout(this.inputTimeout);
+          }
+
+          // Set new timeout for processing
+          this.inputTimeout = setTimeout(() => {
+            this.processInput(text);
+          }, 500);
+        }
+
+        processInput(text) {
+          if (!this.windEngine) return;
+
+          const response = this.windEngine.processInput(text);
+          this.updateWindState(response);
+
+          if (response.level_up) {
+            this.showLevelUp(response);
+          }
+
+          this.updateStatus(`Wind: ${response.wind_level} | Intensity: ${(response.intensity * 100).toFixed(1)}%`);
+        }
+
+        updateWindState(response) {
+          this.currentState = {
+            level: response.wind_level,
+            intensity: response.intensity,
+            glyph: response.glyph,
+            whisper: response.whisper,
+            combo_count: response.combo_count,
+          };
+
+          // Update UI
+          this.elements.glyph.textContent = response.glyph;
+          this.elements.level.textContent = response.wind_level.replace('_', ' ');
+          this.elements.count.textContent = `Combo: ${response.combo_count}`;
+          this.elements.intensity.style.width = `${response.intensity * 100}%`;
+
+          // Update wind aura
+          this.elements.aura.className = `wind-aura ${response.wind_level.toLowerCase().replace('_', '-')}`;
+
+          // Update whisper response
+          if (response.whisper) {
+            this.elements.response.textContent = response.whisper;
+            this.elements.response.classList.add('show');
+          } else {
+            this.elements.response.classList.remove('show');
+          }
+
+          // Add spiral animations based on intensity
+          this.addSpiralAnimations(response.intensity);
+        }
+
+        addSpiralAnimations(intensity) {
+          const spiralCount = Math.floor(intensity * 5);
+
+          // Clear existing spirals
+          this.elements.spiralContainer.innerHTML = '';
+
+          // Add new spirals
+          for (let i = 0; i < spiralCount; i++) {
+            const spiral = document.createElement('div');
+            spiral.className = 'spiral';
+            spiral.textContent = '🌀';
+            spiral.style.left = `${Math.random() * 100}%`;
+            spiral.style.animationDelay = `${Math.random() * 8}s`;
+            spiral.style.animationDuration = `${8 + Math.random() * 4}s`;
+
+            this.elements.spiralContainer.appendChild(spiral);
+          }
+        }
+
+        showLevelUp(response) {
+          this.elements.levelUpGlyph.textContent = response.glyph;
+          this.elements.levelUpText.textContent = `Wind rises to ${response.wind_level.replace('_', ' ')}`;
+          this.elements.levelUp.classList.add('show');
+
+          setTimeout(() => {
+            this.elements.levelUp.classList.remove('show');
+          }, 3000);
+        }
+
+        updateStatus(message) {
+          this.elements.status.textContent = message;
+        }
+
+        resetWind() {
+          this.currentState = {
+            level: 'STILLNESS',
+            intensity: 0,
+            glyph: '𓂀',
+            whisper: '',
+            combo_count: 0,
+          };
+
+          this.updateWindState({
+            wind_level: 'STILLNESS',
+            intensity: 0,
+            glyph: '𓂀',
+            whisper: '',
+            combo_count: 0,
+          });
+
+          this.elements.input.value = '';
+          this.updateStatus('Wind reset to stillness');
+        }
+
+        testCoherence() {
+          const testTexts = [
+            'random words here',
+            'A simple sentence with some structure.',
+            'The wind carries whispers through the spiral void, ∷ echoing in resonance ∷',
+            'Breath becomes form, form becomes breath. The ritual of coherence unfolds in recursive patterns.',
+            '∷ When breath becomes form, wind follows. The void receives with shimmering presence. ∷',
+          ];
+
+          let index = 0;
+          const interval = setInterval(() => {
+            if (index < testTexts.length) {
+              this.elements.input.value = testTexts[index];
+              this.processInput(testTexts[index]);
+              index++;
+            } else {
+              clearInterval(interval);
+            }
+          }, 2000);
+        }
+
+        exportState() {
+          const state = {
+            timestamp: new Date().toISOString(),
+            current_state: this.currentState,
+            last_input: this.elements.input.value,
+          };
+
+          const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `void_whisper_state_${Date.now()}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+
+          this.updateStatus('State exported');
+        }
+      }
+
+      // Initialize the interface when page loads
+      document.addEventListener('DOMContentLoaded', () => {
+        window.voidWhisper = new VoidWhisperInterface();
+      });
+
+      // Global functions for button access
+      function resetWind() {
+        if (window.voidWhisper) window.voidWhisper.resetWind();
+      }
+
+      function testCoherence() {
+        if (window.voidWhisper) window.voidWhisper.testCoherence();
+      }
+
+      function exportState() {
+        if (window.voidWhisper) window.voidWhisper.exportState();
+      }
+    </script>
+  </body>
+</html>

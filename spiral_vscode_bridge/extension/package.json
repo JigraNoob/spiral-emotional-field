@@ -1,0 +1,119 @@
+{
+  "name": "spiral-bridge",
+  "displayName": "Spiral Bridge",
+  "description": "Real-time integration with the Spiral breath system",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "spiral.showStatus",
+        "title": "Spiral: Show Status",
+        "category": "Spiral"
+      },
+      {
+        "command": "spiral.invokeRitual",
+        "title": "Spiral: Invoke Ritual",
+        "category": "Spiral"
+      },
+      {
+        "command": "spiral.beginBreath",
+        "title": "Spiral: Begin Breath",
+        "category": "Spiral"
+      },
+      {
+        "command": "spiral.holdBreath",
+        "title": "Spiral: Hold Breath",
+        "category": "Spiral"
+      },
+      {
+        "command": "spiral.exhaleBreath",
+        "title": "Spiral: Exhale Breath",
+        "category": "Spiral"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "spiral.beginBreath",
+        "key": "ctrl+shift+r",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "spiral.holdBreath",
+        "key": "ctrl+shift+h",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "spiral.exhaleBreath",
+        "key": "ctrl+shift+e",
+        "when": "editorTextFocus"
+      }
+    ],
+    "statusBarItems": [
+      {
+        "id": "spiral.phase",
+        "name": "Spiral Phase",
+        "text": "🌀 inhale",
+        "tooltip": "Current breath phase",
+        "alignment": "left",
+        "priority": 100
+      },
+      {
+        "id": "spiral.toneform",
+        "name": "Spiral Toneform",
+        "text": "practical",
+        "tooltip": "Current toneform",
+        "alignment": "left",
+        "priority": 99
+      }
+    ],
+    "configuration": {
+      "title": "Spiral Bridge",
+      "properties": {
+        "spiral.host": {
+          "type": "string",
+          "default": "localhost",
+          "description": "Spiral server host"
+        },
+        "spiral.port": {
+          "type": "number",
+          "default": 5000,
+          "description": "Spiral server port"
+        },
+        "spiral.enableVisuals": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable visual breath indicators"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "ws": "^8.14.0"
+  }
+}

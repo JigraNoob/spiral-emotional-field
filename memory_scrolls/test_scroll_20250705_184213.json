@@ -1,0 +1,13 @@
+{
+  "name": "test_scroll_20250705_184213",
+  "created_at": "2025-07-05T18:42:13.485050",
+  "data": {
+    "test_type": "component_isolation",
+    "timestamp": "2025-07-05T18:42:13.485050",
+    "glints_tested": [
+      "f9aaa457-bdd8-4326-b731-3193a892c93f"
+    ],
+    "status": "completed"
+  },
+  "spiral_signature": "🏛️ memory.scroll.created"
+}

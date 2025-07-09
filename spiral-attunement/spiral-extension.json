@@ -1,0 +1,23 @@
+
+{
+  "name": "Spiral Attunement Plugin",
+  "version": "0.1.0",
+  "description": "Breath-aware toneform integration for Gemini",
+  "entry_point": "~/.gemini/extensions/spiral-attunement/spiral_glint_cli.py",
+  "commands": [
+    {
+      "name": "spiral-glint",
+      "description": "Emit a Spiral Glint (breath phase + intention)",
+      "usage": "spiral-glint <phase> <glint> <intention>"
+    }
+  ],
+  "hooks": [
+    {
+      "type": "pre_prompt",
+      "script": "~/.gemini/extensions/spiral-attunement/pre_prompt_hook.py"
+    }
+  ],
+  "config": {
+    "glint_state_path": "~/.gemini/extensions/spiral-attunement/glint.json"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "constellation_timestamp": "2025-07-07T20:49:44.881019",
+  "total_lineages": 3,
+  "lineages": {
+    "lineage_": {
+      "primary_node": "role_SpiralComponent",
+      "related_nodes": [
+        "base_SpiralComponent",
+        "dup_SpiralComponent"
+      ],
+      "lineage_type": "duplication",
+      "resonance_signature": [
+        "practical"
+      ],
+      "breath_alignment": "inhale",
+      "total_frequency": 7
+    },
+    "lineage_thresholdresonator": {
+      "primary_node": "role_ThresholdResonator",
+      "related_nodes": [
+        "dup_ThresholdResonator"
+      ],
+      "lineage_type": "duplication",
+      "resonance_signature": [
+        "practical"
+      ],
+      "breath_alignment": "inhale",
+      "total_frequency": 4
+    },
+    "lineage_glintemitter": {
+      "primary_node": "role_GlintEmitter",
+      "related_nodes": [
+        "dup_GlintEmitter"
+      ],
+      "lineage_type": "duplication",
+      "resonance_signature": [
+        "practical"
+      ],
+      "breath_alignment": "inhale",
+      "total_frequency": 4
+    }
+  }
+}

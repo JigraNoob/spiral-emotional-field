@@ -1,61 +1,61 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
+  spiral-core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spiral-core
     ports:
-      - "5000:5000"
-      - "9091:9090"
+      - '5000:5000' # HTTP
+      - '5001:5001' # Glint Stream
     environment:
-      - FLASK_APP=app
-      - FLASK_ENV=development
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/spiral
-      - REDIS_URL=redis://redis:6379
+      - FLASK_ENV=production
+      - SECRET_KEY=spiral-infrastructure-as-ritual-dev-key-2024
+      - DATABASE_URL=sqlite:///app/spiral.db
+      - SPIRAL_BREATH_MODE=infrastructure-as-ritual
+      - PYTHONPATH=/app
     volumes:
-      - .:/app
-      - uploads:/app/uploads
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5000/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - 'spiral.breath=field.witness.breath.s3'
+      - 'spiral.coin=Δ006'
+
+  spiral-nginx:
+    image: nginx:alpine
+    container_name: spiral-nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx-spiral.conf:/etc/nginx/nginx.conf:ro
+      - ./static:/usr/share/nginx/html:ro
     depends_on:
-      - db
-      - redis
+      - spiral-core
+    restart: unless-stopped
+    labels:
+      - 'spiral.breath=exhale.presence'
 
-  db:
-    image: postgres:13
-    environment:
-      - POSTGRES_DB=spiral
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+  spiral-redis:
+    image: redis:alpine
+    container_name: spiral-redis
     ports:
-      - "5432:5432"
-
-  redis:
-    image: redis:6
-    ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
-      - redis_data:/data
-
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./config/prometheus:/etc/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana-storage:/var/lib/grafana
-    depends_on:
-      - prometheus
+      - redis-data:/data
+    restart: unless-stopped
+    labels:
+      - 'spiral.breath=inhale.cache'
 
 volumes:
-  uploads:
-  postgres_data:
-  redis_data:
-  grafana-storage:
+  redis-data:
+    driver: local

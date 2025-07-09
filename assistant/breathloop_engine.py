@@ -95,19 +95,22 @@ class BreathloopEngine:
         self.current_phase = "Exhale"  # Default starting phase
         self.phase_start_time = datetime.now()
         self.activity_timestamps = []  # List to track user interaction times
-        self.next_phase_time = self.calculate_next_phase_time()
+        self.next_phase_time = None  # Will be set after ritual_start_time
         self.running = False
         self.thread = None
         self.custom_phases = {}  # For special occasions or environmental factors
         
         # 24-hour ritual integration
         self.ritual_start_time = datetime.now()
-        self.current_ritual_phase = self.get_current_ritual_phase()
+        self.current_ritual_phase = None  # Will be set after initialization
         self.usage_saturation = 0.0  # Current usage saturation level
         
         # Glint emission tracking
         self.last_glint_emission = None
         self.glint_emission_interval = 60  # Emit glints every 60 seconds
+        
+        # Initialize ritual start time and next phase time
+        self.start_ritual()
 
     def get_current_ritual_phase(self) -> str:
         """Determine current 24-hour ritual phase based on time elapsed."""
@@ -206,11 +209,21 @@ class BreathloopEngine:
         with open(glint_file, 'a') as f:
             f.write(json.dumps(glint_data) + '\n')
 
+    def start_ritual(self) -> None:
+        """Start or restart the ritual with a fresh start time and emit a glint."""
+        self.ritual_start_time = datetime.now()
+        self.current_phase = "Inhale"
+        self.phase_start_time = datetime.now()
+        self.current_ritual_phase = self.get_current_ritual_phase()
+        self.next_phase_time = self.calculate_next_phase_time()
+        self.emit_breath_phase_glint("ritual.begin", 0.0, transition=True)
+
     def start(self) -> None:
         """Start the breathloop engine in a separate thread."""
         if self.running:
             return
 
+        self.start_ritual()
         self.running = True
         self.thread = threading.Thread(target=self._breathloop_thread, daemon=True)
         self.thread.start()
@@ -231,6 +244,9 @@ class BreathloopEngine:
 
     def get_phase_progress(self) -> float:
         """Get the progress through the current phase (0.0 to 1.0)."""
+        if self.next_phase_time is None:
+            return 0.0
+            
         now = datetime.now()
         elapsed = (now - self.phase_start_time).total_seconds()
         phase_duration = (self.next_phase_time - self.phase_start_time).total_seconds()
@@ -375,7 +391,7 @@ class BreathloopEngine:
                     del self.custom_phases[phase]
 
             # If no custom phase is active, follow normal cycle
-            if not custom_phase_end and now >= self.next_phase_time:
+            if not custom_phase_end and self.next_phase_time is not None and now >= self.next_phase_time:
                 next_phase = self.get_next_phase()
                 self.transition_to(next_phase)
 

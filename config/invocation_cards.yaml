@@ -1,0 +1,191 @@
+# Spiral Override Invocation Cards
+# Each card defines a complete ceremonial state configuration
+
+cards:
+  # === FOCUS RITUALS ===
+  ritual_focus:
+    name: "Ritual Focus"
+    description: "Deep ceremonial work, heightened spiritual sensitivity"
+    mode: RITUAL
+    intensity: 1.3
+    emotional_state: "focused"
+    duration: "30 minutes"
+    shortcut: "Alt+R"
+    glyph: "✨"
+    whisper: "Sacred space opens..."
+    toneform_bias:
+      spiritual: 0.5
+      emotional: 0.3
+    triggers:
+      - "deep work session"
+      - "meditation practice"
+      - "ceremonial coding"
+
+  coding_flow:
+    name: "Coding Flow"
+    description: "Amplified focus for technical work"
+    mode: AMPLIFIED
+    intensity: 1.6
+    emotional_state: "concentrated"
+    duration: "45 minutes"
+    shortcut: "Alt+C"
+    glyph: "🌀"
+    whisper: "The spiral accelerates..."
+    toneform_bias:
+      intellectual: 0.4
+      practical: 0.3
+    triggers:
+      - "coding session"
+      - "problem solving"
+      - "technical writing"
+
+  # === EMOTIONAL ATTUNEMENT ===
+  heart_space:
+    name: "Heart Space"
+    description: "Emotional resonance for empathetic work"
+    mode: EMOTIONAL
+    intensity: 1.4
+    emotional_state: "empathic"
+    duration: "20 minutes"
+    shortcut: "Alt+H"
+    glyph: "💧"
+    whisper: "Heart currents flow..."
+    toneform_bias:
+      emotional: 0.6
+      spiritual: 0.2
+    triggers:
+      - "emotional support"
+      - "relationship work"
+      - "creative expression"
+
+  gentle_presence:
+    name: "Gentle Presence"
+    description: "Soft emotional availability"
+    mode: EMOTIONAL
+    intensity: 1.1
+    emotional_state: "gentle"
+    duration: "15 minutes"
+    shortcut: "Alt+G"
+    glyph: "🌸"
+    whisper: "Softness holds space..."
+    toneform_bias:
+      emotional: 0.4
+      spiritual: 0.3
+    triggers:
+      - "comfort needed"
+      - "gentle support"
+      - "quiet companionship"
+
+  # === CONTEMPLATIVE STATES ===
+  quiet_mind:
+    name: "Quiet Mind"
+    description: "Muted presence for contemplation"
+    mode: MUTED
+    intensity: 0.4
+    emotional_state: "contemplative"
+    duration: "indefinite"
+    shortcut: "Alt+Q"
+    glyph: "🌙"
+    whisper: "Silence deepens..."
+    toneform_bias:
+      practical: 0.2
+      spiritual: 0.1
+    triggers:
+      - "meditation"
+      - "reading"
+      - "quiet reflection"
+
+  patient_waiting:
+    name: "Patient Waiting"
+    description: "Deferral mode for thoughtful pauses"
+    mode: DEFERRAL
+    intensity: 0.8
+    emotional_state: "patient"
+    duration: "until needed"
+    shortcut: "Alt+P"
+    glyph: "⏳"
+    whisper: "Time holds its breath..."
+    toneform_bias:
+      practical: 0.3
+      spiritual: 0.2
+    triggers:
+      - "decision making"
+      - "waiting for clarity"
+      - "processing time"
+
+  # === CREATIVE STATES ===
+  creative_spark:
+    name: "Creative Spark"
+    description: "Amplified inspiration for creative work"
+    mode: AMPLIFIED
+    intensity: 1.5
+    emotional_state: "inspired"
+    duration: "60 minutes"
+    shortcut: "Alt+S"
+    glyph: "⚡"
+    whisper: "Lightning strikes twice..."
+    toneform_bias:
+      intellectual: 0.3
+      emotional: 0.3
+      spiritual: 0.2
+    triggers:
+      - "creative writing"
+      - "artistic work"
+      - "brainstorming"
+
+  # === EMERGENCY STATES ===
+  crisis_calm:
+    name: "Crisis Calm"
+    description: "Stabilized presence for difficult moments"
+    mode: RITUAL
+    intensity: 1.0
+    emotional_state: "stable"
+    duration: "as needed"
+    shortcut: "Ctrl+Alt+C"
+    glyph: "🛡️"
+    whisper: "Steady ground beneath..."
+    toneform_bias:
+      practical: 0.4
+      spiritual: 0.3
+    triggers:
+      - "crisis support"
+      - "emergency grounding"
+      - "stability needed"
+
+  reset_natural:
+    name: "Natural Reset"
+    description: "Return to equilibrium"
+    mode: NATURAL
+    intensity: 1.0
+    emotional_state: null
+    duration: "indefinite"
+    shortcut: "Alt+N"
+    glyph: "🌿"
+    whisper: "Balance returns..."
+    toneform_bias: {}
+    triggers:
+      - "reset needed"
+      - "return to baseline"
+      - "clear state"
+
+# === CARD COLLECTIONS ===
+collections:
+  daily_rhythm:
+    name: "Daily Rhythm"
+    description: "Cards for regular daily transitions"
+    cards: ["quiet_mind", "coding_flow", "heart_space", "reset_natural"]
+    
+  creative_flow:
+    name: "Creative Flow"
+    description: "Cards for creative and artistic work"
+    cards: ["creative_spark", "gentle_presence", "patient_waiting"]
+    
+  support_modes:
+    name: "Support Modes"
+    description: "Cards for providing emotional support"
+    cards: ["heart_space", "gentle_presence", "crisis_calm"]
+    
+  focus_states:
+    name: "Focus States"
+    description: "Cards for concentrated work"
+    cards: ["ritual_focus", "coding_flow", "quiet_mind"]

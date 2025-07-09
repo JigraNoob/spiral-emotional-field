@@ -117,8 +117,8 @@ class CompanionBreathlineSyncer:
             
             return breath_state
             
-        except ImportError:
-            logger.warning("Breathloop engine not available, using cached state")
+        except (ImportError, AttributeError) as e:
+            logger.warning(f"Breathloop engine not available: {e}, using cached state")
             return self.current_breath_state
     
     def get_ensemble_status(self) -> str:

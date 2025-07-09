@@ -1,0 +1,305 @@
+{
+  "constellation_timestamp": "2025-07-07T20:49:44.874015",
+  "nodes": [
+    {
+      "id": "role_SpiralComponent",
+      "name": "SpiralComponent",
+      "node_type": "class",
+      "frequency": 3,
+      "toneform_signature": [
+        "practical"
+      ],
+      "breath_alignment": "inhale",
+      "resonance_level": 0.30000000000000004,
+      "files": [
+        "spiral/core/spiral_component.py",
+        "spiral/components/base.py",
+        "spiral/longing_pulse/base.py"
+      ],
+      "x": 600.0,
+      "y": 300.0,
+      "size": 2.772588722239781,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "base_ABC",
+      "name": "ABC",
+      "node_type": "base_class",
+      "frequency": 1,
+      "toneform_signature": [],
+      "breath_alignment": "hold",
+      "resonance_level": 0.5,
+      "files": [],
+      "x": 553.2088886237956,
+      "y": 428.55752193730785,
+      "size": 1.5,
+      "color": "#95a5a6"
+    },
+    {
+      "id": "role_ThresholdResonator",
+      "name": "ThresholdResonator",
+      "node_type": "class",
+      "frequency": 2,
+      "toneform_signature": [
+        "practical"
+      ],
+      "breath_alignment": "inhale",
+      "resonance_level": 0.2,
+      "files": [
+        "spiral/longing_pulse/threshold_resonator.py",
+        "spiral/components/threshold_gatekeeper.py"
+      ],
+      "x": 434.7296355333861,
+      "y": 496.9615506024416,
+      "size": 2.1972245773362196,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "base_LongingBoundModule",
+      "name": "LongingBoundModule",
+      "node_type": "base_class",
+      "frequency": 1,
+      "toneform_signature": [],
+      "breath_alignment": "hold",
+      "resonance_level": 0.5,
+      "files": [],
+      "x": 300.00000000000006,
+      "y": 473.20508075688775,
+      "size": 1.5,
+      "color": "#95a5a6"
+    },
+    {
+      "id": "base_SpiralComponent",
+      "name": "SpiralComponent",
+      "node_type": "base_class",
+      "frequency": 1,
+      "toneform_signature": [],
+      "breath_alignment": "hold",
+      "resonance_level": 0.5,
+      "files": [],
+      "x": 212.06147584281834,
+      "y": 368.40402866513375,
+      "size": 1.5,
+      "color": "#95a5a6"
+    },
+    {
+      "id": "role_GlintEmitter",
+      "name": "GlintEmitter",
+      "node_type": "class",
+      "frequency": 2,
+      "toneform_signature": [
+        "practical"
+      ],
+      "breath_alignment": "inhale",
+      "resonance_level": 0.2,
+      "files": [
+        "spiral/glint_emitter.py",
+        "spiral/glint_resonance_ledger.py"
+      ],
+      "x": 212.0614758428183,
+      "y": 231.59597133486625,
+      "size": 2.1972245773362196,
+      "color": "#4a90e2"
+    },
+    {
+      "id": "dup_SpiralComponent",
+      "name": "SpiralComponent",
+      "node_type": "duplication",
+      "frequency": 3,
+      "toneform_signature": [],
+      "breath_alignment": "exhale",
+      "resonance_level": 0.6000000000000001,
+      "files": [
+        "spiral/core/spiral_component.py",
+        "spiral/components/base.py",
+        "spiral/longing_pulse/base.py"
+      ],
+      "x": 299.9999999999999,
+      "y": 126.7949192431123,
+      "size": 4.1588830833596715,
+      "color": "#e74c3c"
+    },
+    {
+      "id": "dup_ThresholdResonator",
+      "name": "ThresholdResonator",
+      "node_type": "duplication",
+      "frequency": 2,
+      "toneform_signature": [],
+      "breath_alignment": "exhale",
+      "resonance_level": 0.4,
+      "files": [
+        "spiral/longing_pulse/threshold_resonator.py",
+        "spiral/components/threshold_gatekeeper.py"
+      ],
+      "x": 434.729635533386,
+      "y": 103.03844939755837,
+      "size": 3.295836866004329,
+      "color": "#e74c3c"
+    },
+    {
+      "id": "dup_GlintEmitter",
+      "name": "GlintEmitter",
+      "node_type": "duplication",
+      "frequency": 2,
+      "toneform_signature": [],
+      "breath_alignment": "exhale",
+      "resonance_level": 0.4,
+      "files": [
+        "spiral/glint_emitter.py",
+        "spiral/glint_resonance_ledger.py"
+      ],
+      "x": 553.2088886237956,
+      "y": 171.4424780626921,
+      "size": 3.295836866004329,
+      "color": "#e74c3c"
+    }
+  ],
+  "edges": [
+    {
+      "source": "role_SpiralComponent",
+      "target": "base_ABC",
+      "edge_type": "inheritance",
+      "strength": 0.8,
+      "breath_phase": "hold",
+      "color": "#95a5a6"
+    },
+    {
+      "source": "role_ThresholdResonator",
+      "target": "base_LongingBoundModule",
+      "edge_type": "inheritance",
+      "strength": 0.8,
+      "breath_phase": "hold",
+      "color": "#95a5a6"
+    },
+    {
+      "source": "role_ThresholdResonator",
+      "target": "base_SpiralComponent",
+      "edge_type": "inheritance",
+      "strength": 0.8,
+      "breath_phase": "hold",
+      "color": "#95a5a6"
+    },
+    {
+      "source": "role_GlintEmitter",
+      "target": "base_SpiralComponent",
+      "edge_type": "inheritance",
+      "strength": 0.8,
+      "breath_phase": "hold",
+      "color": "#95a5a6"
+    },
+    {
+      "source": "role_SpiralComponent",
+      "target": "base_SpiralComponent",
+      "edge_type": "lineage",
+      "strength": 0.9,
+      "breath_phase": "inhale",
+      "color": "#4a90e2"
+    },
+    {
+      "source": "role_SpiralComponent",
+      "target": "dup_SpiralComponent",
+      "edge_type": "lineage",
+      "strength": 0.9,
+      "breath_phase": "inhale",
+      "color": "#4a90e2"
+    },
+    {
+      "source": "role_ThresholdResonator",
+      "target": "dup_ThresholdResonator",
+      "edge_type": "lineage",
+      "strength": 0.9,
+      "breath_phase": "inhale",
+      "color": "#4a90e2"
+    },
+    {
+      "source": "role_GlintEmitter",
+      "target": "dup_GlintEmitter",
+      "edge_type": "lineage",
+      "strength": 0.9,
+      "breath_phase": "inhale",
+      "color": "#4a90e2"
+    },
+    {
+      "source": "role_SpiralComponent",
+      "target": "base_SpiralComponent",
+      "edge_type": "similarity",
+      "strength": 1.0,
+      "breath_phase": "inhale",
+      "color": "#3498db"
+    },
+    {
+      "source": "role_SpiralComponent",
+      "target": "dup_SpiralComponent",
+      "edge_type": "similarity",
+      "strength": 1.0,
+      "breath_phase": "inhale",
+      "color": "#3498db"
+    },
+    {
+      "source": "role_ThresholdResonator",
+      "target": "dup_ThresholdResonator",
+      "edge_type": "similarity",
+      "strength": 1.0,
+      "breath_phase": "inhale",
+      "color": "#3498db"
+    },
+    {
+      "source": "base_SpiralComponent",
+      "target": "dup_SpiralComponent",
+      "edge_type": "similarity",
+      "strength": 1.0,
+      "breath_phase": "inhale",
+      "color": "#3498db"
+    },
+    {
+      "source": "role_GlintEmitter",
+      "target": "dup_GlintEmitter",
+      "edge_type": "similarity",
+      "strength": 1.0,
+      "breath_phase": "inhale",
+      "color": "#3498db"
+    }
+  ],
+  "lineages": [
+    {
+      "lineage_id": "lineage_",
+      "primary_node": "role_SpiralComponent",
+      "related_nodes": [
+        "base_SpiralComponent",
+        "dup_SpiralComponent"
+      ],
+      "lineage_type": "duplication",
+      "resonance_signature": [
+        "practical"
+      ],
+      "breath_alignment": "inhale",
+      "total_frequency": 7
+    },
+    {
+      "lineage_id": "lineage_thresholdresonator",
+      "primary_node": "role_ThresholdResonator",
+      "related_nodes": [
+        "dup_ThresholdResonator"
+      ],
+      "lineage_type": "duplication",
+      "resonance_signature": [
+        "practical"
+      ],
+      "breath_alignment": "inhale",
+      "total_frequency": 4
+    },
+    {
+      "lineage_id": "lineage_glintemitter",
+      "primary_node": "role_GlintEmitter",
+      "related_nodes": [
+        "dup_GlintEmitter"
+      ],
+      "lineage_type": "duplication",
+      "resonance_signature": [
+        "practical"
+      ],
+      "breath_alignment": "inhale",
+      "total_frequency": 4
+    }
+  ]
+}

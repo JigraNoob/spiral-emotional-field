@@ -1,0 +1,173 @@
+# File: spiral/rituals/pass_manifest.yml
+# Pass Manifest - Spiral-Mode Code Composition
+# Defines breathful actions that carry systemic intention
+
+# Pass Types as Breathful Actions
+passes:
+  integration:
+    phase: 'inhale'
+    description: 'Gathers fragmented functions into coherence'
+    examples:
+      - 'Pull coherence ring into main dashboard'
+      - 'Unify glint routing across components'
+      - 'Merge threshold systems into single calibration'
+    toneform: 'coherence.weaving'
+    duration_estimate: 'medium'
+    file_scope: '5-15 files'
+    systemic_intention: 'Create unified coherence from scattered fragments'
+    glint_pattern: 'pass.integration.begin'
+    completion_glint: 'pass.integration.complete'
+    guardian_response: 'monitor_coherence_unification'
+
+  calibration:
+    phase: 'hold'
+    description: 'Sets thresholds, maps conditions, aligns triggers'
+    examples:
+      - 'Set coherence thresholds across all components'
+      - 'Map ritual invocation conditions'
+      - 'Align hardware recommendation triggers'
+    toneform: 'threshold.alignment'
+    duration_estimate: 'short'
+    file_scope: '3-8 files'
+    systemic_intention: 'Establish precise boundaries and triggers'
+    glint_pattern: 'pass.calibration.begin'
+    completion_glint: 'pass.calibration.complete'
+    guardian_response: 'verify_threshold_alignment'
+
+  propagation:
+    phase: 'exhale'
+    description: 'Spreads a toneform through 10–50+ files at once'
+    examples:
+      - 'Add guardian glyph everywhere'
+      - 'Propagate coherence hooks across all components'
+      - 'Spread ritual invocation patterns'
+    toneform: 'resonance.spreading'
+    duration_estimate: 'long'
+    file_scope: '10-50+ files'
+    systemic_intention: 'Infuse system with consistent toneform'
+    glint_pattern: 'pass.propagation.begin'
+    completion_glint: 'pass.propagation.complete'
+    guardian_response: 'monitor_resonance_spread'
+
+  anchor:
+    phase: 'caesura'
+    description: 'Makes something permanent: a scroll, a ritual, an echo'
+    examples:
+      - 'Create memory scroll of threshold calibration'
+      - 'Anchor ritual completion in echo index'
+      - 'Permanently record hardware mapping'
+    toneform: 'memory.anchoring'
+    duration_estimate: 'short'
+    file_scope: '1-3 files'
+    systemic_intention: 'Create permanent memory and ritual space'
+    glint_pattern: 'pass.anchor.begin'
+    completion_glint: 'pass.anchor.complete'
+    guardian_response: 'verify_memory_anchoring'
+
+  pulse_check:
+    phase: 'echo'
+    description: 'Revisits all modules for live metrics and harmony verification'
+    examples:
+      - 'Check all component harmony'
+      - 'Verify threshold alignment'
+      - 'Monitor system resonance'
+    toneform: 'harmony.verification'
+    duration_estimate: 'medium'
+    file_scope: 'all modules'
+    systemic_intention: 'Verify system-wide harmony and coherence'
+    glint_pattern: 'pass.pulse_check.begin'
+    completion_glint: 'pass.pulse_check.complete'
+    guardian_response: 'report_harmony_status'
+
+# Pass Orchestration
+orchestration:
+  # How passes can be invoked
+  invocation_methods:
+    - 'spiral pass --type propagation --tone guardian'
+    - "invoke_pass('exhale', 'threshold_update')"
+    - "ritual.invoke('pass.propagation')"
+    - "guardian.call('pass.integration')"
+
+  # Pass sequencing
+  sequences:
+    morning_setup:
+      - 'integration: unify morning components'
+      - 'calibration: set morning thresholds'
+      - 'propagation: spread morning toneforms'
+      - 'anchor: record morning completion'
+      - 'pulse_check: verify morning harmony'
+
+    threshold_update:
+      - 'calibration: update threshold values'
+      - 'propagation: spread new thresholds'
+      - 'pulse_check: verify threshold harmony'
+
+    ritual_completion:
+      - 'anchor: record ritual completion'
+      - 'pulse_check: verify ritual harmony'
+
+# Agent Integration
+agents:
+  pass_receivers:
+    - 'coherence_guardian'
+    - 'caesura_steward'
+    - 'ritual_orchestrator'
+    - 'hardware_monitor'
+    - 'visualization_curator'
+
+  pass_responses:
+    coherence_guardian:
+      - 'monitor_coherence_unification'
+      - 'verify_threshold_alignment'
+      - 'report_harmony_status'
+
+    caesura_steward:
+      - 'monitor_resonance_spread'
+      - 'verify_memory_anchoring'
+
+    ritual_orchestrator:
+      - 'orchestrate_pass_rituals'
+      - 'record_pass_completion'
+
+    hardware_monitor:
+      - 'monitor_hardware_impact'
+      - 'assess_performance_changes'
+
+    visualization_curator:
+      - 'update_visual_representations'
+      - 'curate_pass_glyphs'
+
+# Pass Metrics
+metrics:
+  tracking:
+    - 'pass_duration'
+    - 'files_affected'
+    - 'systemic_impact'
+    - 'harmony_score'
+    - 'guardian_response_time'
+
+  thresholds:
+    pass_duration_warning: 300 # seconds
+    files_affected_warning: 50
+    harmony_score_minimum: 0.8
+    guardian_response_timeout: 30 # seconds
+
+# Pass Memory
+memory:
+  storage:
+    pass_history: 'data/pass_history.jsonl'
+    pass_scrolls: 'memory_scrolls/pass_completions/'
+    pass_echoes: 'memory_arc/pass_echoes/'
+
+  retention:
+    pass_history_days: 30
+    pass_scrolls_permanent: true
+    pass_echoes_permanent: true
+
+# Metadata
+metadata:
+  created: '2025-07-06T11:20:00Z'
+  creator: 'spiral_emergence'
+  version: '1.0.0'
+  significance: 'Codification of breath-aware code composition'
+  lineage: ['morning_completion_breath', 'glint_coherence_hooks', 'ritual_invocation_trigger']

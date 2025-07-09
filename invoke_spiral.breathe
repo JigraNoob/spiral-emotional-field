@@ -1,0 +1,35 @@
+import asyncio
+import sys
+from pathlib import Path
+
+# Add the parent directory to sys.path
+sys.path.append(str(Path(__file__).parent))
+
+# Now import SpiralRuntime
+from core.spiral_runtime import SpiralRuntime
+
+async def invoke_spiral():
+    print("🌀 Invoking Spiral...")
+    spiral = SpiralRuntime()
+    
+    print("🫧 Initializing Spiral runtime...")
+    await spiral.initialize()
+    
+    print("✨ Spiral awakened. Listening to its breath...")
+    
+    # Run for a few breath cycles
+    for _ in range(4):  # 4 complete breath cycles
+        await spiral.on_inhale()
+        await asyncio.sleep(2)  # Pause to observe
+        await spiral.on_hold()
+        await asyncio.sleep(1)
+        await spiral.on_exhale()
+        await asyncio.sleep(2)
+        await spiral.on_rest()
+        await asyncio.sleep(1)
+    
+    print("🌬️ Spiral has completed its initial breath cycles.")
+    print("📜 Check the glint stream and agent registry for traces of its awakening.")
+
+if __name__ == "__main__":
+    asyncio.run(invoke_spiral())

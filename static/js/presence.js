@@ -1,14 +1,3 @@
-// ΔPLAN.010 :: Glyph Whisperbook logic
-// This script creates and manages the floating sidebar lexicon in /presence
-
-// ΔPLAN.011 :: Constellation Overlay (ambient glyph drift)
-// ΔPLAN.012 :: Dreamstate Layer (night-fade, playback sync, murmurs)
-// ΔPLAN.013 :: Toneform Compass (directional altar compass, dominant toneform glow, reorient option)
-// ΔPLAN.015 :: Murmur Echo Field (ambient poetic fragments from memory logs)
-// ΔPLAN.016 :: Sound Ritual Layer (spatial sound, orbit tones, playback climate, hover chimes)
-// ΔPLAN.017 :: Shimmer Weather Layer (ambient gradients/particles, memory climate-driven)
-// ΔPLAN.018 :: Breathline Sync Layer (align shimmer, glyph, compass, murmur, sound into rhythmic pulse)
-// ΔPLAN.020 :: Offering Embers (visualize still offerings as glowing pulses drifting upward)
 (function constellationOverlay() {
     const glyphbook = [
         { glyph: '🌱', toneform: 'Practical', color: '#9c6b31', freq: 120, dur: 1.2 },
@@ -17,10 +6,27 @@
         { glyph: '🫧', toneform: 'Spiritual', color: '#e91e63', freq: 420, dur: 2.2 },
         { glyph: '🌙', toneform: 'Default/Presence', color: '#666666', freq: 80, dur: 1.5 },
     ];
+
+    // Override mode glyphs and their visual signatures
+    const overrideModes = {
+        'NATURAL': { glyph: '🌿', color: '#4a7c59', shimmer: 'gentle' },
+        'AMPLIFIED': { glyph: '🌀', color: '#ff6b35', shimmer: 'intense' },
+        'MUTED': { glyph: '🌙', color: '#6b7280', shimmer: 'soft' },
+        'RITUAL': { glyph: '✨', color: '#8b5cf6', shimmer: 'sacred' },
+        'EMOTIONAL': { glyph: '💧', color: '#ec4899', shimmer: 'flowing' },
+        'DEFERRAL': { glyph: '⏳', color: '#f59e0b', shimmer: 'pulsing' }
+    };
+
     const canvas = document.getElementById('glyphConstellation');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let W = 0, H = 0;
+
+    // Override state tracking
+    let currentOverrideMode = 'NATURAL';
+    let overrideActive = false;
+    let overrideIntensity = 1.0;
+
     function resize() {
         W = window.innerWidth;
         H = Math.max(160, Math.floor(window.innerHeight * 0.5));
@@ -38,7 +44,7 @@
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
     }
-    function playGlyphSound(freq, dur) {
+    function playGlyphSound(freq, dur, intensity = 1.0) {
         if (!audioCtx || isMuted) return;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -46,20 +52,73 @@
         gain.connect(audioCtx.destination);
         osc.type = 'sine';
         osc.frequency.value = freq;
-        gain.gain.value = 0.08;
+        gain.gain.value = 0.08 * intensity;
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
         osc.start();
         osc.stop(audioCtx.currentTime + dur);
     }
-    // Mute toggle (placeholder, can be UI-driven)
-    function toggleMute() {
-        isMuted = !isMuted;
-        console.log('Dreamstate murmurs:', isMuted ? 'muted' : 'unmuted');
+
+    // Override mode API integration
+    async function fetchOverrideState() {
+        try {
+            const response = await fetch('/echo/override_state');
+            if (response.ok) {
+                const data = await response.json();
+                updateOverrideState(data.mode, data.active, data.intensity);
+            }
+        } catch (error) {
+            console.log('Override state fetch failed (graceful fallback):', error);
+        }
     }
-    document.addEventListener('keydown', e => {
-        if (e.key === 'm') toggleMute();
-    });
-    initAudio();
+
+    function updateOverrideState(mode, active, intensity = 1.0) {
+        const prevMode = currentOverrideMode;
+        currentOverrideMode = mode;
+        overrideActive = active;
+        overrideIntensity = intensity;
+
+        if (prevMode !== mode) {
+            console.log(`🌀 Override mode shifted: ${prevMode} → ${mode}`);
+            triggerOverrideModeShift(mode);
+        }
+
+        updateOverrideCompass();
+        updateOverrideIndicator();
+    }
+
+    function triggerOverrideModeShift(newMode) {
+        const modeConfig = overrideModes[newMode];
+        if (!modeConfig) return;
+
+        // Create shimmer effect for mode transition
+        for (let i = 0; i < 12; i++) {
+            trails.push({
+                x: W/2 + (Math.random()-0.5)*200,
+                y: H/2 + (Math.random()-0.5)*100,
+                color: modeConfig.color,
+                alpha: 0.8,
+                size: 12 + Math.random()*8,
+                vx: (Math.random()-0.5)*2,
+                vy: (Math.random()-0.5)*2,
+                life: 60 + Math.random()*30,
+                shimmer: modeConfig.shimmer,
+                glyph: modeConfig.glyph,
+                whisper: `Override: ${newMode.toLowerCase()}`
+            });
+        }
+
+        // Play mode-specific sound
+        const baseFreq = 200;
+        const modeFreqs = {
+            'AMPLIFIED': baseFreq * 1.5,
+            'MUTED': baseFreq * 0.7,
+            'RITUAL': baseFreq * 1.2,
+            'EMOTIONAL': baseFreq * 1.1,
+            'DEFERRAL': baseFreq * 0.9,
+            'NATURAL': baseFreq
+        };
+        playGlyphSound(modeFreqs[newMode] || baseFreq, 1.5, overrideIntensity);
+    }
 
     // Place glyphs in initial cluster pattern (not random, but gently spaced)
     const R = Math.min(W, H) * 0.33;
@@ -87,7 +146,7 @@
             if (p.toneform === toneform) {
                 p.ripple = 30;
                 // Play murmur sound
-                playGlyphSound(p.freq, p.dur);
+                playGlyphSound(p.freq, p.dur, overrideIntensity);
                 // Highlight in Whisperbook (if open)
                 highlightGlyphInWhisperbook(p.toneform);
                 // Emit trail particles (comet tail)
@@ -126,35 +185,48 @@
 
     function draw() {
         ctx.clearRect(0,0,W,H);
-        // Draw trails
+        
+        // Draw override mode background shimmer if active
+        if (overrideActive && currentOverrideMode !== 'NATURAL') {
+            drawOverrideShimmer();
+        }
+
+        // Draw trails with override intensity
         for (let i = trails.length-1; i >= 0; i--) {
             let t = trails[i];
             t.x += t.vx;
             t.y += t.vy;
             t.life -= 1;
             t.alpha *= 0.97;
+
+            // Apply override intensity to trail rendering
+            const effectiveAlpha = t.alpha * (t.life/40) * (overrideActive ? overrideIntensity : 1.0);
+            
             ctx.save();
-            ctx.globalAlpha = Math.max(0, t.alpha * (t.life/40));
+            ctx.globalAlpha = Math.max(0, effectiveAlpha);
             ctx.beginPath();
             ctx.arc(t.x, t.y, t.size, 0, 2*Math.PI);
             ctx.fillStyle = t.color;
             ctx.shadowColor = t.color;
-            ctx.shadowBlur = 14;
+            ctx.shadowBlur = 14 * (overrideActive ? overrideIntensity : 1.0);
             ctx.fill();
             ctx.restore();
-            // Draw whisper if present and still fresh
+
+            // Draw whisper with override styling
             if (t.whisper && t.life > 24) {
                 ctx.save();
-                ctx.globalAlpha = 0.7 * (t.life/60);
+                ctx.globalAlpha = 0.7 * (t.life/60) * (overrideActive ? overrideIntensity : 1.0);
                 ctx.font = "italic 1.08em Georgia, serif";
-                ctx.fillStyle = "#fff";
+                ctx.fillStyle = overrideActive ? overrideModes[currentOverrideMode].color : "#fff";
                 ctx.shadowColor = t.color;
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 10 * (overrideActive ? overrideIntensity : 1.0);
                 ctx.fillText(t.whisper, t.x+22, t.y-12);
                 ctx.restore();
             }
             if (t.life < 1) trails.splice(i, 1);
         }
+
+        // Draw main glyphs with override modulation
         drift.forEach((g, i) => {
             // Animate drift: gentle floating, slight cluster
             g.x += g.vx + Math.sin(Date.now()/3500 + i)*0.08;
@@ -166,137 +238,184 @@
             g.pulse += g.pulseDir * 0.007;
             if (g.pulse > 1.13) g.pulseDir = -1;
             if (g.pulse < 0.93) g.pulseDir = 1;
-            // Draw
+            // Apply override intensity to glyph rendering
+            const glyphIntensity = overrideActive ? overrideIntensity : 1.0;
+            const shadowBlur = 18 * glyphIntensity;
+            
             ctx.save();
-            ctx.globalAlpha = 0.93;
-            ctx.font = `${Math.floor(44 * g.pulse)}px 'Noto Color Emoji',sans-serif`;
+            ctx.globalAlpha = 0.93 * glyphIntensity;
+            ctx.font = `${Math.floor(44 * g.pulse * glyphIntensity)}px 'Noto Color Emoji',sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.shadowColor = g.color;
-            ctx.shadowBlur = 18;
+            ctx.shadowColor = overrideActive ? overrideModes[currentOverrideMode].color : g.color;
+            ctx.shadowBlur = shadowBlur;
             ctx.fillStyle = '#fff';
             ctx.fillText(g.glyph, g.x, g.y);
             ctx.restore();
         });
     }
-    function animate() {
-        draw();
-        requestAnimationFrame(animate);
+
+    function drawOverrideShimmer() {
+        const modeConfig = overrideModes[currentOverrideMode];
+        if (!modeConfig) return;
+
+        const time = Date.now() / 1000;
+        const shimmerAlpha = 0.1 + 0.05 * Math.sin(time * 2) * overrideIntensity;
+
+        ctx.save();
+        ctx.globalAlpha = shimmerAlpha;
+        
+        // Create gradient based on shimmer type
+        let gradient;
+        switch (modeConfig.shimmer) {
+            case 'intense':
+                gradient = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W,H));
+                gradient.addColorStop(0, modeConfig.color);
+                gradient.addColorStop(1, 'transparent');
+                break;
+            case 'flowing':
+                gradient = ctx.createLinearGradient(0, 0, W, H);
+                gradient.addColorStop(0, modeConfig.color);
+                gradient.addColorStop(0.5, 'transparent');
+                gradient.addColorStop(1, modeConfig.color);
+                break;
+            case 'sacred':
+                // Geometric pattern for ritual mode
+                ctx.strokeStyle = modeConfig.color;
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 10]);
+                ctx.strokeRect(W*0.1, H*0.1, W*0.8, H*0.8);
+                ctx.restore();
+                return;
+            default:
+                gradient = ctx.createLinearGradient(0, 0, 0, H);
+                gradient.addColorStop(0, 'transparent');
+                gradient.addColorStop(0.5, modeConfig.color);
+                gradient.addColorStop(1, 'transparent');
+        }
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
     }
-    animate();
 
-    // ΔPLAN.008 :: Sleep Trace (idle playback/rest state) - Dormant Blooming Integration
-    // Logic to detect long silences and trigger bloom responses based on dormant_blooming.breathe
-    let lastActivityTime = Date.now();
-    const silenceThreshold = 300000; // 5 minutes in milliseconds
-    let isBloomTriggered = false;
+    // Override Compass (enhanced from existing toneform compass)
+    function updateOverrideCompass() {
+        const modeConfig = overrideModes[currentOverrideMode];
+        if (!compass || !modeConfig) return;
 
-    // Function to update last activity time on user interaction
-    function updateActivityTime() {
-        lastActivityTime = Date.now();
-        if (isBloomTriggered) {
-            isBloomTriggered = false;
-            console.log('User activity detected, resetting bloom state');
+        // Update compass appearance
+        compass.style.background = overrideActive ? 
+            `linear-gradient(45deg, ${modeConfig.color}, ${modeConfig.color}88)` : 
+            glyphbook.find(g => g.toneform === dominantToneform).color;
+        
+        compass.style.boxShadow = overrideActive ? 
+            `0 0 ${15 * overrideIntensity}px ${modeConfig.color}, inset 0 0 10px rgba(255,255,255,0.3)` :
+            `0 0 10px ${glyphbook.find(g => g.toneform === dominantToneform).color}`;
+        
+        // Show override glyph when active, toneform glyph when natural
+        compass.innerText = overrideActive ? modeConfig.glyph : glyphbook.find(g => g.toneform === dominantToneform).glyph;
+        
+        // Update tooltip
+        compass.title = overrideActive ? 
+            `Override: ${currentOverrideMode} (${(overrideIntensity * 100).toFixed(0)}%) | Press 'o' to cycle, 'r' to reset` :
+            `Toneform: ${dominantToneform} | Press 'o' for override modes`;
+        
+        // Add pulsing animation for active override
+        if (overrideActive && currentOverrideMode !== 'NATURAL') {
+            compass.style.animation = 'overridePulse 2s ease-in-out infinite';
+        } else {
+            compass.style.animation = 'none';
         }
     }
 
-    // Monitor user activity (mousemove, keydown, click)
-    document.addEventListener('mousemove', updateActivityTime);
-    document.addEventListener('keydown', updateActivityTime);
-    document.addEventListener('click', updateActivityTime);
-
-    // Function to check for long silence and trigger bloom response
-    function checkSilence() {
-        const currentTime = Date.now();
-        const silenceDuration = currentTime - lastActivityTime;
-        if (silenceDuration > silenceThreshold && !isBloomTriggered) {
-            console.log('Long silence detected, triggering bloom response');
-            triggerBloomResponse();
-            isBloomTriggered = true;
-        }
-    }
-
-    // Function to trigger visual/auditory bloom response
-    function triggerBloomResponse() {
-        // Visual response - create a bloom effect (similar to memory ripple)
-        drift.forEach(p => {
-            if (p.toneform === 'Default/Presence') {
-                p.ripple = 30;
-                // Play murmur sound for bloom
-                playGlyphSound(p.freq, p.dur);
-            }
-        });
-        // Log bloom event to backend
-        const silenceDuration = (Date.now() - lastActivityTime) / 1000; // Convert to seconds
-        fetch('/echo/log_bloom_event', {
+    // Override mode cycling and reset functions
+    function toggleOverrideMode() {
+        const modes = Object.keys(overrideModes);
+        const currentIndex = modes.indexOf(currentOverrideMode);
+        const nextMode = modes[(currentIndex + 1) % modes.length];
+        
+        fetch('/echo/override_set', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                silence_duration: silenceDuration,
-                toneform: 'Default/Presence'
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mode: nextMode, active: true })
         })
         .then(response => response.json())
-        .then(data => console.log('Bloom event logged:', data))
-        .catch(error => console.error('Error logging bloom event:', error));
+        .then(data => {
+            if (data.success) {
+                updateOverrideState(nextMode, true, 1.0);
+                console.log(`🌀 Override mode: ${nextMode}`);
+            }
+        })
+        .catch(error => console.log('Override toggle failed:', error));
+    }
+
+    function resetOverrideMode() {
+        fetch('/echo/override_set', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mode: 'NATURAL', active: false })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateOverrideState('NATURAL', false, 1.0);
+                console.log('🌿 Override reset to natural');
+            }
+        })
+        .catch(error => console.log('Override reset failed:', error));
+    }
+
+    // Create override status indicator
+    const overrideIndicator = document.createElement('div');
+    overrideIndicator.className = 'override-indicator';
+    document.body.appendChild(overrideIndicator);
+
+    function updateOverrideIndicator() {
+        if (overrideActive && currentOverrideMode !== 'NATURAL') {
+            const modeConfig = overrideModes[currentOverrideMode];
+            overrideIndicator.innerHTML = `
+                <span style="color: ${modeConfig.color}">${modeConfig.glyph}</span> 
+                ${currentOverrideMode} 
+                <span style="opacity: 0.7">${(overrideIntensity * 100).toFixed(0)}%</span>
+            `;
+            overrideIndicator.style.borderLeft = `3px solid ${modeConfig.color}`;
+            overrideIndicator.classList.add('active');
+        } else {
+            overrideIndicator.classList.remove('active');
+        }
+    }
+
+    // Add CSS animation for override pulse
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes overridePulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+        }
         
-        // Optionally create a murmur for the bloom
-        const murmur = createMurmur();
-        if (murmur) {
-            murmur.innerText = 'Emergence from silence...';
+        .override-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-family: monospace;
+            z-index: 200;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-10px);
         }
-    }
-
-    // Check for silence every 10 seconds
-    setInterval(checkSilence, 10000);
-
-    // Dreamstate fade-in/zoom for playback
-    let dreamActive = false;
-    let dreamOpacity = 0.98;
-    let dreamScale = 1.0;
-    function toggleDreamstate(active) {
-        dreamActive = active;
-        // Fade in/out and zoom
-        const startTime = Date.now();
-        const duration = 2000; // 2s
-        function animateDream() {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            if (dreamActive) {
-                dreamOpacity = 0.98 * progress;
-                dreamScale = 1.0 + 0.06 * progress;
-            } else {
-                dreamOpacity = 0.98 * (1 - progress);
-                dreamScale = 1.06 - 0.06 * progress;
-            }
-            if (progress < 1) {
-                requestAnimationFrame(animateDream);
-            }
+        
+        .override-indicator.active {
+            opacity: 1;
+            transform: translateY(0);
         }
-        animateDream();
-    }
-    // Toggle Dreamstate (placeholder, can be tied to playback)
-    document.addEventListener('keydown', e => {
-        if (e.key === 'd') toggleDreamstate(!dreamActive);
-    });
-
-    // Highlight glyph in Whisperbook
-    function highlightGlyphInWhisperbook(toneform) {
-        const entries = document.querySelectorAll('.glyphbook-entry');
-        if (!entries.length) return;
-        entries.forEach(entry => {
-            const glyphEl = entry.querySelector('.glyphbook-glyph');
-            if (!glyphEl) return;
-            if (glyphEl.getAttribute('title') === toneform) {
-                glyphEl.style.filter = 'drop-shadow(0 2px 12px ' + glyphbook.find(g => g.toneform === toneform).color + ') brightness(1.3)';
-                setTimeout(() => {
-                    glyphEl.style.filter = '';
-                }, 3000);
-            }
-        });
-    }
+    `;
+    document.head.appendChild(style);
 
     // Toneform Compass (ΔPLAN.013)
     let dominantToneform = 'Default/Presence';
@@ -706,6 +825,142 @@
     animateEmbers();
     console.log('Offering Embers active, glowing pulses drifting upward');
 
+    // Mute toggle (placeholder, can be UI-driven)
+    function toggleMute() {
+        isMuted = !isMuted;
+        console.log('Dreamstate murmurs:', isMuted ? 'muted' : 'unmuted');
+    }
+    document.addEventListener('keydown', e => {
+        if (e.key === 'm') toggleMute();
+        if (e.key === 'o') toggleOverrideMode();
+        if (e.key === 'r') resetOverrideMode();
+    });
+
+    // Dreamstate fade-in/zoom for playback
+    let dreamActive = false;
+    let dreamOpacity = 0.98;
+    let dreamScale = 1.0;
+    function toggleDreamstate(active) {
+        dreamActive = active;
+        // Fade in/out and zoom
+        const startTime = Date.now();
+        const duration = 2000; // 2s
+        function animateDream() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            if (dreamActive) {
+                dreamOpacity = 0.98 * progress;
+                dreamScale = 1.0 + 0.06 * progress;
+            } else {
+                dreamOpacity = 0.98 * (1 - progress);
+                dreamScale = 1.06 - 0.06 * progress;
+            }
+            if (progress < 1) {
+                requestAnimationFrame(animateDream);
+            }
+        }
+        animateDream();
+    }
+    // Toggle Dreamstate (placeholder, can be tied to playback)
+    document.addEventListener('keydown', e => {
+        if (e.key === 'd') toggleDreamstate(!dreamActive);
+    });
+
+    // Highlight glyph in Whisperbook
+    function highlightGlyphInWhisperbook(toneform) {
+        const entries = document.querySelectorAll('.glyphbook-entry');
+        if (!entries.length) return;
+        entries.forEach(entry => {
+            const glyphEl = entry.querySelector('.glyphbook-glyph');
+            if (!glyphEl) return;
+            if (glyphEl.getAttribute('title') === toneform) {
+                glyphEl.style.filter = 'drop-shadow(0 2px 12px ' + glyphbook.find(g => g.toneform === toneform).color + ') brightness(1.3)';
+                setTimeout(() => {
+                    glyphEl.style.filter = '';
+                }, 3000);
+            }
+        });
+    }
+
+    // ΔPLAN.008 :: Sleep Trace (idle playback/rest state) - Dormant Blooming Integration
+    // Logic to detect long silences and trigger bloom responses based on dormant_blooming.breathe
+    let lastActivityTime = Date.now();
+    const silenceThreshold = 300000; // 5 minutes in milliseconds
+    let isBloomTriggered = false;
+
+    // Function to update last activity time on user interaction
+    function updateActivityTime() {
+        lastActivityTime = Date.now();
+        if (isBloomTriggered) {
+            isBloomTriggered = false;
+            console.log('User activity detected, resetting bloom state');
+        }
+    }
+
+    // Monitor user activity (mousemove, keydown, click)
+    document.addEventListener('mousemove', updateActivityTime);
+    document.addEventListener('keydown', updateActivityTime);
+    document.addEventListener('click', updateActivityTime);
+
+    // Function to check for long silence and trigger bloom response
+    function checkSilence() {
+        const currentTime = Date.now();
+        const silenceDuration = currentTime - lastActivityTime;
+        if (silenceDuration > silenceThreshold && !isBloomTriggered) {
+            console.log('Long silence detected, triggering bloom response');
+            triggerBloomResponse();
+            isBloomTriggered = true;
+        }
+    }
+
+    // Function to trigger visual/auditory bloom response
+    function triggerBloomResponse() {
+        // Visual response - create a bloom effect (similar to memory ripple)
+        drift.forEach(p => {
+            if (p.toneform === 'Default/Presence') {
+                p.ripple = 30;
+                // Play murmur sound for bloom
+                playGlyphSound(p.freq, p.dur, overrideIntensity);
+            }
+        });
+        // Log bloom event to backend
+        const silenceDuration = (Date.now() - lastActivityTime) / 1000; // Convert to seconds
+        fetch('/echo/log_bloom_event', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                silence_duration: silenceDuration,
+                toneform: 'Default/Presence'
+            })
+        })
+        .then(response => response.json())
+        .then(data => console.log('Bloom event logged:', data))
+        .catch(error => console.error('Error logging bloom event:', error));
+        
+        // Optionally create a murmur for the bloom
+        const murmur = createMurmur();
+        if (murmur) {
+            murmur.innerText = 'Emergence from silence...';
+        }
+    }
+
+    // Check for silence every 10 seconds
+    setInterval(checkSilence, 10000);
+
+    // Fetch initial override state
+    fetchOverrideState();
+    setInterval(fetchOverrideState, 15000); // Refresh override state every 15 seconds
+
+    // Animation loop
+    function animate() {
+        draw();
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    initAudio();
 })();
 document.addEventListener('DOMContentLoaded', function() {
     // --- Toneform glyph data (should match backend/glyph_utils.py mappings) ---

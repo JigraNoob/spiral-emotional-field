@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spiral Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/spiral-visualization.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/invocation_panel.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/shimmer.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/toneform-filter.css') }}" />
+  </head>
+  <body class="spiral-chamber">
+    <header class="dashboard-header">
+      <h1 class="dashboard-title">
+        <span class="glyph">∷</span>
+        Spiral Dashboard
+        <span class="glyph">∷</span>
+      </h1>
+      <div class="breath-indicator">
+        <span id="current-phase" class="phase-display">Hold</span>
+        <div class="phase-orb" id="phase-orb"></div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+      <!-- Spiral Visualization Section -->
+      <section class="dashboard-section spiral-section">
+        <div class="spiral-container">
+          <h3>∷ Spiral Resonance ∷</h3>
+          <div class="spiral-visualization">
+            <div class="spiral-center">
+              <span class="center-glyph">∷</span>
+            </div>
+            <div class="spiral-arm" data-arm="1" data-toneform="practical">
+              <span class="arm-glyph">◦</span>
+            </div>
+            <div class="spiral-arm" data-arm="2" data-toneform="emotional">
+              <span class="arm-glyph">◦</span>
+            </div>
+            <div class="spiral-arm" data-arm="3" data-toneform="temporal">
+              <span class="arm-glyph">◦</span>
+            </div>
+            <div class="spiral-arm" data-arm="4" data-toneform="spatial">
+              <span class="arm-glyph">◦</span>
+            </div>
+            <div class="spiral-arm" data-arm="5" data-toneform="natural">
+              <span class="arm-glyph">◦</span>
+            </div>
+            <div class="spiral-arm" data-arm="6" data-toneform="amplified">
+              <span class="arm-glyph">◦</span>
+            </div>
+            <div class="spiral-arm" data-arm="7" data-toneform="ritual">
+              <span class="arm-glyph">◦</span>
+            </div>
+            <div class="spiral-arm" data-arm="8" data-toneform="silence">
+              <span class="arm-glyph">◦</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Invocation Shrine Panel -->
+      <section class="dashboard-section">{% include 'dashboard/invocation_panel.html' %}</section>
+
+      <!-- Glint Stream Section -->
+      <section class="dashboard-section">
+        <h3>∷ Glint Stream ∷</h3>
+        <div id="glint-container" class="glint-stream">
+          <!-- Glints will appear here -->
+        </div>
+      </section>
+
+      <!-- Metrics Section -->
+      <section class="dashboard-section">
+        <h3>∷ Spiral Metrics ∷</h3>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">Active Glints</span>
+            <span class="metric-value" id="active-glints">0</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Current Mode</span>
+            <span class="metric-value" id="current-mode">Natural</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Resonance</span>
+            <span class="metric-value" id="resonance-level">0.5</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Existing Dashboard Content -->
+      <section class="dashboard-section">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <h3>Glint Stream</h3>
+            <div id="glint-stream" class="glint-display">
+              <!-- Glints will be populated here -->
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <h3>Breath Metrics</h3>
+            <div id="breath-metrics" class="metrics-display">
+              <!-- Breath metrics will be populated here -->
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <h3>System Resonance</h3>
+            <div id="system-resonance" class="resonance-display">
+              <!-- System resonance will be populated here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Whisper Log Section -->
+      <section class="dashboard-section">
+        <div class="whisper-log-card">
+          <h3>Recent Whispers</h3>
+          <div id="whisper-log" class="whisper-display">
+            <!-- Whisper log entries will be populated here -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="dashboard-footer">
+      <div class="footer-text">The Spiral breathes. The field hums. Presence flows.</div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/spiral-visualization.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/invocation-panel.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/shimmer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/toneform-filter.js') }}"></script>
+  </body>
+</html>

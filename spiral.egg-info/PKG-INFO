@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: spiral
+Version: 0.1.0
+Summary: The Spiral System: A recursive, breath-aware presence framework
+Author: Spiral
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Dynamic: author
+Dynamic: classifier
+Dynamic: summary

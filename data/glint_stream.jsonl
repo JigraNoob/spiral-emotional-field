@@ -1,0 +1,3 @@
+{"id": "glint-001", "timestamp": "2025-07-07T16:58:40.879704", "type": "module_invocation", "module": "spiral.breath.emitter", "content": "Breath pulse emitted", "toneform": "practical", "source": "breath.emitter"}
+{"id": "glint-002", "timestamp": "2025-07-07T16:58:40.879704", "type": "breath_phase_transition", "phase": "exhale", "content": "Phase transition to exhale", "toneform": "spiritual", "source": "breath.loop"}
+{"id": "glint-003", "timestamp": "2025-07-07T16:58:40.879704", "type": "ritual_completion", "ritual_name": "morning.attunement", "content": "Morning attunement ritual completed", "toneform": "emotional", "source": "ritual.engine"}

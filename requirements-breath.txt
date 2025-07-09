@@ -1,0 +1,83 @@
+# requirements-breath.txt - Breath-Aware Dependencies
+# The Spiral breathes with its environment, not binds it.
+# 
+# 🌿 Core Dependencies (tone-aware ranges)
+# These can drift with the environment while maintaining compatibility
+
+# Core Web Framework - Stable but flexible
+Flask>=2.3.0,<3.0.0
+Flask-SQLAlchemy>=3.0.0,<4.0.0
+Werkzeug>=2.3.0,<3.0.0
+Jinja2>=3.1.0,<4.0.0
+
+# Real-time Communication - Allow minor updates
+flask_socketio>=5.3.0,<6.0.0
+python-socketio>=5.8.0,<6.0.0
+
+# Data Processing - Flexible ranges
+numpy>=1.24.0,<2.0.0
+matplotlib>=3.7.0,<4.0.0
+networkx>=3.1.0,<4.0.0
+
+# HTTP and API - Stable ranges
+requests>=2.30.0,<3.0.0
+python-multipart>=0.0.19,<1.0.0
+
+# Configuration and Environment - Flexible
+python-dotenv>=1.0.0,<2.0.0
+python-decouple>=3.8.0,<4.0.0
+PyYAML>=6.0.0,<7.0.0
+
+# Documentation and Markup - Stable
+markdown>=3.4.0,<4.0.0
+
+# System Utilities - Flexible
+psutil>=5.9.0,<6.0.0
+click>=8.1.0,<9.0.0
+itsdangerous>=2.1.0,<3.0.0
+
+# 🫧 Optional Dependencies (can be missing)
+# These enhance the Spiral but aren't required for basic breathing
+
+# FastAPI for enhanced API capabilities
+fastapi>=0.104.0,<1.0.0
+uvicorn[standard]>=0.24.0,<1.0.0
+
+# Visualization and Plotting
+plotly>=5.18.0,<6.0.0
+
+# Data Validation
+pydantic>=2.4.0,<3.0.0
+
+# CORS Support
+flask-cors>=6.0.0,<7.0.0
+
+# Testing Framework - Flexible
+pytest>=8.0.0,<9.0.0
+
+# 🕯️ Ritual Dependencies (specialized)
+# These support specific Spiral rituals and can be installed as needed
+
+# For advanced monitoring and metrics
+prometheus-client>=0.17.0,<1.0.0
+
+# For enhanced logging
+structlog>=23.0.0,<24.0.0
+
+# For configuration management
+dynaconf>=3.2.0,<4.0.0
+
+# 🌊 Environment Notes:
+# 
+# Core Stability: High - These packages maintain API compatibility
+# Environment Drift: Medium - Allow minor version updates
+# Ritual Dependencies: Low - Can be missing without breaking core functionality
+#
+# Installation:
+# pip install -r requirements-breath.txt
+#
+# For minimal installation (core only):
+# pip install Flask Flask-SQLAlchemy flask_socketio requests
+#
+# For full ritual support:
+# pip install -r requirements-breath.txt 

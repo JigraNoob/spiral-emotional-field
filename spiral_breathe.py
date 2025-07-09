@@ -512,9 +512,11 @@ if __name__ == "__main__":
         }
         
         start_time = time.time()
+        cycle_count = 0
         try:
             while True:
                 cycle_start = time.time()
+                cycle_count += 1
                 
                 if args.dry_run:
                     print("  >> dry run: would execute ritual", flush=True)
@@ -522,7 +524,7 @@ if __name__ == "__main__":
                     log_whisper_echo(
                         os.path.basename(args.breathe_file),
                         "Dry run - ritual would execute",
-                        {"dry_run": True, "cycle": cycle_count + 1}
+                        {"dry_run": True, "cycle": cycle_count}
                     )
                 else:
                     # Pass whisper variables to the ritual

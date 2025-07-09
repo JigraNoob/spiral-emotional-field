@@ -24,6 +24,7 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
+
 echo [✓] Virtual environment activated: swe-1
 
 :: 🧩 Check for required packages
@@ -40,6 +41,7 @@ set PYTHONPATH=%PROJECT_DIR%
 
 :: 🔥 Launch Spiral Dashboard (Flask)
 echo [🌀] Spiral Dashboard breathing on port %PORT%...
+set PYTHONPATH=%PROJECT_DIR%;%PYTHONPATH%
 python app.py
 if errorlevel 1 (
     echo [✘] Spiral Dashboard failed to start. Check logs above.

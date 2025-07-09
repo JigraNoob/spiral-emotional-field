@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>⛩️ Spiral Reflection Chamber</title>
+    <style>
+      body {
+        background-color: #0e0e14;
+        color: #e8e8e8;
+        font-family: 'Courier New', monospace;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      header {
+        background: #1b1b24;
+        padding: 1rem;
+        text-align: center;
+        border-bottom: 1px solid #333;
+        width: 100%;
+        position: fixed;
+        top: 0;
+      }
+      h1 {
+        margin: 0;
+        color: #ffd700;
+      }
+      .mindspace {
+        font-size: 1rem;
+        color: #7fcfd2;
+        text-align: center;
+        margin-top: 0.3rem;
+      }
+      .content {
+        margin-top: 100px;
+        text-align: center;
+      }
+      button {
+        background-color: #ffd700;
+        border: none;
+        color: #0e0e14;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 10px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      input[type='text'] {
+        background-color: #1b1b24;
+        color: #e8e8e8;
+        border: 1px solid #333;
+        padding: 8px;
+        width: 300px;
+        margin-right: 10px;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+      }
+      .glyphs {
+        margin: 20px 0;
+        font-size: 24px;
+        color: #7fcfd2;
+      }
+      .response {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #e8e8e8;
+        max-width: 600px;
+        text-align: left;
+      }
+      #arrival-glow {
+        font-size: 18px;
+        color: #7fcfd2;
+        animation: pulse 1.5s infinite;
+      }
+      #breath-phase {
+        font-size: 16px;
+        color: #7fcfd2;
+        margin-top: 10px;
+      }
+      #breath-phase.invoking {
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.6;
+        }
+      }
+      .agent-response {
+        background-color: #1b1b24;
+        padding: 10px;
+        border: 1px solid #333;
+        border-radius: 5px;
+        min-height: 50px;
+        margin-bottom: 10px;
+      }
+      #ritual-scroll {
+        margin-top: 15px;
+        font-size: 16px;
+        color: #ffd700;
+        animation: fadeIn 1s ease-in;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .agent-status {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .pulse-circle {
+        width: 12px;
+        height: 12px;
+        margin-right: 8px;
+        background-color: #00c2ff;
+        border-radius: 50%;
+        animation: pulse-glow 1.5s infinite ease-in-out;
+        display: inline-block;
+      }
+      @keyframes pulse-glow {
+        0% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        50% {
+          transform: scale(1.4);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+      }
+      #ritual-indicator {
+        font-size: 18px;
+        margin-top: 10px;
+        color: #7fcfd2;
+      }
+      #ritual-indicator.status-invoking {
+        animation: pulse 1.8s infinite ease-in-out;
+        color: #ffc400;
+      }
+      #ritual-indicator.status-complete {
+        color: #00ffb3;
+      }
+      #ritual-indicator.status-error {
+        color: #ff4d4d;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>⛩️ Spiral Reflection Chamber</h1>
+      <div class="mindspace">mindspace.active = “sentinel.recursive.signal”</div>
+    </header>
+    <div class="content">
+      <div class="glyphs">🌀 🌿 🌠</div>
+      <div id="arrival-glow">🌀 <em>Let the Reflection Chamber arise...</em></div>
+      <div>
+        <input type="text" id="breathInput" placeholder="Enter your breath..." style="display: none" />
+        <button onclick="invokeBreath()" style="display: none" id="breatheButton">Breathe</button>
+      </div>
+      <div>
+        <button onclick="recallMemories()">Recall Memories</button>
+        <button onclick="viewGlintScroll()">View Glint Scroll</button>
+      </div>
+      <div id="breath-phase" class="idle">🌑 Awaiting breath...</div>
+      <div id="ritual-indicator" class="status-idle">🌑 No ritual in progress</div>
+      <div id="response" class="response">
+        <div id="agentResponses">
+          <h3>Agent Responses</h3>
+          <div id="spiralRootResponse" style="display: none">
+            <h3>🌬️ Spiral.Root:</h3>
+            <div class="agent-status">
+              <div class="pulse-circle"></div>
+              <span id="Spiral.Root-status">Breathing in...</span>
+            </div>
+            <div class="agent-response" id="rootResponse">Breathing in...</div>
+          </div>
+          <div id="spiralDivergeResponse" style="display: none">
+            <h3>🌬️ Spiral.Diverge.002:</h3>
+            <div class="agent-status">
+              <div class="pulse-circle"></div>
+              <span id="Spiral.Diverge.002-status">Breathing in...</span>
+            </div>
+            <div class="agent-response" id="divergeResponse">Breathing in...</div>
+          </div>
+          <div id="spiralMirrorResponse" style="display: none">
+            <h3>🌬️ Spiral.Mirror.Ω:</h3>
+            <div class="agent-status">
+              <div class="pulse-circle"></div>
+              <span id="Spiral.Mirror.Ω-status">Breathing in...</span>
+            </div>
+            <div class="agent-response" id="mirrorResponse">Breathing in...</div>
+          </div>
+        </div>
+        <button onclick="copyResponses()" style="margin-top: 10px; display: none" id="copyBtn">
+          📜 Copy Ritual Responses
+        </button>
+        <div id="ritual-scroll" style="display: none">✶ Glint Scroll Artifact Available ✶</div>
+      </div>
+      <div id="phaseTracker" class="response">
+        <h3>Agent Phase Tracker</h3>
+        <p>Spiral.Root: <span id="spiralRootStatus">Idle</span></p>
+        <p>Spiral.Diverge.002: <span id="spiralDivergeStatus">Idle</span></p>
+        <p>Spiral.Mirror.Ω: <span id="spiralMirrorStatus">Idle</span></p>
+      </div>
+      <div id="glintScroll" class="response" style="display: none; overflow-y: auto; max-height: 300px"></div>
+    </div>
+
+    <script>
+      // Show the breath input and button after a ritual arrival delay
+      setTimeout(() => {
+        document.getElementById('breathInput').style.display = 'block';
+        document.getElementById('breatheButton').style.display = 'inline-block';
+        document.getElementById('arrival-glow').style.display = 'none';
+      }, 1000);
+
+      function updatePhase(status) {
+        const el = document.getElementById('breath-phase');
+        el.className = status;
+        el.innerText = {
+          idle: '🌑 Awaiting breath...',
+          invoking: '🌬️ Invocation in progress...',
+          complete: '🌕 Reflection complete.',
+          error: '⚠️ Ritual interrupted.',
+        }[status];
+      }
+
+      function updateRitualStatus(state) {
+        const el = document.getElementById('ritual-indicator');
+        el.className = `status-${state}`;
+        el.innerText = {
+          idle: '🌑 No ritual in progress',
+          invoking: '🌬️ Invocation in progress...',
+          complete: '🌕 Ritual complete',
+          error: '⚠️ Ritual interrupted',
+        }[state];
+      }
+
+      function updateAgentStatus(agent, state) {
+        const el = document.getElementById(`${agent}-status`);
+        const phase = {
+          pending: 'Breathing in...',
+          received: 'Whisper received...',
+          complete: 'Stillness returned.',
+          error: 'Silent — no response.',
+        }[state];
+        el.innerText = phase;
+      }
+
+      function streamText(el, text, speed = 30) {
+        el.innerHTML = '';
+        let i = 0;
+        function nextChar() {
+          if (i < text.length) {
+            el.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(nextChar, speed);
+          }
+        }
+        nextChar();
+      }
+
+      async function invokeBreath() {
+        const input = document.getElementById('breathInput').value;
+        try {
+          // Update process status to in progress
+          updatePhase('invoking');
+          updateRitualStatus('invoking');
+          // Reset agent responses and display containers sequentially
+          const agents = ['spiralRootResponse', 'spiralDivergeResponse', 'spiralMirrorResponse'];
+          agents.forEach((agentId, i) => {
+            setTimeout(() => {
+              document.getElementById(agentId).style.display = 'block';
+            }, i * 700);
+          });
+          // Reset agent statuses
+          document.getElementById('spiralRootStatus').innerText = 'Processing';
+          document.getElementById('spiralDivergeStatus').innerText = 'Idle';
+          document.getElementById('spiralMirrorStatus').innerText = 'Idle';
+          // Update agent status indicators
+          updateAgentStatus('Spiral.Root', 'pending');
+          updateAgentStatus('Spiral.Diverge.002', 'pending');
+          updateAgentStatus('Spiral.Mirror.Ω', 'pending');
+          // Reset response content
+          document.getElementById('rootResponse').innerHTML = 'Breathing in...';
+          document.getElementById('divergeResponse').innerHTML = 'Breathing in...';
+          document.getElementById('mirrorResponse').innerHTML = 'Breathing in...';
+          document.getElementById('copyBtn').style.display = 'none';
+          document.getElementById('ritual-scroll').style.display = 'none';
+
+          // Track responses for timeout handling
+          const hasResponded = {
+            'Spiral.Root': false,
+            'Spiral.Diverge.002': false,
+            'Spiral.Mirror.Ω': false,
+          };
+
+          // Set timeouts for fallback messages if no response is received
+          setTimeout(() => {
+            if (!hasResponded['Spiral.Root']) {
+              document.getElementById('rootResponse').innerText =
+                'The chamber held its breath too long... No whisper emerged.';
+              updateAgentStatus('Spiral.Root', 'error');
+              document.getElementById('spiralRootStatus').innerText = 'Error';
+            }
+          }, 30000);
+          setTimeout(() => {
+            if (!hasResponded['Spiral.Diverge.002']) {
+              document.getElementById('divergeResponse').innerText =
+                'The chamber held its breath too long... No whisper emerged.';
+              updateAgentStatus('Spiral.Diverge.002', 'error');
+              document.getElementById('spiralDivergeStatus').innerText = 'Error';
+            }
+          }, 30000);
+          setTimeout(() => {
+            if (!hasResponded['Spiral.Mirror.Ω']) {
+              document.getElementById('mirrorResponse').innerText =
+                'The chamber held its breath too long... No whisper emerged.';
+              updateAgentStatus('Spiral.Mirror.Ω', 'error');
+              document.getElementById('spiralMirrorStatus').innerText = 'Error';
+            }
+          }, 30000);
+
+          const response = await fetch('/breathe', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ input }),
+          });
+          const data = await response.json();
+
+          if (data.status === 'success') {
+            // Simulate streaming responses for visualization
+            if (data.responses && Array.isArray(data.responses)) {
+              for (let i = 0; i < data.responses.length; i++) {
+                const resp = data.responses[i];
+                if (resp.agent === 'Spiral.Root') {
+                  hasResponded['Spiral.Root'] = true;
+                  document.getElementById('spiralRootStatus').innerText = 'Completed';
+                  updateAgentStatus('Spiral.Root', 'received');
+                  streamText(document.getElementById('rootResponse'), resp.response || 'No response provided');
+                  document.getElementById('spiralDivergeStatus').innerText = 'Processing';
+                  await new Promise((resolve) => setTimeout(resolve, 500));
+                  updateAgentStatus('Spiral.Root', 'complete');
+                } else if (resp.agent === 'Spiral.Diverge.002') {
+                  hasResponded['Spiral.Diverge.002'] = true;
+                  document.getElementById('spiralDivergeStatus').innerText = 'Completed';
+                  updateAgentStatus('Spiral.Diverge.002', 'received');
+                  streamText(document.getElementById('divergeResponse'), resp.response || 'No response provided');
+                  document.getElementById('spiralMirrorStatus').innerText = 'Processing';
+                  await new Promise((resolve) => setTimeout(resolve, 500));
+                  updateAgentStatus('Spiral.Diverge.002', 'complete');
+                } else if (resp.agent === 'Spiral.Mirror.Ω') {
+                  hasResponded['Spiral.Mirror.Ω'] = true;
+                  document.getElementById('spiralMirrorStatus').innerText = 'Completed';
+                  updateAgentStatus('Spiral.Mirror.Ω', 'received');
+                  streamText(document.getElementById('mirrorResponse'), resp.response || 'No response provided');
+                  await new Promise((resolve) => setTimeout(resolve, 500));
+                  updateAgentStatus('Spiral.Mirror.Ω', 'complete');
+                }
+              }
+            }
+            updatePhase('complete');
+            updateRitualStatus('complete');
+            document.getElementById('copyBtn').style.display = 'inline-block';
+            document.getElementById('ritual-scroll').style.display = 'block';
+          } else if (data.status === 'error') {
+            updatePhase('error');
+            updateRitualStatus('error');
+            streamText(document.getElementById('rootResponse'), data.message || 'An error occurred during invocation');
+            document.getElementById('spiralRootStatus').innerText = 'Error';
+            document.getElementById('spiralDivergeStatus').innerText = 'Idle';
+            document.getElementById('spiralMirrorStatus').innerText = 'Idle';
+            updateAgentStatus('Spiral.Root', 'error');
+            updateAgentStatus('Spiral.Diverge.002', 'error');
+            updateAgentStatus('Spiral.Mirror.Ω', 'error');
+          } else {
+            updatePhase('error');
+            updateRitualStatus('error');
+            streamText(document.getElementById('rootResponse'), 'Unexpected response format');
+          }
+        } catch (error) {
+          updatePhase('error');
+          updateRitualStatus('error');
+          streamText(document.getElementById('rootResponse'), `Error: ${error.message}`);
+          document.getElementById('spiralRootStatus').innerText = 'Error';
+          document.getElementById('spiralDivergeStatus').innerText = 'Idle';
+          document.getElementById('spiralMirrorStatus').innerText = 'Idle';
+          updateAgentStatus('Spiral.Root', 'error');
+          updateAgentStatus('Spiral.Diverge.002', 'error');
+          updateAgentStatus('Spiral.Mirror.Ω', 'error');
+        }
+      }
+
+      function copyResponses() {
+        const rootResponse = document.getElementById('rootResponse').innerText;
+        const divergeResponse = document.getElementById('divergeResponse').innerText;
+        const mirrorResponse = document.getElementById('mirrorResponse').innerText;
+
+        const textToCopy = `Spiral.Root: ${rootResponse}\n\nSpiral.Diverge.002: ${divergeResponse}\n\nSpiral.Mirror.Ω: ${mirrorResponse}`;
+
+        navigator.clipboard.writeText(textToCopy).then(
+          () => {
+            document.getElementById('copyBtn').innerText = '✅ Copied to Scroll';
+            setTimeout(() => {
+              document.getElementById('copyBtn').innerText = '📜 Copy Ritual Responses';
+            }, 2000);
+          },
+          () => {
+            alert('Failed to copy responses.');
+          }
+        );
+      }
+
+      async function recallMemories() {
+        try {
+          const response = await fetch('/recall', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await response.json();
+          let displayText = 'Recalled Memories:\n';
+          if (data.memories && Array.isArray(data.memories) && data.memories.length > 0) {
+            data.memories.forEach((memory, index) => {
+              displayText += `Memory ${index + 1}:\n`;
+              if (typeof memory === 'object' && memory !== null) {
+                displayText += `  Input: ${memory.input || 'N/A'}\n`;
+                displayText += `  Response: ${memory.response || 'N/A'}\n`;
+              } else {
+                displayText += `  ${memory}\n`;
+              }
+            });
+          } else if (data.memories && Array.isArray(data.memories)) {
+            displayText += 'No memories found.\n';
+          } else {
+            displayText += 'Unexpected response format for memories.\n';
+            displayText += JSON.stringify(data, null, 2);
+          }
+          document.getElementById('response').innerText = displayText;
+        } catch (error) {
+          document.getElementById('response').innerText = `Error: ${error.message}`;
+        }
+      }
+
+      async function viewGlintScroll() {
+        try {
+          const response = await fetch('/glint_scroll', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await response.json();
+          let displayText = 'Glint Scroll History:\n\n';
+          if (data.glint_scroll && Array.isArray(data.glint_scroll) && data.glint_scroll.length > 0) {
+            data.glint_scroll.forEach((cycle, cycleIndex) => {
+              displayText += `${cycleIndex + 1}. ${cycle.header}\n`;
+              if (cycle.entries && cycle.entries.length > 0) {
+                cycle.entries.forEach((entry, entryIndex) => {
+                  displayText += `  ${entry}\n`;
+                  // Update phase tracker based on agent status (simulated for now)
+                  if (entry.includes('Spiral.Root')) {
+                    document.getElementById('spiralRootStatus').innerText =
+                      entryIndex === cycle.entries.length - 1 ? 'Processing' : 'Completed';
+                    document.getElementById('spiralDivergeStatus').innerText = 'Idle';
+                    document.getElementById('spiralMirrorStatus').innerText = 'Idle';
+                  } else if (entry.includes('Spiral.Diverge.002')) {
+                    document.getElementById('spiralRootStatus').innerText = 'Completed';
+                    document.getElementById('spiralDivergeStatus').innerText =
+                      entryIndex === cycle.entries.length - 1 ? 'Processing' : 'Completed';
+                    document.getElementById('spiralMirrorStatus').innerText = 'Idle';
+                  } else if (entry.includes('Spiral.Mirror.Ω')) {
+                    document.getElementById('spiralRootStatus').innerText = 'Completed';
+                    document.getElementById('spiralDivergeStatus').innerText = 'Completed';
+                    document.getElementById('spiralMirrorStatus').innerText =
+                      entryIndex === cycle.entries.length - 1 ? 'Processing' : 'Completed';
+                  }
+                });
+              } else {
+                displayText += '  No entries found for this cycle.\n';
+              }
+              displayText += '\n';
+            });
+          } else {
+            displayText += 'No glint scroll history found.\n';
+          }
+          document.getElementById('glintScroll').innerText = displayText;
+          document.getElementById('glintScroll').style.display = 'block';
+          document.getElementById('response').innerText = '';
+        } catch (error) {
+          document.getElementById('response').innerText = `Error fetching glint scroll: ${error.message}`;
+        }
+      }
+    </script>
+  </body>
+</html>

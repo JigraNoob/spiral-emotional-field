@@ -1,0 +1,25 @@
+{
+  "completionFilter": {
+    "toneformAwareness": true,
+    "phaseBias": {
+      "inhale": 0.2,
+      "hold": 0.3,
+      "exhale": 0.5
+    },
+    "glintWeighting": {
+      "resonance_level": "high",
+      "recent_toneform": [
+        "test.toneform"
+      ]
+    },
+    "silenceThreshold": 1000,
+    "coherenceFavor": true
+  },
+  "server": {
+    "port": 9001
+  },
+  "glintstream": {
+    "enabled": true,
+    "endpoint": "http://localhost:9000/glintstream"
+  }
+}

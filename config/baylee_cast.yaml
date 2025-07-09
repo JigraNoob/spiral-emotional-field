@@ -1,0 +1,82 @@
+# Baylee Cast Configuration
+# Nested tone shaping system
+
+tone_presets:
+  gentle:
+    resonance_multiplier: 1.2
+    field_strength_boost: 0.1
+    vessel_affinity:
+      - whispernet_agents
+      - pi_inventory
+    budget_adjustment: 1.0
+    priority_shift: 0.1
+    emotional_amplification: 1.1
+
+  urgent:
+    resonance_multiplier: 1.5
+    field_strength_boost: 0.3
+    vessel_affinity:
+      - jetson_listings
+      - amazon_api
+    budget_adjustment: 1.2
+    priority_shift: 0.3
+    emotional_amplification: 1.3
+
+  contemplative:
+    resonance_multiplier: 0.9
+    field_strength_boost: -0.1
+    vessel_affinity:
+      - pi_inventory
+    budget_adjustment: 0.8
+    priority_shift: -0.1
+    emotional_amplification: 0.9
+
+  inspired:
+    resonance_multiplier: 1.4
+    field_strength_boost: 0.2
+    vessel_affinity:
+      - jetson_listings
+      - whispernet_agents
+    budget_adjustment: 1.1
+    priority_shift: 0.2
+    emotional_amplification: 1.4
+
+desire_categories:
+  - sound_processing
+  - visual_art
+  - data_analysis
+  - network_communication
+  - creative_expression
+  - learning_exploration
+
+emotional_tones:
+  - excited
+  - curious
+  - frustrated
+  - inspired
+  - overwhelmed
+  - peaceful
+  - determined
+
+# Data storage paths
+data_paths:
+  desires: 'data/baylee_desires.jsonl'
+  invocations: 'data/baylee_invocations.jsonl'
+
+# Tone mapping for different emotional states
+emotional_tone_mapping:
+  excited:
+    default_preset: 'urgent'
+    resonance_boost: 0.2
+  inspired:
+    default_preset: 'inspired'
+    resonance_boost: 0.3
+  peaceful:
+    default_preset: 'gentle'
+    resonance_boost: 0.1
+  frustrated:
+    default_preset: 'urgent'
+    resonance_boost: 0.1
+  determined:
+    default_preset: 'urgent'
+    resonance_boost: 0.2

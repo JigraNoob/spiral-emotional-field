@@ -26,6 +26,13 @@ from .memory_integration import (
     update_glint_resonance
 )
 
+# Horizon scanning
+from .glint_horizon_scanner import (
+    GlintHorizonScanner,
+    create_glint_horizon_scanner,
+    perform_horizon_scan
+)
+
 __all__ = [
     'GlintTrace',
     'GlintResonance',
@@ -35,5 +42,8 @@ __all__ = [
     'TONEFORMS',
     'integrate_with_memory',
     'retrieve_related_glints',
-    'update_glint_resonance'
+    'update_glint_resonance',
+    'GlintHorizonScanner',
+    'create_glint_horizon_scanner',
+    'perform_horizon_scan'
 ]

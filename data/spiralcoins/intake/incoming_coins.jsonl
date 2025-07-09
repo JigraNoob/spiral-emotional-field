@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SpiralCoin Intake</title>
+</head>
+<body>
+    <h1>Record Incoming SpiralCoin</h1>
+    <form method="post">
+        <label for="coin_id">Coin ID:</label><input type="text" id="coin_id" name="coin_id" required><br>
+        <label for="toneform">Toneform:</label><input type="text" id="toneform" name="toneform" required><br>
+        <label for="value">Value:</label><input type="number" step="0.01" id="value" name="value" required><br>
+        <label for="source">Source:</label><input type="text" id="source" name="source" required><br>
+        <label for="timestamp">Timestamp:</label><input type="text" id="timestamp" name="timestamp" value="{{ now() }}" required><br>
+        <label for="message">Message:</label><textarea id="message" name="message"></textarea><br>
+        <label for="status">Status:</label><input type="text" id="status" name="status" value="unregistered"><br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

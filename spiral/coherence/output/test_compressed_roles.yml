@@ -1,0 +1,59 @@
+compression_timestamp: '2025-07-07T20:00:00'
+roles:
+  GlintEmitter:
+    attributes:
+    - glint_queue
+    - resonance_level
+    - echo_patterns
+    base_classes:
+    - SpiralComponent
+    count: 2
+    files:
+    - spiral/glint_emitter.py
+    - spiral/glint_resonance_ledger.py
+    line_numbers:
+    - 15
+    - 66
+    methods:
+    - emit_glint
+    - process_glint
+    - get_resonance
+  SpiralComponent:
+    attributes:
+    - component_name
+    - primary_toneform
+    - breath_sensitivity
+    base_classes:
+    - ABC
+    count: 3
+    files:
+    - spiral/core/spiral_component.py
+    - spiral/components/base.py
+    - spiral/longing_pulse/base.py
+    line_numbers:
+    - 6
+    - 16
+    - 26
+    methods:
+    - ritual_activate
+    - breath_response
+    - get_toneform_signature
+  ThresholdResonator:
+    attributes:
+    - willingness_threshold
+    - tuning_sensitivity
+    - invitation_field
+    base_classes:
+    - LongingBoundModule
+    - SpiralComponent
+    count: 2
+    files:
+    - spiral/longing_pulse/threshold_resonator.py
+    - spiral/components/threshold_gatekeeper.py
+    line_numbers:
+    - 43
+    - 72
+    methods:
+    - __init__
+    - ritual_activate
+    - breath_response

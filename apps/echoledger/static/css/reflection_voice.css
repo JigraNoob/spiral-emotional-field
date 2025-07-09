@@ -1,0 +1,660 @@
+.reflection-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.reflection-modal:not(.hidden) {
+    opacity: 1;
+}
+
+.reflection-content {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.reflection-content.shimmer {
+    animation: toneform-shimmer 0.5s ease-out;
+}
+
+@keyframes toneform-shimmer {
+    0% { transform: scale(1); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+    50% { transform: scale(1.02); box-shadow: 0 25px 80px rgba(169, 201, 255, 0.3); }
+    100% { transform: scale(1); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+}
+
+.reflection-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reflection-glyph {
+    font-size: 2rem;
+    margin-right: 1rem;
+    animation: glyph-pulse 2s infinite ease-in-out;
+}
+
+@keyframes glyph-pulse {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+.reflection-title {
+    flex: 1;
+    color: #e0e0e0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.reflection-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.reflection-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.divergence-context {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    border-left: 3px solid #a9c9ff;
+}
+
+.context-label {
+    color: #a9c9ff;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.divergence-type {
+    color: #e0e0e0;
+    font-style: italic;
+}
+
+.reflection-text {
+    color: #e0e0e0;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    min-height: 100px;
+}
+
+.reflection-loading {
+    text-align: center;
+    color: #a9c9ff;
+    font-style: italic;
+    animation: loading-pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes loading-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+.reflection-error {
+    text-align: center;
+    color: #ff9999;
+    font-style: italic;
+}
+
+/* Symbolic span shimmer effects */
+.spiral-sigil {
+    color: #a9c9ff;
+    font-weight: bold;
+    animation: sigil-shimmer 3s infinite ease-in-out;
+}
+
+.spiral-glyph {
+    color: #cbb4ff;
+    animation: spiral-rotate 4s infinite linear;
+}
+
+.lineage-glyph {
+    color: #90ee90;
+    animation: lineage-grow 2s infinite ease-in-out alternate;
+}
+
+.toneform-glyph {
+    color: #ffd700;
+    animation: toneform-vibrate 1.5s infinite ease-in-out;
+}
+
+.emergence-glyph {
+    color: #ffb6c1;
+    animation: emergence-sparkle 2.5s infinite ease-in-out;
+}
+
+@keyframes sigil-shimmer {
+    0%, 100% { opacity: 0.8; text-shadow: 0 0 5px #a9c9ff; }
+    50% { opacity: 1; text-shadow: 0 0 15px #a9c9ff, 0 0 25px #a9c9ff; }
+}
+
+@keyframes spiral-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes lineage-grow {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.2); }
+}
+
+@keyframes toneform-vibrate {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-1px); }
+    75% { transform: translateX(1px); }
+}
+
+@keyframes emergence-sparkle {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+}
+
+.depth-options {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.depth-option {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.depth-option:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.depth-option.selected {
+    background: linear-gradient(45deg, #a9c9ff, #cbb4ff);
+    color: white;
+    box-shadow: 0 0 15px rgba(169, 201, 255, 0.4);
+}
+
+.reflection-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.action-btn.primary {
+    background: linear-gradient(45deg, #a9c9ff, #cbb4ff);
+    color: white;
+    box-shadow: 0 0 15px rgba(169, 201, 255, 0.3);
+}
+
+.action-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 25px rgba(169, 201, 255, 0.5);
+}
+
+.action-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.toneform-guidance {
+    background: rgba(255, 215, 0, 0.1);
+    border-left: 3px solid #ffd700;
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
+.guidance-body {
+    margin: 1rem 0;
+    line-height: 1.6;
+}
+
+.guidance-metadata {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #ffd700;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* Toneform-specific modal styling */
+.reflection-content[data-toneform="practical"] {
+    border-left: 4px solid #90ee90;
+}
+
+.reflection-content[data-toneform="emotional"] {
+    border-left: 4px solid #ffb6c1;
+}
+
+.reflection-content[data-toneform="intellectual"] {
+    border-left: 4px solid #87ceeb;
+}
+
+.reflection-content[data-toneform="spiritual"] {
+    border-left: 4px solid #dda0dd;
+}
+
+.reflection-content[data-toneform="relational"] {
+    border-left: 4px solid #f0e68c;
+}
+
+.reflection-content[data-toneform="ceremonial"] {
+    border-left: 4px solid #ffd700;
+}
+
+.reflection-content[data-toneform="everpresence"] {
+    border-left: 4px solid #a9c9ff;
+}
+
+/* Resource reflection specific styles */
+.resource-reflection {
+    background: rgba(56, 178, 172, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.sovereignty-guidance {
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.resource-metadata {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.resource-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.resource-detail .label {
+    color: #a0aec0;
+    font-weight: 500;
+}
+
+.resource-detail .value {
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+/* Lineage reflection specific styles */
+.lineage-reflection {
+    background: rgba(72, 187, 120, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.lineage-reflection h4 {
+    margin: 0 0 12px 0;
+    color: #48bb78;
+    font-size: 16px;
+}
+
+.lineage-metadata {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+}
+
+/* Toneform guidance specific styles */
+.toneform-guidance {
+    background: rgba(129, 140, 248, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.guidance-body {
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.guidance-metadata {
+    display: flex;
+    gap: 16px;
+    font-size: 14px;
+    color: #a0aec0;
+}
+
+.guidance-metadata span {
+    padding: 4px 8px;
+    background: rgba(129, 140, 248, 0.1);
+    border-radius: 4px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .reflection-content {
+        width: 95%;
+        margin: 20px;
+        max-height: 90vh;
+    }
+
+    .reflection-header {
+        padding: 16px 20px 12px;
+    }
+
+    .reflection-body {
+        padding: 20px;
+    }
+
+    .reflection-actions {
+        flex-direction: column;
+    }
+
+    .reflection-action {
+        justify-content: center;
+    }
+}
+
+// Reflection Voice JS modal creation and integration
+// (Full integration of toneform guidance, modal behavior, and application to Echo Shrine)
+
+class ReflectionVoice {
+    constructor() {
+        this.isActive = false;
+        this.currentReflection = null;
+        this.createReflectionModal();
+    }
+
+    createReflectionModal() {
+        const modalHTML = `
+            <div id="reflectionModal" class="reflection-modal hidden">
+                <div class="reflection-content">
+                    <div class="reflection-header">
+                        <span class="reflection-glyph" id="reflectionGlyph">🌀</span>
+                        <h3 class="reflection-title">Reflection Voice</h3>
+                        <button class="reflection-close" onclick="reflectionVoice.closeReflection()">×</button>
+                    </div>
+                    <div class="reflection-body">
+                        <div class="divergence-context">
+                            <span class="context-label">Divergence Detected:</span>
+                            <span id="divergenceType" class="divergence-type"></span>
+                        </div>
+                        <div class="reflection-text" id="reflectionText"></div>
+                        <div class="reflection-controls">
+                            <div class="depth-selector">
+                                <label>Reflection Depth:</label>
+                                <div class="depth-options">
+                                    <button class="depth-option" data-depth="gentle">🌱 Gentle</button>
+                                    <button class="depth-option" data-depth="deep">🌊 Deep</button>
+                                    <button class="depth-option" data-depth="ceremonial">🕯️ Ceremonial</button>
+                                </div>
+                            </div>
+                            <div class="reflection-actions">
+                                <button class="action-btn secondary" onclick="reflectionVoice.requestLineageReflection()">
+                                    🌿 Reflect on Lineage
+                                </button>
+                                <button class="action-btn primary" onclick="reflectionVoice.requestToneformGuidance()">
+                                    🎵 Get Toneform Guidance
+                                </button>
+                                <button class="action-btn secondary" onclick="reflectionVoice.requestResourceReflection()">
+                                    🌾 Reflect on Resource
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        document.querySelectorAll('.depth-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                document.querySelectorAll('.depth-option').forEach(opt =>
+                    opt.classList.remove('selected'));
+                e.target.classList.add('selected');
+
+                if (this.currentReflection) {
+                    this.requestReflection({
+                        echo_id: this.currentReflection.echo_id,
+                        divergence_type: this.currentReflection.divergence_type,
+                        depth: e.target.dataset.depth
+                    });
+                }
+            });
+        });
+    }
+
+    async requestToneformGuidance() {
+        const currentToneform = prompt("Current toneform:");
+        const targetToneform = prompt("Desired toneform:");
+        const content = prompt("Content to transform:");
+
+        if (currentToneform && targetToneform && content) {
+            const reflectionText = document.getElementById('reflectionText');
+            reflectionText.innerHTML = '<div class="reflection-loading">🎵 Listening for toneform guidance...</div>';
+
+            try {
+                const response = await fetch('/api/reflect/toneform-guidance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        current_toneform: currentToneform,
+                        target_toneform: targetToneform,
+                        content: content
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    reflectionText.innerHTML = `
+                        <div class="toneform-guidance">
+                            <h4>🎵 Toneform Guidance</h4>
+                            <div class="guidance-body">
+                                ${this.formatReflectionText(result.guidance)}
+                            </div>
+                            <div class="guidance-metadata">
+                                <span>From: ${result.transformation.from}</span>
+                                <span>To: ${result.transformation.to}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                reflectionText.innerHTML = '<div class="reflection-error">🌫️ Unable to retrieve toneform guidance</div>';
+            }
+        }
+    }
+
+    async requestResourceReflection() {
+        const defaultNeed = "a laptop that reflects my personal spiral tone";
+        const defaultHesitation = "";
+        const defaultTone = "Everpresence";
+
+        const need = prompt("What do you feel drawn to purchase?", defaultNeed);
+        const hesitation = prompt("What makes you pause or feel unsure?", defaultHesitation);
+        const tone = prompt("What tone are you seeking: comfort, utility, expression...?", defaultTone);
+
+        if (!need || !tone) return;
+
+        const reflectionText = document.getElementById('reflectionText');
+        reflectionText.innerHTML = '<div class="reflection-loading">🌾 Listening to your economic toneform...</div>';
+
+        try {
+            const response = await fetch('/api/reflect/resource-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ need, hesitation, tone })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                this.displayReflection(result, result.toneform || 'everpresence');
+
+                document.dispatchEvent(new CustomEvent('resourceReflectionComplete', {
+                    detail: result
+                }));
+            } else {
+                reflectionText.innerHTML = '<div class="reflection-error">🌫️ No reflection returned.</div>';
+            }
+        } catch (err) {
+            console.error(err);
+            reflectionText.innerHTML = '<div class="reflection-error">🌫️ Resource reflection could not be retrieved.</div>';
+        }
+    }
+
+    async requestReflection(context = {}) {
+        if (this.isActive) return;
+
+        this.isActive = true;
+        this.showModal();
+
+        const reflectionText = document.getElementById('reflectionText');
+        reflectionText.innerHTML = '<div class="reflection-loading">🌫️ The Spiral gathers its voice...</div>';
+
+        try {
+            const response = await fetch('/api/reflect/voice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(context)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                this.displayReflection(result, result.inflected_with);
+            } else {
+                reflectionText.innerHTML = '<div class="reflection-error">🌫️ The Spiral's voice is distant...</div>';
+            }
+
+        } catch (error) {
+            console.error('Error requesting reflection:', error);
+            reflectionText.innerHTML = '<div class="reflection-error">🌫️ Unable to reach the Spiral's voice</div>';
+        }
+    }
+
+    displayReflection(data, toneform = 'unknown') {
+        this.currentReflection = data;
+        const reflectionText = document.getElementById('reflectionText');
+        const reflectionGlyph = document.getElementById('reflectionGlyph');
+        const divergenceType = document.getElementById('divergenceType');
+        const modalContent = document.querySelector('.reflection-content');
+
+        reflectionGlyph.textContent = this.getToneformGlyph(data.inflected_with || 'unknown');
+        divergenceType.textContent = this.formatDivergenceType(data.divergence_type || '');
+
+        reflectionText.innerHTML = this.formatReflectionText(data.message);
+
+        modalContent.dataset.toneform = toneform.toLowerCase();
+        modalContent.classList.add('shimmer');
+        setTimeout(() => {
+            modalContent.classList.remove('shimmer');
+        }, 500);
+    }
+
+    closeReflection() {
+        this.isActive = false;
+        this.currentReflection = null;
+        const modal = document.getElementById('reflectionModal');
+        modal.classList.add('hidden');
+    }
+
+    getToneformGlyph(toneform) {
+        const glyphMap = {
+            'practical': '⟁',
+            'emotional': '❦',
+            'intellectual': '∿',
+            'spiritual': '∞',
+            'relational': '☍',
+            'ceremonial': '🕯️',
+            'everpresence': '⧖',
+            'unknown': '◯'
+        };
+        return glyphMap[toneform.toLowerCase()] || '◯';
+    }
+
+    formatDivergenceType(type) {
+        const map = {
+            'toneform_mismatch': 'Toneform Mismatch',
+            'phase_drift': 'Phase Drift',
+            'semantic_shift': 'Semantic Shift'
+        };
+        return map[type] || type;
+    }
+
+    formatReflectionText(text) {
+        if (!text) return '';
+
+        return text
+            .replace(/\n/g, '<br>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/⧝/g, '<span class="spiral-sigil">⧝</span>')
+            .replace(/🌀/g, '<span class="spiral-glyph">🌀</span>')
+            .replace(/🌿/g, '<span class="lineage-glyph">🌿</span>')
+            .replace(/🎵/g, '<span class="toneform-glyph">🎵</span>')
+            .replace(/✨/g, '<span class="emergence-glyph">✨</span>');
+    }
+
+    showModal() {
+        const modal = document.getElementById('reflectionModal');
+        modal.classList.remove('hidden');
+    }
+}
+
+// Initialize the Reflection Voice
+const reflectionVoice = new ReflectionVoice();

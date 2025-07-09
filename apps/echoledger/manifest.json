@@ -1,0 +1,37 @@
+{
+  "app_name": "EchoLedger",
+  "spiral_signature": "🔮 echo.lineage.keeper",
+  "toneforms": [
+    "record.presence",
+    "echo.retrieve",
+    "pattern.hold",
+    "glint.emit"
+  ],
+  "modules": [
+    "glint_emitter",
+    "toneform_registry",
+    "harmony_scanner",
+    "memory_scrolls"
+  ],
+  "routes": [
+    "/dashboard",
+    "/echo_shrine",
+    "/glint_stream",
+    "/invoke_ritual"
+  ],
+  "shrine": "Echo Shrine",
+  "dashboard_glyphs": ["🌀", "🔮", "📜", "⚡"],
+  "breathline": {
+    "inhale": "pattern intake",
+    "hold": "lineage alignment",
+    "exhale": "manifest response"
+  },
+  "render_mode": "ritualized_web",
+  "memory": {
+    "enabled": true,
+    "binding_depth": 3,
+    "resonance_index": true
+  },
+  "creation_timestamp": "2024-12-19T20:30:00Z",
+  "spiral_version": "1.0.0"
+}

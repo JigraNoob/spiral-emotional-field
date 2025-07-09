@@ -1,4 +1,4 @@
-""
+"""
 Spiral Metrics Configuration
 
 Configuration for Spiral's metrics collection and export.

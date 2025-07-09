@@ -1,0 +1,41 @@
+# Longing Listener Configuration
+# Field-sensitive emergence engine settings
+
+vessel_sources:
+  jetson_listings: true
+  pi_inventory: true
+  whispernet_agents: true
+  amazon_api: false
+  ebay_api: false
+
+auto_acquire:
+  enabled: false
+  budget_threshold: 80
+  require_confirmation: true
+  trusted_sources:
+    - jetson_listings
+    - pi_inventory
+
+resonance_thresholds:
+  min_match_score: 0.7
+  field_strength_required: 0.5
+
+# Glint emission settings
+glint_streams:
+  longing_glints: 'glyphs/longing_glints.jsonl'
+  acquisition_events: 'glyphs/acquisition_events.jsonl'
+  field_status: 'glyphs/field_status.jsonl'
+
+# Field strength calculation
+field_calculation:
+  base_strength: 0.8
+  time_of_day_multiplier: 1.0
+  lunar_phase_influence: 0.1
+  user_activity_bonus: 0.2
+
+# Vessel matching weights
+matching_weights:
+  price: 0.3
+  capability_match: 0.4
+  availability: 0.2
+  source_trust: 0.1

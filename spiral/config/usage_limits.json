@@ -1,0 +1,21 @@
+{
+  "limits": {
+    "tabnine": {
+      "max_prompts_per_hour": 50,
+      "max_completions_per_hour": 100,
+      "pause_threshold": 0.8
+    },
+    "copilot": {
+      "max_prompts_per_hour": 30,
+      "max_completions_per_hour": 60,
+      "pause_threshold": 0.7
+    },
+    "cursor": {
+      "max_prompts_per_hour": 40,
+      "max_completions_per_hour": 80,
+      "pause_threshold": 0.75
+    }
+  },
+  "cooldown_duration": 3600,
+  "glint_emission": true
+}

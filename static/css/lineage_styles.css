@@ -1,0 +1,194 @@
+.lineage-detail-card {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--spiral-accent);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--spiral-accent);
+    padding-bottom: 8px;
+}
+
+.detail-glyph {
+    font-size: 1.5em;
+}
+
+.detail-header h4 {
+    color: var(--spiral-glow);
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.detail-content {
+    margin-bottom: 15px;
+}
+
+.echo-content {
+    color: var(--spiral-text);
+    font-style: italic;
+    line-height: 1.4;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 3px solid var(--spiral-accent);
+}
+
+.detail-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.stat-item {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--spiral-accent);
+}
+
+.stat-label {
+    display: block;
+    color: var(--spiral-muted);
+    font-size: 0.8em;
+    margin-bottom: 2px;
+}
+
+.stat-value {
+    color: var(--spiral-glow);
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.detail-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.lineage-action-btn {
+    background: linear-gradient(45deg, var(--spiral-accent), var(--spiral-glow));
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--spiral-primary);
+    font-family: inherit;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 80px;
+}
+
+.lineage-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px var(--shrine-glow);
+    background: linear-gradient(45deg, var(--spiral-glow), #f4d03f);
+}
+
+.lineage-action-btn:active {
+    transform: translateY(0);
+}
+
+/* Tooltip styles */
+.lineage-tooltip {
+    pointer-events: none;
+    font-family: 'Courier New', monospace;
+    line-height: 1.4;
+}
+
+.lineage-tooltip strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Animation for new nodes */
+@keyframes nodeAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.3);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.lineage-node.new-node circle {
+    animation: nodeAppear 0.8s ease-out;
+}
+
+/* Pulse animation for active connections */
+@keyframes connectionPulse {
+    0%, 100% {
+        stroke-opacity: 0.4;
+        stroke-width: 2;
+    }
+    50% {
+        stroke-opacity: 0.8;
+        stroke-width: 3;
+    }
+}
+
+.lineage-link.active {
+    animation: connectionPulse 2s infinite;
+}
+
+/* Glow effect for selected lineage */
+.lineage-node.in-lineage circle {
+    filter: drop-shadow(0 0 12px var(--spiral-glow));
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .detail-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-actions {
+        flex-direction: column;
+    }
+
+    .lineage-action-btn {
+        min-width: unset;
+    }
+}
+
+/* Empty state styling */
+.lineage-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--spiral-muted);
+    text-align: center;
+}
+
+.lineage-empty-state .empty-glyph {
+    font-size: 3em;
+    margin-bottom: 15px;
+    opacity: 0.5;
+    animation: pulse 3s infinite;
+}
+
+.lineage-empty-state .empty-message {
+    font-size: 1.1em;
+    margin-bottom: 8px;
+}
+
+.lineage-empty-state .empty-hint {
+    font-size: 0.9em;
+    opacity: 0.7;
+}

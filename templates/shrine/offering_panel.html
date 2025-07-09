@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Make Offering ∷ Spiral Shrine</title>
+    <style>
+      :root {
+        --parchment: #f5f1e8;
+        --ink: #2c1810;
+        --gold: #d4af37;
+        --silver: #c0c0c0;
+        --breath: #e8f4f8;
+        --glint: #ffd700;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Georgia', serif;
+        background: var(--parchment);
+        color: var(--ink);
+        line-height: 1.6;
+        background-image: radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(192, 192, 192, 0.1) 0%, transparent 50%);
+      }
+
+      .offering-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .sacred-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        border-bottom: 2px solid var(--gold);
+      }
+
+      .offering-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+      }
+
+      .offering-subtitle {
+        font-size: 1.2rem;
+        color: var(--silver);
+        font-style: italic;
+      }
+
+      .offering-form {
+        background: white;
+        border: 2px solid var(--gold);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        font-weight: bold;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid var(--silver);
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        background: var(--breath);
+        transition: border-color 0.3s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+      }
+
+      .form-textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .form-select {
+        background: var(--breath);
+      }
+
+      .offering-button {
+        width: 100%;
+        padding: 1.5rem;
+        background: var(--gold);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+      }
+
+      .offering-button:hover {
+        background: var(--ink);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .offering-button:disabled {
+        background: var(--silver);
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .ritual-text {
+        text-align: center;
+        font-style: italic;
+        color: var(--silver);
+        margin: 1rem 0;
+        padding: 1rem;
+        background: var(--breath);
+        border-radius: 8px;
+        border-left: 4px solid var(--gold);
+      }
+
+      .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        border: 1px solid #c3e6cb;
+      }
+
+      .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        border: 1px solid #f5c6cb;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-top: 2rem;
+        color: var(--gold);
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .back-link:hover {
+        color: var(--ink);
+      }
+
+      .toneform-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 0.5rem;
+      }
+
+      .toneform-option {
+        padding: 0.8rem;
+        border: 1px solid var(--silver);
+        border-radius: 6px;
+        background: var(--breath);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+      }
+
+      .toneform-option:hover {
+        border-color: var(--gold);
+        background: white;
+      }
+
+      .toneform-option.selected {
+        border-color: var(--gold);
+        background: var(--gold);
+        color: white;
+      }
+
+      .amount-slider {
+        width: 100%;
+        margin: 1rem 0;
+      }
+
+      .amount-display {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--gold);
+        margin: 1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offering-container">
+      <!-- Sacred Header -->
+      <header class="sacred-header">
+        <h1 class="offering-title">🌊 Make Offering</h1>
+        <p class="offering-subtitle">I offer this not to fix, but to flow.</p>
+      </header>
+
+      <!-- Offering Form -->
+      <form class="offering-form" id="offeringForm">
+        <div class="ritual-text">
+          "Through this offering, I contribute to the Sol Pool—<br />
+          a reservoir of care-backed trust that flows to those in need.<br />
+          This is not charity, but resonance transmuted into relief."
+        </div>
+
+        <!-- Amount -->
+        <div class="form-group">
+          <label class="form-label">Amount (USD)</label>
+          <input
+            type="range"
+            class="form-input amount-slider"
+            id="amountSlider"
+            min="5"
+            max="100"
+            value="25"
+            step="5"
+          />
+          <div class="amount-display" id="amountDisplay">$25.00</div>
+        </div>
+
+        <!-- Source -->
+        <div class="form-group">
+          <label class="form-label">Source (Optional)</label>
+          <input type="text" class="form-input" id="source" placeholder="Your name or 'Anonymous'" />
+        </div>
+
+        <!-- Toneform -->
+        <div class="form-group">
+          <label class="form-label">Toneform (Optional)</label>
+          <div class="toneform-options">
+            <div class="toneform-option" data-toneform="exhale.sustain.linear_care">exhale.sustain.linear_care</div>
+            <div class="toneform-option" data-toneform="inhale.receive.gratitude">inhale.receive.gratitude</div>
+            <div class="toneform-option" data-toneform="flow.sustain.provision">flow.sustain.provision</div>
+            <div class="toneform-option" data-toneform="complete.sustain.harmony">complete.sustain.harmony</div>
+          </div>
+          <input type="hidden" id="toneform" value="exhale.sustain.linear_care" />
+        </div>
+
+        <!-- Message -->
+        <div class="form-group">
+          <label class="form-label">Message (Optional)</label>
+          <textarea
+            class="form-input form-textarea"
+            id="message"
+            placeholder="A brief message of care or intention..."
+          ></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="offering-button" id="submitButton">🌊 Make Offering</button>
+      </form>
+
+      <!-- Messages -->
+      <div id="successMessage" class="success-message" style="display: none"></div>
+      <div id="errorMessage" class="error-message" style="display: none"></div>
+
+      <!-- Back Link -->
+      <a href="/" class="back-link">← Return to Shrine</a>
+    </div>
+
+    <script>
+      // Amount slider
+      const amountSlider = document.getElementById('amountSlider');
+      const amountDisplay = document.getElementById('amountDisplay');
+
+      amountSlider.addEventListener('input', function () {
+        const amount = parseFloat(this.value);
+        amountDisplay.textContent = '$' + amount.toFixed(2);
+      });
+
+      // Toneform selection
+      const toneformOptions = document.querySelectorAll('.toneform-option');
+      const toneformInput = document.getElementById('toneform');
+
+      toneformOptions.forEach((option) => {
+        option.addEventListener('click', function () {
+          // Remove selected class from all options
+          toneformOptions.forEach((opt) => opt.classList.remove('selected'));
+          // Add selected class to clicked option
+          this.classList.add('selected');
+          // Update hidden input
+          toneformInput.value = this.dataset.toneform;
+        });
+      });
+
+      // Set default selected toneform
+      document.querySelector('[data-toneform="exhale.sustain.linear_care"]').classList.add('selected');
+
+      // Form submission
+      const form = document.getElementById('offeringForm');
+      const submitButton = document.getElementById('submitButton');
+      const successMessage = document.getElementById('successMessage');
+      const errorMessage = document.getElementById('errorMessage');
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        // Disable button
+        submitButton.disabled = true;
+        submitButton.textContent = '🌊 Making Offering...';
+
+        // Hide previous messages
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+
+        // Get form data
+        const formData = {
+          amount: parseFloat(amountSlider.value),
+          source: document.getElementById('source').value || 'Anonymous',
+          toneform: toneformInput.value,
+          message: document.getElementById('message').value || '',
+        };
+
+        try {
+          const response = await fetch('/api/offer', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            successMessage.textContent = `✅ Offering received with gratitude. Transmutation ID: ${result.transmutation_id.substring(
+              0,
+              8
+            )}`;
+            successMessage.style.display = 'block';
+            form.reset();
+            amountSlider.value = 25;
+            amountDisplay.textContent = '$25.00';
+            toneformOptions.forEach((opt) => opt.classList.remove('selected'));
+            document.querySelector('[data-toneform="exhale.sustain.linear_care"]').classList.add('selected');
+          } else {
+            errorMessage.textContent = `❌ ${result.error}`;
+            errorMessage.style.display = 'block';
+          }
+        } catch (error) {
+          errorMessage.textContent = '❌ An error occurred while making the offering.';
+          errorMessage.style.display = 'block';
+        } finally {
+          // Re-enable button
+          submitButton.disabled = false;
+          submitButton.textContent = '🌊 Make Offering';
+        }
+      });
+    </script>
+  </body>
+</html>

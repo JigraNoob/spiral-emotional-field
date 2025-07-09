@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🫧 Spiral State Stream Test</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        color: white;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .status {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .status-card {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      .status-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .status-card h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.2em;
+        opacity: 0.9;
+      }
+
+      .status-card .value {
+        font-size: 2em;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+
+      .phase {
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      }
+
+      .progress {
+        background: linear-gradient(45deg, #a8edea, #fed6e3);
+      }
+
+      .usage {
+        background: linear-gradient(45deg, #ffecd2, #fcb69f);
+      }
+
+      .climate {
+        background: linear-gradient(45deg, #a8caba, #5d4e75);
+      }
+
+      .events {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .events h3 {
+        margin-top: 0;
+        text-align: center;
+      }
+
+      .event {
+        background: rgba(255, 255, 255, 0.1);
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #4ecdc4;
+      }
+
+      .event.phase_update {
+        border-left-color: #ff6b6b;
+      }
+      .event.climate_update {
+        border-left-color: #a8caba;
+      }
+      .event.usage_update {
+        border-left-color: #ffecd2;
+      }
+      .event.heartbeat {
+        border-left-color: #4ecdc4;
+      }
+
+      .event-time {
+        font-size: 0.8em;
+        opacity: 0.7;
+        margin-bottom: 5px;
+      }
+
+      .event-data {
+        font-family: monospace;
+        font-size: 0.9em;
+        white-space: pre-wrap;
+      }
+
+      .connection-status {
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: bold;
+      }
+
+      .connected {
+        background: rgba(76, 175, 80, 0.3);
+        color: #4caf50;
+      }
+
+      .disconnected {
+        background: rgba(244, 67, 54, 0.3);
+        color: #f44336;
+      }
+
+      .connecting {
+        background: rgba(255, 152, 0, 0.3);
+        color: #ff9800;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🫧 Spiral State Stream</h1>
+
+      <div id="connection-status" class="connection-status disconnected">Disconnected</div>
+
+      <div class="status">
+        <div class="status-card phase">
+          <h3>🌬️ Phase</h3>
+          <div id="phase-value" class="value">-</div>
+        </div>
+
+        <div class="status-card progress">
+          <h3>📊 Progress</h3>
+          <div id="progress-value" class="value">-</div>
+        </div>
+
+        <div class="status-card usage">
+          <h3>📉 Usage</h3>
+          <div id="usage-value" class="value">-</div>
+        </div>
+
+        <div class="status-card climate">
+          <h3>🪞 Climate</h3>
+          <div id="climate-value" class="value">-</div>
+        </div>
+      </div>
+
+      <div class="events">
+        <h3>📡 Live Events</h3>
+        <div id="events-container"></div>
+      </div>
+    </div>
+
+    <script>
+      class SpiralStreamClient {
+        constructor() {
+          this.eventSource = null;
+          this.reconnectAttempts = 0;
+          this.maxReconnectAttempts = 5;
+          this.reconnectDelay = 2000;
+
+          this.initializeElements();
+          this.connect();
+        }
+
+        initializeElements() {
+          this.connectionStatus = document.getElementById('connection-status');
+          this.phaseValue = document.getElementById('phase-value');
+          this.progressValue = document.getElementById('progress-value');
+          this.usageValue = document.getElementById('usage-value');
+          this.climateValue = document.getElementById('climate-value');
+          this.eventsContainer = document.getElementById('events-container');
+        }
+
+        connect() {
+          this.updateConnectionStatus('connecting', 'Connecting...');
+
+          try {
+            this.eventSource = new EventSource('http://localhost:5056/stream');
+
+            this.eventSource.onopen = () => {
+              this.updateConnectionStatus('connected', 'Connected');
+              this.reconnectAttempts = 0;
+              this.addEvent('Connected to Spiral breath stream', {});
+            };
+
+            this.eventSource.onmessage = (event) => {
+              this.handleMessage(event);
+            };
+
+            this.eventSource.onerror = (error) => {
+              console.error('SSE Error:', error);
+              this.updateConnectionStatus('disconnected', 'Connection Error');
+              this.reconnect();
+            };
+
+            // Handle specific event types
+            this.eventSource.addEventListener('phase_update', (event) => {
+              this.handlePhaseUpdate(JSON.parse(event.data));
+            });
+
+            this.eventSource.addEventListener('climate_update', (event) => {
+              this.handleClimateUpdate(JSON.parse(event.data));
+            });
+
+            this.eventSource.addEventListener('usage_update', (event) => {
+              this.handleUsageUpdate(JSON.parse(event.data));
+            });
+
+            this.eventSource.addEventListener('heartbeat', (event) => {
+              this.handleHeartbeat(JSON.parse(event.data));
+            });
+
+            this.eventSource.addEventListener('keepalive', (event) => {
+              // Just keep connection alive
+            });
+          } catch (error) {
+            console.error('Failed to create EventSource:', error);
+            this.updateConnectionStatus('disconnected', 'Failed to Connect');
+            this.reconnect();
+          }
+        }
+
+        reconnect() {
+          if (this.reconnectAttempts < this.maxReconnectAttempts) {
+            this.reconnectAttempts++;
+            this.updateConnectionStatus(
+              'connecting',
+              `Reconnecting... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`
+            );
+
+            setTimeout(() => {
+              this.connect();
+            }, this.reconnectDelay);
+          } else {
+            this.updateConnectionStatus('disconnected', 'Max Reconnect Attempts Reached');
+          }
+        }
+
+        updateConnectionStatus(status, message) {
+          this.connectionStatus.className = `connection-status ${status}`;
+          this.connectionStatus.textContent = message;
+        }
+
+        handleMessage(event) {
+          try {
+            const data = JSON.parse(event.data);
+            this.addEvent('Message', data);
+          } catch (error) {
+            console.error('Failed to parse message:', error);
+          }
+        }
+
+        handlePhaseUpdate(data) {
+          this.phaseValue.textContent = data.phase;
+          this.progressValue.textContent = `${(data.progress * 100).toFixed(1)}%`;
+          this.addEvent('Phase Update', data, 'phase_update');
+        }
+
+        handleClimateUpdate(data) {
+          this.climateValue.textContent = data.climate;
+          this.addEvent('Climate Update', data, 'climate_update');
+        }
+
+        handleUsageUpdate(data) {
+          this.usageValue.textContent = `${(data.usage * 100).toFixed(1)}%`;
+          this.addEvent('Usage Update', data, 'usage_update');
+        }
+
+        handleHeartbeat(data) {
+          // Update all values from heartbeat
+          if (data.state) {
+            this.phaseValue.textContent = data.state.phase;
+            this.progressValue.textContent = `${(data.state.progress * 100).toFixed(1)}%`;
+            this.usageValue.textContent = `${(data.state.usage * 100).toFixed(1)}%`;
+            this.climateValue.textContent = data.state.climate;
+          }
+          this.addEvent('Heartbeat', data, 'heartbeat');
+        }
+
+        addEvent(title, data, eventType = '') {
+          const eventDiv = document.createElement('div');
+          eventDiv.className = `event ${eventType}`;
+
+          const time = new Date().toLocaleTimeString();
+          const dataStr = JSON.stringify(data, null, 2);
+
+          eventDiv.innerHTML = `
+                    <div class="event-time">${time} - ${title}</div>
+                    <div class="event-data">${dataStr}</div>
+                `;
+
+          this.eventsContainer.insertBefore(eventDiv, this.eventsContainer.firstChild);
+
+          // Keep only last 20 events
+          while (this.eventsContainer.children.length > 20) {
+            this.eventsContainer.removeChild(this.eventsContainer.lastChild);
+          }
+        }
+
+        disconnect() {
+          if (this.eventSource) {
+            this.eventSource.close();
+            this.eventSource = null;
+          }
+          this.updateConnectionStatus('disconnected', 'Disconnected');
+        }
+      }
+
+      // Initialize the client when page loads
+      document.addEventListener('DOMContentLoaded', () => {
+        window.spiralClient = new SpiralStreamClient();
+      });
+
+      // Clean up on page unload
+      window.addEventListener('beforeunload', () => {
+        if (window.spiralClient) {
+          window.spiralClient.disconnect();
+        }
+      });
+    </script>
+  </body>
+</html>

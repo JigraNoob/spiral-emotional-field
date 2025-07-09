@@ -11,6 +11,8 @@ from enum import Enum, auto
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 import math
+from spiral.attunement.resonance_override import override_manager
+from spiral.attunement.coherence_balancer import get_balanced_thresholds, record_coherence_event
 
 # Import metrics
 from .spiral_metrics import metrics, Phase
@@ -114,6 +116,7 @@ class DeferralEngine:
     - Tone weights and emotional saturation
     - Current breath phase
     - Silence protocol status
+    - Resonance override settings
     """
     
     def __init__(self, config: Optional[DeferralConfig] = None):
@@ -131,17 +134,22 @@ class DeferralEngine:
         tone_weights: Dict[str, float],
         current_phase: BreathPhase = BreathPhase.HOLD
     ) -> Tuple[float, bool]:
-        """
-        Calculate the appropriate deferral time and silence status.
+        """Calculate deferral time with resonance override integration."""
         
-        Args:
-            resonance_score: The current resonance score (0.0-1.0)
-            tone_weights: Dictionary of tone weights
-            current_phase: Current breath phase
-            
-        Returns:
-            Tuple of (deferral_time, should_trigger_silence)
-        """
+        # Apply override adjustments to base calculation
+        if override_manager.active:
+            # Adjust resonance score based on override mode
+            if override_manager.config.mode.name == "AMPLIFIED":
+                # Reduce deferral in amplified mode for faster responses
+                resonance_score *= 0.7
+            elif override_manager.config.mode.name == "MUTED":
+                # Increase deferral in muted mode for slower responses
+                resonance_score *= 1.3
+            elif override_manager.config.mode.name == "RITUAL":
+                # Use ritual sensitivity to adjust timing
+                ritual_factor = override_manager.config.ritual_sensitivity
+                resonance_score *= (2.0 - ritual_factor)  # Higher sensitivity = lower deferral
+        
         now = time.time()
         phase_name = current_phase.name
         
@@ -169,8 +177,11 @@ class DeferralEngine:
         self._update_saturation(resonance_score, now - self.state['last_update'])
         self.state['last_update'] = now
         
-        # Check for silence protocol
-        should_silence = self._should_trigger_silence(resonance_score, tone_weights)
+        # Record coherence event for pattern analysis
+        record_coherence_event(resonance_score, tone_weights)
+        
+        # Check for silence protocol using balanced thresholds
+        should_silence = self._should_trigger_silence_with_override(resonance_score, tone_weights)
         if should_silence:
             max_tone = max(tone_weights.values()) if tone_weights else 0.0
             logger.info(
@@ -264,17 +275,27 @@ class DeferralEngine:
                 f"High-resonance events: {high_resonance_count}"
             )
     
-    def _should_trigger_silence(
+    def _should_trigger_silence_with_override(
         self,
         resonance_score: float,
         tone_weights: Dict[str, float]
     ) -> bool:
-        """Determine if the silence protocol should be triggered."""
-        # Check resonance threshold
-        if resonance_score < self.config.SILENCE_RESONANCE_THRESH:
+        """Enhanced silence trigger with override awareness and balanced thresholds."""
+        
+        # Get balanced thresholds for backend safety
+        balanced_thresholds = get_balanced_thresholds()
+        
+        # Use override threshold if active
+        if override_manager.active:
+            threshold = override_manager.config.soft_breakpoint_threshold
+            return resonance_score > threshold
+        
+        # Check resonance threshold using balanced thresholds
+        silence_resonance_thresh = balanced_thresholds.get('silence_threshold', self.config.SILENCE_RESONANCE_THRESH)
+        if resonance_score < silence_resonance_thresh:
             logger.debug(
                 f"Silence check - Resonance {resonance_score:.2f} "
-                f"< threshold {self.config.SILENCE_RESONANCE_THRESH}"
+                f"< balanced threshold {silence_resonance_thresh:.2f}"
             )
             return False
             
@@ -284,16 +305,17 @@ class DeferralEngine:
             return False
             
         max_tone = max(tone_weights.values()) if tone_weights else 0.0
-        should_silence = max_tone >= self.config.SILENCE_TONE_THRESH
+        tone_thresh = balanced_thresholds.get('tone_threshold', self.config.SILENCE_TONE_THRESH)
+        should_silence = max_tone >= tone_thresh
         
         if should_silence:
             # Find which tone triggered the silence
             trigger_tone = next((tone for tone, weight in tone_weights.items() 
-                               if weight >= self.config.SILENCE_TONE_THRESH), None)
+                               if weight >= tone_thresh), None)
             logger.info(
-                f"🔔 Silence threshold crossed - "
+                f"🔔 Silence threshold crossed (balanced) - "
                 f"Tone: {trigger_tone if trigger_tone else 'unknown'}, "
-                f"Weight: {max_tone:.2f} >= {self.config.SILENCE_TONE_THRESH}"
+                f"Weight: {max_tone:.2f} >= {tone_thresh:.2f}"
             )
         
         return should_silence

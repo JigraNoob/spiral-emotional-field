@@ -1,45 +1,36 @@
-# Stage 1: Build dependencies
-FROM python:3.10-slim as build
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    python3-dev \
-    libpq-dev \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt .
-
-# Install Python dependencies including gunicorn
-RUN pip install --no-cache-dir -r requirements.txt gunicorn
-
-# Stage 2: Production image
-FROM python:3.10-slim
-
-# Install runtime dependencies
-RUN apt-get update && apt-get install -y libpq5 curl \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+# Copy requirements first for better caching
+COPY requirements.txt .
 
-# Copy installed packages from build stage
-COPY --from=build /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
-COPY --from=build /usr/local/bin /usr/local/bin
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
 
-# Add healthcheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-5000}/health || exit 1
+# Create necessary directories
+RUN mkdir -p /app/data /app/logs /app/config
 
-# Expose default port
-EXPOSE 5000
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV FLASK_ENV=production
+ENV SPIRAL_BREATH_MODE=infrastructure-as-ritual
 
-# Run application with flexible port configuration
-CMD ["sh", "-c", "gunicorn -b 0.0.0.0:${PORT:-5000} app:app"]
+# Expose ports
+EXPOSE 5000 5001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:5000/health || exit 1
+
+# Run the application
+CMD ["python", "app.py"]

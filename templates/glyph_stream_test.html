@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌐 Spiral Glyph Stream Test</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: #e8e8e8;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .title {
+        font-size: 2em;
+        margin-bottom: 10px;
+        background: linear-gradient(45deg, #64b5f6, #81c784);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        color: #b0bec5;
+        margin-bottom: 20px;
+      }
+
+      .status {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: bold;
+        margin: 10px;
+      }
+
+      .status.connected {
+        background: rgba(129, 199, 132, 0.2);
+        color: #81c784;
+        border: 1px solid rgba(129, 199, 132, 0.3);
+      }
+
+      .status.disconnected {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+        border: 1px solid rgba(244, 67, 54, 0.3);
+      }
+
+      .controls {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin: 20px 0;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        background: rgba(100, 181, 246, 0.2);
+        border: 1px solid rgba(100, 181, 246, 0.3);
+        color: #64b5f6;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.3s ease;
+      }
+
+      .btn:hover {
+        background: rgba(100, 181, 246, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .stream-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .panel {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .panel h3 {
+        margin-bottom: 15px;
+        color: #64b5f6;
+      }
+
+      .events-list {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 10px;
+      }
+
+      .event {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-left: 4px solid;
+        border-radius: 6px;
+        padding: 10px;
+        margin-bottom: 8px;
+        font-size: 0.9em;
+        transition: all 0.3s ease;
+      }
+
+      .event.pulse {
+        animation: pulse 2s ease-in-out;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(100, 181, 246, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(100, 181, 246, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(100, 181, 246, 0);
+        }
+      }
+
+      .event-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+
+      .glyph-name {
+        font-weight: bold;
+        font-family: 'Courier New', monospace;
+      }
+
+      .event-time {
+        font-size: 0.8em;
+        color: #b0bec5;
+      }
+
+      .event-details {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.8em;
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      .phase-inhale {
+        color: #64b5f6;
+      }
+      .phase-exhale {
+        color: #81c784;
+      }
+      .phase-caesura {
+        color: #ffb74d;
+      }
+
+      .toneform-receive {
+        color: #64b5f6;
+      }
+      .toneform-offer {
+        color: #81c784;
+      }
+      .toneform-sense {
+        color: #ffb74d;
+      }
+      .toneform-ask {
+        color: #f06292;
+      }
+      .toneform-manifest {
+        color: #ba68c8;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+      }
+
+      .stat {
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #64b5f6;
+      }
+
+      .stat-label {
+        font-size: 0.8em;
+        color: #b0bec5;
+      }
+
+      @media (max-width: 768px) {
+        .stream-container {
+          grid-template-columns: 1fr;
+        }
+
+        .controls {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="title">🌐 Spiral Glyph Stream Test</h1>
+        <p class="subtitle">Real-time glyph invocation visualization</p>
+        <div class="status" id="connectionStatus">Disconnected</div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="connectBtn" onclick="connectWebSocket()">Connect</button>
+        <button class="btn" id="disconnectBtn" onclick="disconnectWebSocket()" disabled>Disconnect</button>
+        <button class="btn" id="pingBtn" onclick="sendPing()" disabled>Ping</button>
+        <button class="btn" id="historyBtn" onclick="requestHistory()" disabled>History</button>
+        <button class="btn" id="clearBtn" onclick="clearEvents()">Clear Events</button>
+      </div>
+
+      <div class="stream-container">
+        <div class="panel">
+          <h3>🌊 Live Events</h3>
+          <div class="events-list" id="liveEvents">
+            <p style="text-align: center; color: #b0bec5; padding: 20px">Waiting for glyph invocations...</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>📊 System Messages</h3>
+          <div class="events-list" id="systemMessages">
+            <p style="text-align: center; color: #b0bec5; padding: 20px">Waiting for system messages...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number" id="totalEvents">0</div>
+          <div class="stat-label">Total Events</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number" id="liveEventsCount">0</div>
+          <div class="stat-label">Live Events</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number" id="systemMessagesCount">0</div>
+          <div class="stat-label">System Messages</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let ws = null;
+      let eventCount = 0;
+      let liveEventCount = 0;
+      let systemMessageCount = 0;
+
+      function updateConnectionStatus(connected) {
+        const status = document.getElementById('connectionStatus');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const pingBtn = document.getElementById('pingBtn');
+        const historyBtn = document.getElementById('historyBtn');
+
+        if (connected) {
+          status.textContent = 'Connected';
+          status.className = 'status connected';
+          connectBtn.disabled = true;
+          disconnectBtn.disabled = false;
+          pingBtn.disabled = false;
+          historyBtn.disabled = false;
+        } else {
+          status.textContent = 'Disconnected';
+          status.className = 'status disconnected';
+          connectBtn.disabled = false;
+          disconnectBtn.disabled = true;
+          pingBtn.disabled = true;
+          historyBtn.disabled = true;
+        }
+      }
+
+      function connectWebSocket() {
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}/stream/glyphs`;
+
+        ws = new WebSocket(wsUrl);
+
+        ws.onopen = function () {
+          updateConnectionStatus(true);
+          addSystemMessage('Connected to Spiral Glyph Stream', 'connection');
+        };
+
+        ws.onmessage = function (event) {
+          try {
+            const data = JSON.parse(event.data);
+            handleWebSocketMessage(data);
+          } catch (error) {
+            console.error('Error parsing message:', error);
+            addSystemMessage('Error parsing message: ' + error.message, 'error');
+          }
+        };
+
+        ws.onclose = function () {
+          updateConnectionStatus(false);
+          addSystemMessage('Disconnected from Spiral Glyph Stream', 'disconnection');
+        };
+
+        ws.onerror = function (error) {
+          console.error('WebSocket error:', error);
+          addSystemMessage('WebSocket error occurred', 'error');
+        };
+      }
+
+      function disconnectWebSocket() {
+        if (ws) {
+          ws.close();
+          ws = null;
+        }
+      }
+
+      function sendPing() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'ping' }));
+          addSystemMessage('Ping sent', 'ping');
+        }
+      }
+
+      function requestHistory() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'request.history' }));
+          addSystemMessage('History requested', 'history');
+        }
+      }
+
+      function clearEvents() {
+        document.getElementById('liveEvents').innerHTML =
+          '<p style="text-align: center; color: #b0bec5; padding: 20px;">Waiting for glyph invocations...</p>';
+        document.getElementById('systemMessages').innerHTML =
+          '<p style="text-align: center; color: #b0bec5; padding: 20px;">Waiting for system messages...</p>';
+
+        eventCount = 0;
+        liveEventCount = 0;
+        systemMessageCount = 0;
+        updateStats();
+      }
+
+      function handleWebSocketMessage(data) {
+        switch (data.type) {
+          case 'connection.welcome':
+            addSystemMessage(`Welcome: ${data.message}`, 'welcome');
+            break;
+
+          case 'glyph.invocation':
+            addLiveEvent(data);
+            break;
+
+          case 'history.response':
+            addSystemMessage(`History received: ${data.events?.length || 0} events`, 'history');
+            break;
+
+          case 'pong':
+            addSystemMessage('Pong received', 'pong');
+            break;
+
+          case 'filter.confirmed':
+            addSystemMessage('Filters confirmed', 'filter');
+            break;
+
+          default:
+            addSystemMessage(`Unknown message type: ${data.type}`, 'unknown');
+        }
+      }
+
+      function addLiveEvent(eventData) {
+        const container = document.getElementById('liveEvents');
+
+        // Remove waiting message if present
+        if (container.querySelector('p')) {
+          container.innerHTML = '';
+        }
+
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event pulse';
+        eventDiv.style.borderLeftColor = getPhaseColor(eventData.phase);
+
+        eventDiv.innerHTML = `
+                <div class="event-header">
+                    <span class="glyph-name" style="color: ${getToneformColor(eventData.toneform)}">
+                        ${eventData.glyph}
+                    </span>
+                    <span class="event-time">
+                        ${new Date(eventData.timestamp).toLocaleTimeString()}
+                    </span>
+                </div>
+                <div class="event-details">
+                    <span class="tag toneform-${eventData.toneform.split('.')[0]}">${eventData.toneform}</span>
+                    <span class="tag phase-${eventData.phase}">${eventData.phase}</span>
+                    ${eventData.glint_id ? `<span class="tag">${eventData.glint_id}</span>` : ''}
+                </div>
+            `;
+
+        container.insertBefore(eventDiv, container.firstChild);
+
+        // Remove pulse animation after 2 seconds
+        setTimeout(() => {
+          eventDiv.classList.remove('pulse');
+        }, 2000);
+
+        // Limit to 20 events
+        while (container.children.length > 20) {
+          container.removeChild(container.lastChild);
+        }
+
+        liveEventCount++;
+        eventCount++;
+        updateStats();
+      }
+
+      function addSystemMessage(message, type) {
+        const container = document.getElementById('systemMessages');
+
+        // Remove waiting message if present
+        if (container.querySelector('p')) {
+          container.innerHTML = '';
+        }
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'event';
+        messageDiv.style.borderLeftColor = getMessageTypeColor(type);
+
+        messageDiv.innerHTML = `
+                <div class="event-header">
+                    <span class="glyph-name">${type.toUpperCase()}</span>
+                    <span class="event-time">
+                        ${new Date().toLocaleTimeString()}
+                    </span>
+                </div>
+                <div class="event-details">
+                    <span class="tag">${message}</span>
+                </div>
+            `;
+
+        container.insertBefore(messageDiv, container.firstChild);
+
+        // Limit to 10 messages
+        while (container.children.length > 10) {
+          container.removeChild(container.lastChild);
+        }
+
+        systemMessageCount++;
+        eventCount++;
+        updateStats();
+      }
+
+      function getPhaseColor(phase) {
+        switch (phase) {
+          case 'inhale':
+            return '#64b5f6';
+          case 'exhale':
+            return '#81c784';
+          case 'caesura':
+            return '#ffb74d';
+          default:
+            return '#b0bec5';
+        }
+      }
+
+      function getToneformColor(toneform) {
+        const base = toneform.split('.')[0];
+        switch (base) {
+          case 'receive':
+            return '#64b5f6';
+          case 'offer':
+            return '#81c784';
+          case 'sense':
+            return '#ffb74d';
+          case 'ask':
+            return '#f06292';
+          case 'manifest':
+            return '#ba68c8';
+          default:
+            return '#b0bec5';
+        }
+      }
+
+      function getMessageTypeColor(type) {
+        switch (type) {
+          case 'welcome':
+            return '#81c784';
+          case 'error':
+            return '#f44336';
+          case 'ping':
+            return '#64b5f6';
+          case 'pong':
+            return '#64b5f6';
+          case 'history':
+            return '#ffb74d';
+          case 'filter':
+            return '#ba68c8';
+          default:
+            return '#b0bec5';
+        }
+      }
+
+      function updateStats() {
+        document.getElementById('totalEvents').textContent = eventCount;
+        document.getElementById('liveEventsCount').textContent = liveEventCount;
+        document.getElementById('systemMessagesCount').textContent = systemMessageCount;
+      }
+
+      // Auto-connect on page load
+      window.onload = function () {
+        setTimeout(connectWebSocket, 1000);
+      };
+    </script>
+  </body>
+</html>

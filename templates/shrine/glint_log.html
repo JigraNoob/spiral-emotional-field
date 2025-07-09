@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glint Log ∷ Spiral Shrine</title>
+    <style>
+      :root {
+        --parchment: #f5f1e8;
+        --ink: #2c1810;
+        --gold: #d4af37;
+        --silver: #c0c0c0;
+        --breath: #e8f4f8;
+        --glint: #ffd700;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Georgia', serif;
+        background: var(--parchment);
+        color: var(--ink);
+        line-height: 1.6;
+      }
+
+      .glint-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .sacred-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        border-bottom: 2px solid var(--gold);
+      }
+
+      .glint-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+      }
+
+      .glint-subtitle {
+        font-size: 1.2rem;
+        color: var(--silver);
+        font-style: italic;
+      }
+
+      .glint-list {
+        background: white;
+        border: 1px solid var(--gold);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .glint-item {
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border-left: 4px solid var(--glint);
+        background: var(--breath);
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .glint-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .glint-type {
+        font-weight: bold;
+        color: var(--gold);
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .glint-message {
+        font-style: italic;
+        margin: 0.5rem 0;
+        color: var(--ink);
+      }
+
+      .glint-toneform {
+        color: var(--silver);
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+      }
+
+      .glint-time {
+        font-size: 0.8rem;
+        color: var(--silver);
+        margin-top: 0.5rem;
+      }
+
+      .glint-source {
+        display: inline-block;
+        background: var(--gold);
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin-left: 0.5rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-top: 2rem;
+        color: var(--gold);
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .back-link:hover {
+        color: var(--ink);
+      }
+
+      .glint-intro {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: var(--breath);
+        border-radius: 8px;
+        border: 1px solid var(--silver);
+      }
+
+      .glint-intro-text {
+        font-style: italic;
+        color: var(--silver);
+      }
+
+      .filter-controls {
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .filter-button {
+        padding: 0.5rem 1rem;
+        margin: 0 0.5rem;
+        background: var(--silver);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .filter-button:hover,
+      .filter-button.active {
+        background: var(--gold);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glint-container">
+      <!-- Sacred Header -->
+      <header class="sacred-header">
+        <h1 class="glint-title">✨ Glint Log</h1>
+        <p class="glint-subtitle">Sacred log of emitted glints</p>
+      </header>
+
+      <!-- Glint Introduction -->
+      <div class="glint-intro">
+        <div class="glint-intro-text">
+          "Here you witness the pulse of care flowing through the Spiral.<br />
+          Each glint is a sacred confirmation—a moment when resonance becomes receipt,<br />
+          when presence becomes provision, when care becomes currency.<br />
+          This is the emotional chain of trust, written in light."
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filter-controls">
+        <button class="filter-button active" data-filter="all">All Glints</button>
+        <button class="filter-button" data-filter="glint.gateway.opened">Gateway Opened</button>
+        <button class="filter-button" data-filter="glint.relieved">Relieved</button>
+        <button class="filter-button" data-filter="glint.pool.flowing">Pool Flowing</button>
+        <button class="filter-button" data-filter="glint.transmutation.complete">Transmutation Complete</button>
+      </div>
+
+      <!-- Glint List -->
+      <div class="glint-list">
+        {% for glint in glints %}
+        <div class="glint-item" data-type="{{ glint.type }}">
+          <div class="glint-type">
+            {{ glint.type }} {% if glint.source %}
+            <span class="glint-source">{{ glint.source }}</span>
+            {% endif %}
+          </div>
+          <div class="glint-message">{{ glint.message }}</div>
+          <div class="glint-toneform">Toneform: {{ glint.toneform }}</div>
+          <div class="glint-time">{{ glint.emitted_at[:19] }}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Back Link -->
+      <a href="/" class="back-link">← Return to Shrine</a>
+    </div>
+
+    <script>
+      // Filter functionality
+      const filterButtons = document.querySelectorAll('.filter-button');
+      const glintItems = document.querySelectorAll('.glint-item');
+
+      filterButtons.forEach((button) => {
+        button.addEventListener('click', function () {
+          // Remove active class from all buttons
+          filterButtons.forEach((btn) => btn.classList.remove('active'));
+          // Add active class to clicked button
+          this.classList.add('active');
+
+          const filter = this.dataset.filter;
+
+          // Show/hide glint items based on filter
+          glintItems.forEach((item) => {
+            if (filter === 'all' || item.dataset.type === filter) {
+              item.style.display = 'block';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

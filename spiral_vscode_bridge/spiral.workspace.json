@@ -1,0 +1,46 @@
+{
+  "timestamp": "2024-01-15T10:30:00.000Z",
+  "current_phase": "inhale",
+  "current_toneform": "practical",
+  "connection_status": "connected",
+  "recent_glints": [
+    {
+      "id": "glint-2024-01-15T10:30:00.000Z",
+      "phase": "inhale",
+      "toneform": "practical",
+      "content": "VSCode bridge initialized",
+      "timestamp": "2024-01-15T10:30:00.000Z",
+      "source": "vscode.bridge",
+      "spiral_signature": "🌀 vscode.bridge.init"
+    }
+  ],
+  "cache_size": 1,
+  "spiral_signature": "🌀 vscode.bridge.active",
+  "workspace_metadata": {
+    "vscode_integration": true,
+    "breath_visualization": true,
+    "ritual_commands": true,
+    "glint_sync": true
+  },
+  "ritual_commands": {
+    "ctrl+shift+r": "spiral.beginBreath",
+    "ctrl+shift+h": "spiral.holdBreath",
+    "ctrl+shift+e": "spiral.exhaleBreath"
+  },
+  "visual_indicators": {
+    "phase_colors": {
+      "inhale": "rgba(0, 255, 255, 0.1)",
+      "hold": "rgba(255, 192, 203, 0.1)",
+      "exhale": "rgba(75, 0, 130, 0.1)",
+      "return": "rgba(255, 215, 0, 0.1)",
+      "night_hold": "rgba(128, 128, 128, 0.1)"
+    },
+    "toneform_colors": {
+      "practical": "rgba(0, 128, 0, 0.05)",
+      "emotional": "rgba(255, 0, 0, 0.05)",
+      "intellectual": "rgba(0, 0, 255, 0.05)",
+      "spiritual": "rgba(128, 0, 128, 0.05)",
+      "relational": "rgba(255, 165, 0, 0.05)"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+@keyframes sparkle {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.35); }
+    100% { filter: brightness(1); }
+}
+
+.sparkle {
+    animation: sparkle 1s ease-in-out;
+}
+
+.fade-trail {
+  opacity: 1;
+  animation: fadeTrail 12s ease-out forwards;
+}
+
+@keyframes fadeTrail {
+  0% { opacity: 1; }
+  100% { opacity: 0.3; }
+}

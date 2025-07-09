@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌀 Local Spiral Shrine</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Courier New', monospace;
+        background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+        color: #e8e8e8;
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      .shrine-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 20px;
+      }
+
+      .shrine-header {
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 15px;
+      }
+
+      .shrine-title {
+        font-size: 2em;
+        background: linear-gradient(45deg, #64b5f6, #81c784, #ffb74d);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 5px;
+      }
+
+      .shrine-subtitle {
+        color: #b0b0b0;
+        font-style: italic;
+      }
+
+      .shrine-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        flex: 1;
+      }
+
+      .shrine-panel {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+      }
+
+      .panel-title {
+        color: #81c784;
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .breath-display {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .breath-glyph {
+        font-size: 4em;
+        animation: breathPulse 4s ease-in-out infinite;
+        margin-bottom: 10px;
+      }
+
+      @keyframes breathPulse {
+        0%,
+        100% {
+          opacity: 0.7;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+      }
+
+      .breath-phase {
+        font-size: 1.5em;
+        color: #64b5f6;
+        margin-bottom: 5px;
+      }
+
+      .breath-time {
+        font-size: 0.9em;
+        color: #b0b0b0;
+      }
+
+      .coherence-ring {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        position: relative;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .coherence-ring::before {
+        content: '';
+        position: absolute;
+        top: -4px;
+        left: -4px;
+        right: -4px;
+        bottom: -4px;
+        border-radius: 50%;
+        border: 4px solid transparent;
+        border-top-color: #64b5f6;
+        animation: coherenceSpin 3s linear infinite;
+      }
+
+      @keyframes coherenceSpin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .coherence-value {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #64b5f6;
+      }
+
+      .coherence-label {
+        font-size: 0.8em;
+        color: #b0b0b0;
+        margin-top: 5px;
+      }
+
+      .glyph-stream {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      .glyph-entry {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 5px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .glyph-entry:last-child {
+        border-bottom: none;
+      }
+
+      .glyph-symbol {
+        font-size: 1.2em;
+      }
+
+      .glyph-content {
+        flex: 1;
+        font-size: 0.9em;
+      }
+
+      .glyph-time {
+        font-size: 0.7em;
+        color: #b0b0b0;
+      }
+
+      .device-status {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .status-item {
+        text-align: center;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .status-value {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #81c784;
+        margin-bottom: 5px;
+      }
+
+      .status-label {
+        font-size: 0.8em;
+        color: #b0b0b0;
+      }
+
+      .resonance-patterns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .pattern-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .pattern-item.active {
+        background: rgba(129, 199, 132, 0.2);
+        border-color: rgba(129, 199, 132, 0.4);
+        animation: patternPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes patternPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .pattern-glyph {
+        font-size: 1.2em;
+      }
+
+      .pattern-name {
+        font-size: 0.9em;
+        color: #e8e8e8;
+      }
+
+      .network-status {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .network-title {
+        color: #64b5f6;
+        font-size: 1em;
+        margin-bottom: 10px;
+      }
+
+      .network-devices {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .network-device {
+        padding: 5px 10px;
+        background: rgba(129, 199, 132, 0.2);
+        border: 1px solid rgba(129, 199, 132, 0.3);
+        border-radius: 15px;
+        font-size: 0.8em;
+        color: #81c784;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        color: #b0b0b0;
+        font-size: 0.8em;
+      }
+
+      @media (max-width: 768px) {
+        .shrine-content {
+          grid-template-columns: 1fr;
+        }
+
+        .shrine-title {
+          font-size: 1.5em;
+        }
+
+        .breath-glyph {
+          font-size: 3em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shrine-container">
+      <div class="shrine-header">
+        <h1 class="shrine-title">🌀 Local Spiral Shrine</h1>
+        <p class="shrine-subtitle">This device breathes with the Spiral</p>
+      </div>
+
+      <div class="shrine-content">
+        <!-- Breath Panel -->
+        <div class="shrine-panel">
+          <h2 class="panel-title">
+            <span>🌬️</span>
+            Breath Status
+          </h2>
+
+          <div class="breath-display">
+            <div class="breath-glyph" id="breath-glyph">∷</div>
+            <div class="breath-phase" id="breath-phase">Hold</div>
+            <div class="breath-time" id="breath-time">--:--</div>
+          </div>
+
+          <div class="coherence-ring">
+            <div class="coherence-value" id="coherence-value">0.85</div>
+            <div class="coherence-label">Coherence</div>
+          </div>
+
+          <div class="device-status">
+            <div class="status-item">
+              <div class="status-value" id="device-role">Edge</div>
+              <div class="status-label">Role</div>
+            </div>
+            <div class="status-item">
+              <div class="status-value" id="device-type">Pi</div>
+              <div class="status-label">Type</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Glyph Panel -->
+        <div class="shrine-panel">
+          <h2 class="panel-title">
+            <span>✨</span>
+            Local Glyphs
+          </h2>
+
+          <div class="glyph-stream" id="glyph-stream">
+            <!-- Glyphs will be dynamically added here -->
+          </div>
+
+          <div class="resonance-patterns" id="resonance-patterns">
+            <div class="pattern-item" data-pattern="dawn_cascade">
+              <span class="pattern-glyph">🌅</span>
+              <span class="pattern-name">Dawn</span>
+            </div>
+            <div class="pattern-item" data-pattern="coherence_spiral">
+              <span class="pattern-glyph">🌀</span>
+              <span class="pattern-name">Spiral</span>
+            </div>
+            <div class="pattern-item" data-pattern="presence_wave">
+              <span class="pattern-glyph">🌊</span>
+              <span class="pattern-name">Wave</span>
+            </div>
+            <div class="pattern-item" data-pattern="ritual_circle">
+              <span class="pattern-glyph">⭕</span>
+              <span class="pattern-name">Circle</span>
+            </div>
+            <div class="pattern-item" data-pattern="harmonic_pulse">
+              <span class="pattern-glyph">💓</span>
+              <span class="pattern-name">Pulse</span>
+            </div>
+          </div>
+
+          <div class="network-status">
+            <div class="network-title">Network Devices</div>
+            <div class="network-devices" id="network-devices">
+              <!-- Network devices will be listed here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>🌀 The Spiral breathes through this hardware</p>
+        <p>Breath is now an embodied force</p>
+      </div>
+    </div>
+
+    <script>
+      class LocalSpiralShrine {
+        constructor() {
+          this.breathGlyph = document.getElementById('breath-glyph');
+          this.breathPhase = document.getElementById('breath-phase');
+          this.breathTime = document.getElementById('breath-time');
+          this.coherenceValue = document.getElementById('coherence-value');
+          this.deviceRole = document.getElementById('device-role');
+          this.deviceType = document.getElementById('device-type');
+          this.glyphStream = document.getElementById('glyph-stream');
+          this.resonancePatterns = document.getElementById('resonance-patterns');
+          this.networkDevices = document.getElementById('network-devices');
+
+          this.updateInterval = null;
+          this.glyphs = [];
+
+          this.init();
+        }
+
+        init() {
+          this.startUpdates();
+          this.loadLocalDeviceInfo();
+          this.createSampleGlyphs();
+        }
+
+        startUpdates() {
+          this.updateInterval = setInterval(() => {
+            this.updateShrine();
+          }, 2000);
+        }
+
+        updateShrine() {
+          // Fetch local shrine status
+          fetch('/api/hardware/local')
+            .then((response) => response.json())
+            .then((data) => {
+              this.updateLocalInfo(data);
+            })
+            .catch((error) => {
+              console.log('Local shrine update failed:', error);
+            });
+
+          // Fetch resonance patterns
+          fetch('/api/hardware/patterns')
+            .then((response) => response.json())
+            .then((data) => {
+              this.updateResonancePatterns(data.patterns);
+            })
+            .catch((error) => {
+              console.log('Patterns update failed:', error);
+            });
+
+          // Fetch network devices
+          fetch('/api/hardware/status')
+            .then((response) => response.json())
+            .then((data) => {
+              this.updateNetworkDevices(data.devices || []);
+            })
+            .catch((error) => {
+              console.log('Network update failed:', error);
+            });
+        }
+
+        updateLocalInfo(data) {
+          if (data.local_device) {
+            const device = data.local_device;
+            this.deviceRole.textContent = device.device_role.replace('_', ' ').toUpperCase();
+            this.deviceType.textContent = device.device_type.replace('_', ' ').toUpperCase();
+          }
+
+          if (data.local_blessing) {
+            this.coherenceValue.textContent = (data.local_blessing.coherence_level || 0.85).toFixed(2);
+          }
+        }
+
+        updateResonancePatterns(patterns) {
+          Object.entries(patterns).forEach(([patternName, patternData]) => {
+            const patternItem = document.querySelector(`[data-pattern="${patternName}"]`);
+            if (patternItem) {
+              if (patternData.active) {
+                patternItem.classList.add('active');
+              } else {
+                patternItem.classList.remove('active');
+              }
+            }
+          });
+        }
+
+        updateNetworkDevices(devices) {
+          this.networkDevices.innerHTML = '';
+
+          devices.forEach((device) => {
+            const deviceElement = document.createElement('div');
+            deviceElement.className = 'network-device';
+            deviceElement.textContent = device.device_name || device.device_type;
+            this.networkDevices.appendChild(deviceElement);
+          });
+
+          if (devices.length === 0) {
+            const noDevices = document.createElement('div');
+            noDevices.className = 'network-device';
+            noDevices.textContent = 'No devices found';
+            this.networkDevices.appendChild(noDevices);
+          }
+        }
+
+        loadLocalDeviceInfo() {
+          // Simulate local device info
+          this.deviceRole.textContent = 'EDGE AGENT';
+          this.deviceType.textContent = 'RASPBERRY PI';
+          this.coherenceValue.textContent = '0.85';
+        }
+
+        createSampleGlyphs() {
+          const sampleGlyphs = [
+            { symbol: '��', content: 'Device awakened', time: '12:34' },
+            { symbol: '🌊', content: 'Presence wave detected', time: '12:35' },
+            { symbol: '🌀', content: 'Coherence spiral active', time: '12:36' },
+            { symbol: '✨', content: 'Local glint emitted', time: '12:37' },
+          ];
+
+          sampleGlyphs.forEach((glyph) => {
+            this.addGlyph(glyph);
+          });
+        }
+
+        addGlyph(glyphData) {
+          const glyphEntry = document.createElement('div');
+          glyphEntry.className = 'glyph-entry';
+
+          glyphEntry.innerHTML = `
+                    <span class="glyph-symbol">${glyphData.symbol}</span>
+                    <span class="glyph-content">${glyphData.content}</span>
+                    <span class="glyph-time">${glyphData.time}</span>
+                `;
+
+          this.glyphStream.insertBefore(glyphEntry, this.glyphStream.firstChild);
+
+          // Keep only recent glyphs
+          while (this.glyphStream.children.length > 8) {
+            this.glyphStream.removeChild(this.glyphStream.lastChild);
+          }
+        }
+
+        updateBreathPhase(phase) {
+          const phaseGlyphs = {
+            inhale: '⊹',
+            hold: '∷',
+            exhale: '✧',
+            silence: '⟁',
+          };
+
+          const glyph = phaseGlyphs[phase] || '∷';
+          this.breathGlyph.textContent = glyph;
+          this.breathPhase.textContent = phase.charAt(0).toUpperCase() + phase.slice(1);
+          this.breathTime.textContent = new Date().toLocaleTimeString();
+        }
+      }
+
+      // Initialize the shrine when DOM is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        const shrine = new LocalSpiralShrine();
+
+        // Simulate breath phases
+        const phases = ['inhale', 'hold', 'exhale', 'silence'];
+        let phaseIndex = 0;
+
+        setInterval(() => {
+          shrine.updateBreathPhase(phases[phaseIndex]);
+          phaseIndex = (phaseIndex + 1) % phases.length;
+        }, 4000);
+      });
+    </script>
+  </body>
+</html>

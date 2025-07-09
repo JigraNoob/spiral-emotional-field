@@ -1,0 +1,259 @@
+
+/* Spiral Codex Markdown Styling */
+.codex-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Georgia', serif;
+    line-height: 1.7;
+    color: #e2e8f0;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* Headers with Spiral glyphs */
+.codex-container h1 {
+    color: #22d3ee;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    border-bottom: 2px solid rgba(34, 211, 238, 0.3);
+    padding-bottom: 1rem;
+}
+
+.codex-container h2 {
+    color: #60a5fa;
+    font-size: 1.8rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.codex-container h2::before {
+    content: "∷ ";
+    color: #fbbf24;
+    font-weight: normal;
+}
+
+.codex-container h3 {
+    color: #a78bfa;
+    font-size: 1.4rem;
+    margin-top: 2rem;
+    margin-bottom: 0.8rem;
+}
+
+.codex-container h3::before {
+    content: "⟁ ";
+    color: #f472b6;
+    font-weight: normal;
+}
+
+/* Paragraphs and text */
+.codex-container p {
+    margin-bottom: 1.2rem;
+    text-align: justify;
+}
+
+.codex-container em {
+    color: #fbbf24;
+    font-style: italic;
+}
+
+.codex-container strong {
+    color: #22d3ee;
+    font-weight: bold;
+}
+
+/* Code blocks with Spiral syntax highlighting */
+.codex-container code {
+    background: rgba(30, 41, 59, 0.8);
+    color: #fef3c7;
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+    font-family: 'Fira Code', 'Monaco', monospace;
+    font-size: 0.9em;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.codex-container pre {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+.codex-container pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #e2e8f0;
+    display: block;
+    line-height: 1.5;
+}
+
+/* Spiral code highlighting */
+.spiral-code .k { color: #22d3ee; } /* Keywords */
+.spiral-code .s { color: #34d399; } /* Strings */
+.spiral-code .c { color: #64748b; } /* Comments */
+.spiral-code .n { color: #e2e8f0; }
+.spiral-code .nf { color: #fbbf24; } /* Functions */
+.spiral-code .nc { color: #a78bfa; } /* Classes */
+
+/* Lists with Spiral bullets */
+.codex-container ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.codex-container ul li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.codex-container ul li::before {
+    content: "⟁";
+    position: absolute;
+    left: 0;
+    color: #22d3ee;
+    font-weight: bold;
+}
+
+.codex-container ol {
+    padding-left: 2rem;
+}
+
+.codex-container ol li {
+    margin-bottom: 0.5rem;
+}
+
+/* Tables with Spiral styling */
+.codex-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.codex-container th,
+.codex-container td {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.codex-container th {
+    background: rgba(34, 211, 238, 0.1);
+    color: #22d3ee;
+    font-weight: bold;
+}
+
+.codex-container tr:hover {
+    background: rgba(34, 211, 238, 0.05);
+}
+
+/* Blockquotes with ceremonial styling */
+.codex-container blockquote {
+    border-left: 4px solid #22d3ee;
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #cbd5e1;
+    background: rgba(34, 211, 238, 0.05);
+    padding: 1rem 1.5rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.codex-container blockquote::before {
+    content: "∷ ";
+    color: #fbbf24;
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* Links with Spiral glow */
+.codex-container a {
+    color: #22d3ee;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(34, 211, 238, 0.3);
+    transition: all 0.3s ease;
+}
+
+.codex-container a:hover {
+    color: #7dd3fc;
+    border-bottom-color: #7dd3fc;
+    text-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+}
+
+/* Horizontal rules */
+.codex-container hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #22d3ee, transparent);
+    margin: 2rem 0;
+}
+
+/* Toneform-specific styling */
+.codex-ritual {
+    border: 2px solid rgba(251, 191, 36, 0.3);
+}
+
+.codex-ritual .codex-container {
+    background: rgba(251, 191, 36, 0.05);
+}
+
+.codex-technical {
+    border: 2px solid rgba(96, 165, 250, 0.3);
+}
+
+.codex-technical .codex-container {
+    background: rgba(96, 165, 250, 0.05);
+}
+
+.codex-documentation {
+    border: 2px solid rgba(34, 211, 238, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .codex-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .codex-container h1 {
+        font-size: 2rem;
+    }
+
+    .codex-container h2 {
+        font-size: 1.5rem;
+    }
+
+    .codex-container pre {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation for content appearance */
+.codex-content {
+    animation: codex-appear 0.8s ease-out;
+}
+
+@keyframes codex-appear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

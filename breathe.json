@@ -1,0 +1,321 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Spiral Breath Profile Schema",
+  "description": "Defines the breath patterns and environmental adaptation preferences for the Spiral system",
+  "type": "object",
+  "properties": {
+    "breath": {
+      "type": "object",
+      "description": "Core breath configuration",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["soft", "gentle", "firm", "intense"],
+          "default": "soft",
+          "description": "The breath intensity mode for environment adaptation"
+        },
+        "rhythm": {
+          "type": "string",
+          "enum": ["natural", "measured", "accelerated", "decelerated"],
+          "default": "natural",
+          "description": "The rhythm of breath pattern changes"
+        },
+        "tolerance": {
+          "type": "object",
+          "properties": {
+            "python_version": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+$",
+              "default": "3.10",
+              "description": "Minimum Python version with graceful degradation"
+            },
+            "missing_dependencies": {
+              "type": "string",
+              "enum": ["warn", "suggest", "ignore", "fail"],
+              "default": "warn",
+              "description": "How to handle missing dependencies"
+            },
+            "environment_mismatch": {
+              "type": "string",
+              "enum": ["adapt", "suggest", "warn", "fail"],
+              "default": "adapt",
+              "description": "How to handle environment mismatches"
+            }
+          },
+          "required": ["python_version", "missing_dependencies", "environment_mismatch"]
+        }
+      },
+      "required": ["mode", "rhythm", "tolerance"]
+    },
+    "environment": {
+      "type": "object",
+      "description": "Environment detection and adaptation",
+      "properties": {
+        "preferred": {
+          "type": "string",
+          "default": "swe-1",
+          "description": "Preferred virtual environment name"
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["venv", ".venv", "env"],
+          "description": "Alternative environment names to search for"
+        },
+        "python_variants": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["python", "python3", "py"],
+          "description": "Python command variants to try"
+        },
+        "ambient_mode": {
+          "type": "object",
+          "properties": {
+            "allowed": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to allow running without virtual environment"
+            },
+            "warning": {
+              "type": "string",
+              "default": "Proceeding in ambient mode",
+              "description": "Message to show when using ambient mode"
+            }
+          },
+          "required": ["allowed", "warning"]
+        }
+      },
+      "required": ["preferred", "alternatives", "python_variants", "ambient_mode"]
+    },
+    "invocation": {
+      "type": "object",
+      "description": "Invocation patterns and rituals",
+      "properties": {
+        "default_ritual": {
+          "type": "string",
+          "default": "natural_breath",
+          "description": "Default ritual to run when no specific ritual is specified"
+        },
+        "rituals": {
+          "type": "object",
+          "properties": {
+            "natural_breath": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "default": "Confirm Spiral is breathing with its environment"
+                },
+                "command": {
+                  "type": "string",
+                  "default": "echo 'Spiral is breathing'"
+                }
+              }
+            },
+            "dashboard": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "default": "Start Spiral Dashboard"
+                },
+                "command": {
+                  "type": "string",
+                  "default": "python app.py"
+                },
+                "port": {
+                  "type": "integer",
+                  "default": 5000
+                },
+                "auto_browser": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "emitter": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "default": "Start Spiral Emitter API"
+                },
+                "command": {
+                  "type": "string",
+                  "default": "python spiral_emitter_api.py"
+                },
+                "port": {
+                  "type": "integer",
+                  "default": 5050
+                }
+              }
+            }
+          }
+        },
+        "auto_browser": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to automatically open browser for web interfaces"
+        }
+      },
+      "required": ["default_ritual", "rituals", "auto_browser"]
+    },
+    "dependencies": {
+      "type": "object",
+      "description": "Dependency management with breath-aware ranges",
+      "properties": {
+        "core": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "range": {
+                "type": "string"
+              },
+              "stability": {
+                "type": "string",
+                "enum": ["high", "medium", "low"],
+                "default": "medium"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "required": ["name", "range"]
+          },
+          "default": [
+            {
+              "name": "Flask",
+              "range": ">=2.3.0,<3.0.0",
+              "stability": "high",
+              "description": "Core web framework"
+            },
+            {
+              "name": "flask_socketio",
+              "range": ">=5.3.0,<6.0.0",
+              "stability": "medium",
+              "description": "Real-time communication"
+            },
+            {
+              "name": "requests",
+              "range": ">=2.30.0,<3.0.0",
+              "stability": "medium",
+              "description": "HTTP client"
+            }
+          ]
+        },
+        "optional": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "range": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string",
+                "enum": ["visualization", "api", "monitoring", "development"],
+                "default": "development"
+              }
+            },
+            "required": ["name", "range"]
+          }
+        }
+      },
+      "required": ["core"]
+    },
+    "cursor_integration": {
+      "type": "object",
+      "description": "Integration with Cursor's breath phase detection",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to integrate with Cursor's breath detection"
+        },
+        "breath_phases": {
+          "type": "object",
+          "properties": {
+            "inhale": {
+              "type": "object",
+              "properties": {
+                "action": {
+                  "type": "string",
+                  "default": "pause_emission",
+                  "description": "Action to take during inhale phase"
+                },
+                "duration": {
+                  "type": "integer",
+                  "default": 2000,
+                  "description": "Duration in milliseconds"
+                }
+              }
+            },
+            "exhale": {
+              "type": "object",
+              "properties": {
+                "action": {
+                  "type": "string",
+                  "default": "resume_emission",
+                  "description": "Action to take during exhale phase"
+                },
+                "intensity": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0,
+                  "default": 0.8,
+                  "description": "Emission intensity during exhale"
+                }
+              }
+            }
+          }
+        },
+        "glint_channel": {
+          "type": "string",
+          "default": "cursor_breath",
+          "description": "Channel for Cursor breath synchronization"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Profile metadata and versioning",
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "default": "1.0.0",
+          "description": "Schema version"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this profile was created"
+        },
+        "author": {
+          "type": "string",
+          "default": "Spiral Guardian",
+          "description": "Profile author"
+        },
+        "description": {
+          "type": "string",
+          "default": "Breath-aware environment adaptation profile",
+          "description": "Profile description"
+        }
+      },
+      "required": ["version", "created", "author", "description"]
+    }
+  },
+  "required": ["breath", "environment", "invocation", "dependencies", "metadata"],
+  "additionalProperties": false
+}

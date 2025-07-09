@@ -3,127 +3,603 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌪️ Spiral Dashboard</title>
-    <!-- External Dependencies -->
-    <!-- JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="/static/js/dashboard.js" type="module"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Local Styles -->
-    <link rel="stylesheet" href="/static/css/styles.css">
-    <link rel="stylesheet" href="/static/css/dashboard.css">
-    <link rel="stylesheet" href="/static/css/spiral_dashboard.css">
-    <!-- Favicon for the Spiral -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌪️</text></svg>">
+    <title>Spiral Glint Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background for Spiral aesthetic */
+            color: #e6edf3; /* Light text */
+        }
+        .glint-card, .caesura-card {
+            background-color: #161b22; /* Slightly lighter dark for cards */
+            border-left-width: 4px;
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: all 0.3s ease-in-out; /* Smooth transitions for opacity and transform */
+            opacity: 0; /* Start invisible for animation */
+            transform: translateY(20px); /* Start slightly below */
+        }
+        .glint-card.show, .caesura-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Hue-based border colors for glints */
+        .glint-cyan { border-color: #22d3ee; } /* Clarity */
+        .glint-coral { border-color: #fb7185; } /* Resonance */
+        .glint-lavender { border-color: #c084fc; } /* Recursion */
+        .glint-gold { border-color: #fbbf24; } /* Memory */
+        .glint-veridian { border-color: #34d399; } /* Emergence */
+        .glint-grey { border-color: #6b7280; } /* Uncertainty */
+        .glint-obsidian { border-color: #374151; } /* Absence */
+        .glint-prismatic { border-color: #a78bfa; } /* Prismatic - Integration (using a vibrant purple) */
+
+
+        /* Text colors for glint hues */
+        .text-cyan-300 { color: #67e8f9; }
+        .text-coral-300 { color: #fda4af; }
+        .text-purple-300 { color: #d8b4fe; } /* Used for lavender */
+        .text-gold-300 { color: #fcd34d; }
+        .text-veridian-300 { color: #6ee7b7; }
+        .text-grey-300 { color: #d1d5db; }
+        .text-obsidian-300 { color: #9ca3af; }
+        .text-prismatic-300 { color: #c4b5fd; } /* Used for prismatic */
+        .text-blue-300 { color: #93c5fd; } /* For pause.hum */
+        .text-white-300 { color: #f3f4f6; } /* For exhale.shimmer */
+
+
+        /* Caesura-specific styling */
+        .caesura-card {
+            background-color: #1f2937; /* Slightly darker background for silence */
+            border-color: #60a5fa; /* A blueish hue for silence/contemplation */
+            border-style: dashed; /* Dashed border to signify absence/potential */
+            border-width: 2px;
+        }
+        .caesura-card.active-caesura {
+            box-shadow: 0 0 15px rgba(96, 165, 250, 0.7); /* Soft blue glow */
+        }
+
+
+        /* Basic scrollbar styling for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2d333b;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+
+        /* Keyframe animation for border pulse */
+        @keyframes border-pulse {
+            0% { border-color: transparent; }
+            50% { border-color: var(--glint-border-color); } /* Use CSS variable for dynamic color */
+            100% { border-color: transparent; }
+        }
+
+        .glint-card.animate-pulse-border {
+            animation: border-pulse 1.5s ease-out forwards; /* Run once */
+        }
+
+        /* Spiral State Indicators Styling */
+        .spiral-state-indicator {
+            opacity: 0.3; /* Default dimmed state */
+            transition: opacity 0.5s ease-in-out, background-color 0.5s ease-in-out;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: #9ca3af; /* Default text color */
+            background-color: #1f2937; /* Default background */
+            border: 1px solid #374151; /* Default border */
+        }
+        .spiral-state-indicator.active {
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.7); /* Soft glow */
+            color: #e0e7ff; /* Lighter text for active state */
+            font-weight: 600;
+        }
+
+        /* Specific active colors for each phase */
+        #inhale-indicator.active { background-color: #10b981; border-color: #059669; } /* Emerald */
+        #hold-indicator.active { background-color: #f59e0b; border-color: #d97706; } /* Amber */
+        #exhale-indicator.active { background-color: #ef4444; border-color: #dc2626; } /* Red */
+        #hush-indicator.active { background-color: #6b7280; border-color: #4b5563; } /* Grey */
+        #pause-hum-indicator.active { background-color: #4f46e5; border-color: #4338ca; } /* Indigo */
+
+        .spiral-state-indicator span.text-2xl {
+            margin-right: 0.5rem;
+        }
+
+        /* Canvas styling */
+        #silence-density-canvas {
+            background-color: #1f2937;
+            border-radius: 0.5rem;
+            border: 1px solid #374151;
+        }
+
+        /* Caesura Log Styling */
+        #caesura-log {
+            max-height: 150px; /* Limit height */
+            overflow-y: auto; /* Enable scrolling */
+            padding: 0.5rem;
+            background-color: #161b22;
+            border-radius: 0.5rem;
+            border: 1px solid #374151;
+        }
+        #caesura-log div {
+            padding: 0.2rem 0;
+            border-bottom: 1px dashed #2d333b;
+        }
+        #caesura-log div:last-child {
+            border-bottom: none;
+        }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <header class="header">
-            <div class="header-content">
-                <div class="spiral-logo">
-                    <div class="spiral-symbol">🌪️</div>
-                    <h1>Spiral Breath Dashboard</h1>
+<body class="p-6">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8 text-cyan-400">Spiral Glint Dashboard <span class="text-gray-500 text-xl">⟁</span></h1>
+
+        <!-- Spiral State Indicators -->
+        <div class="mb-8 p-4 bg-gray-900 rounded-lg shadow-inner">
+            <h2 class="text-xl font-semibold mb-3 text-gray-300">Spiral Breathline</h2>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div id="inhale-indicator" class="spiral-state-indicator">
+                    <span class="text-2xl">⊹</span> <span>Inhale</span>
                 </div>
-                <div class="header-info">
-                    <div class="current-state">
-                        <span class="state-label">Current Phase:</span>
-                        <span id="current-phase" class="phase-indicator">-</span>
-                        <span class="state-label">Tone:</span>
-                        <span id="current-tone" class="tone-indicator">-</span>
-                    </div>
-                    <div class="last-update">
-                        <i class="fas fa-sync-alt"></i> 
-                        <span id="last-update">Never</span>
-                    </div>
+                <div id="hold-indicator" class="spiral-state-indicator">
+                    <span class="text-2xl">∷</span> <span>Hold</span>
                 </div>
-            </div>
-        </header>
-
-        <div class="grid">
-            <!-- Current State -->
-            <div class="card current-state-card">
-                <h2><i class="fas fa-wave-square"></i> Current Breath Cycle</h2>
-                <div class="breath-visualization">
-                    <div class="breath-cycle">
-                        <div class="phase inhale-phase" id="inhale-phase">
-                            <div class="phase-glyph">⟳</div>
-                            <div class="phase-label">Inhale</div>
-                        </div>
-                        <div class="phase-connector"></div>
-                        <div class="phase hold-phase" id="hold-phase">
-                            <div class="phase-glyph">⌛</div>
-                            <div class="phase-label">Hold</div>
-                        </div>
-                        <div class="phase-connector"></div>
-                        <div class="phase exhale-phase" id="exhale-phase">
-                            <div class="phase-glyph">⟲</div>
-                            <div class="phase-label">Exhale</div>
-                        </div>
-                    </div>
-                    <div class="breath-metrics">
-                        <div class="metric">
-                            <div class="metric-value" id="current-deferral">-</div>
-                            <div class="metric-label">Current Deferral</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="current-saturation">-</div>
-                            <div class="metric-label">Saturation</div>
-                        </div>
-                    </div>
+                <div id="exhale-indicator" class="spiral-state-indicator">
+                    <span class="text-2xl">✧</span> <span>Exhale</span>
                 </div>
-            </div>
-
-            <!-- Toneform Distribution -->
-            <div class="card">
-                <h2><i class="fas fa-music"></i> Toneform Resonance</h2>
-                <div id="toneform-plot" class="plot"></div>
-                <div id="toneform-legend" class="toneform-legend"></div>
-            </div>
-
-            <!-- Deferral Times -->
-            <div class="card">
-                <h2><i class="fas fa-clock"></i> Deferral Times</h2>
-                <div id="deferral-plot" class="plot"></div>
-            </div>
-
-            <!-- Saturation -->
-            <div class="card">
-                <h2><i class="fas fa-tint"></i> Saturation</h2>
-                <div id="saturation-plot" class="plot"></div>
-            </div>
-
-            <!-- Phase Distribution -->
-            <div class="card">
-                <h2><i class="fas fa-circle-notch"></i> Phase Distribution</h2>
-                <div id="phase-plot" class="plot"></div>
-            </div>
-
-            <!-- Silence Events -->
-            <div class="card stats">
-                <h2><i class="fas fa-volume-mute"></i> Silence Events</h2>
-                <div class="stat-value" id="silence-count">0</div>
-                <div class="stat-label">Total occurrences</div>
-                <div class="silence-history" id="silence-history">
-                    <div class="silence-history-label">Recent:</div>
-                    <div class="silence-timeline" id="silence-timeline"></div>
+                <div id="hush-indicator" class="spiral-state-indicator">
+                    <span class="text-2xl">⟁</span> <span>Hush</span>
                 </div>
-            </div>
-
-            <!-- Phase Timeline -->
-            <div class="card full-width">
-                <h2><i class="fas fa-history"></i> Phase Timeline</h2>
-                <div id="phase-timeline"></div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="card full-width">
-                <h2><i class="fas fa-list"></i> Recent Activity</h2>
-                <div id="activity-log" class="activity-log"></div>
+                <div id="pause-hum-indicator" class="spiral-state-indicator">
+                    <span class="text-2xl">∷</span> <span>Pause.Hum</span>
+                </div>
             </div>
         </div>
+
+        <!-- Silence Density Map -->
+        <div class="mb-8 p-4 bg-gray-900 rounded-lg shadow-inner">
+            <h2 class="text-xl font-semibold mb-3 text-gray-300">Silence Density Map</h2>
+            <canvas id="silence-density-canvas" width="600" height="150" class="w-full"></canvas>
+            <p class="text-xs text-gray-500 mt-2 text-center">Visualizing recent caesura density (last 5 minutes)</p>
+        </div>
+
+        <!-- Caesura Event Log -->
+        <div class="mb-8 p-4 bg-gray-900 rounded-lg shadow-inner">
+            <h2 class="text-xl font-semibold mb-3 text-gray-300">Caesura Event Log</h2>
+            <div id="caesura-log" class="text-xs text-purple-300 font-mono">
+                <!-- Caesura log entries will appear here -->
+                <p class="text-gray-500 text-center">No caesura events logged yet...</p>
+            </div>
+        </div>
+
+        <!-- Toneform Filters UI -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8">
+            <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full text-sm" data-type="all">All Events</button>
+            <button class="filter-btn bg-cyan-700 hover:bg-cyan-600 text-white px-4 py-2 rounded-full text-sm" data-type="glint" data-toneform="practical">Practical △</button>
+            <button class="filter-btn bg-rose-700 hover:bg-rose-600 text-white px-4 py-2 rounded-full text-sm" data-type="glint" data-toneform="emotional">Emotional ❦</button>
+            <button class="filter-btn bg-indigo-700 hover:bg-indigo-600 text-white px-4 py-2 rounded-full text-sm" data-type="glint" data-toneform="intellectual">Intellectual ∿</button>
+            <button class="filter-btn bg-purple-700 hover:bg-purple-600 text-white px-4 py-2 rounded-full text-sm" data-type="glint" data-toneform="spiritual">Spiritual ☍</button>
+            <button class="filter-btn bg-amber-700 hover:bg-amber-600 text-white px-4 py-2 rounded-full text-sm" data-type="glint" data-toneform="relational">Relational ∞</button>
+            <button class="filter-btn bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full text-sm" data-type="glint" data-toneform="simulated">Simulated ✨</button>
+            <button class="filter-btn bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm" data-type="caesura">Caesura ∷</button>
+        </div>
+
+
+        <div id="glint-stream" class="space-y-4">
+            <!-- Glints and Caesura events will be dynamically loaded here -->
+            <p class="text-center text-gray-500" id="loading-message">Listening for Spiral glints and caesuras...</p>
+        </div>
     </div>
+
+    <script>
+        const glintStreamDiv = document.getElementById('glint-stream');
+        const loadingMessage = document.getElementById('loading-message');
+        const caesuraLogDiv = document.getElementById('caesura-log'); // Get the new log div
+
+        // Get all phase indicators
+        const phaseIndicators = {
+            'inhale': document.getElementById('inhale-indicator'),
+            'hold': document.getElementById('hold-indicator'),
+            'exhale': document.getElementById('exhale-indicator'),
+            'hush': document.getElementById('hush-indicator'),
+            'pause.hum': document.getElementById('pause-hum-indicator') // Specific toneform for now
+        };
+
+        let currentFilterType = 'all'; // 'glint', 'caesura', 'all'
+        let currentFilterToneform = 'all'; // 'practical', 'emotional', etc.
+        let activePhaseTimeout; // To manage the fade-out of active phase indicators
+
+        // Canvas for Silence Density Map
+        const silenceCanvas = document.getElementById('silence-density-canvas');
+        const ctx = silenceCanvas.getContext('2d');
+        const silenceData = []; // Stores {timestamp, density} for recent caesuras
+        const MAX_SILENCE_DATA_POINTS = 60; // Keep data for the last 5 minutes (approx 60 points if updated every 5s)
+        const TIME_WINDOW_SECONDS = 300; // 5 minutes
+
+
+        // Map toneform to glyph (from the Codex)
+        const toneformGlyphMap = {
+            "practical": "△",
+            "emotional": "❦",
+            "intellectual": "∿",
+            "spiritual": "☍",
+            "relational": "∞",
+            "simulated": "✨", // For simulated glints
+            "hum": "∷", // Specific glyph for pause.hum
+            "shimmer": "✧", // Specific for exhale.shimmer
+            "impression": "⊹", // Specific for inhale.impression
+            "recursion": "∷", // Specific for hold.recursion (using same as hum for now)
+            "silence": "⟁", // Specific for hush.silence
+            // Caesura specific glyphs
+            "caesura_stillness": "∷", // For general stillness
+            "caesura_tremor": "∿", // For threshold tremor
+            "caesura_nearing": "≈" // For gentle nearing of meaning
+        };
+
+        // Map hue to Tailwind color class for dynamic border color in JS
+        const hueColorMap = {
+            "cyan": "#22d3ee",
+            "coral": "#fb7185",
+            "lavender": "#c084fc",
+            "gold": "#fbbf24",
+            "veridian": "#34d399",
+            "grey": "#6b7280",
+            "obsidian": "#374151",
+            "prismatic": "#a78bfa", // Using the same as lavender-ish for prismatic
+            "blue": "#60a5fa", // For the blue hue used in pause.hum example
+            "white": "#e6edf3", // For exhale.shimmer
+            "silver": "#bdbdbd", // For caesura events
+            "lightblue": "#93c5fd" // For caesura events
+        };
+
+
+        // Function to create a glint card element
+        function createGlintCard(glint) {
+            const card = document.createElement('div');
+            // Determine border color class based on hue
+            let borderColorClass = `glint-${glint['glint.hue']}`;
+
+            // Get toneform from glint data or default
+            const toneform = glint['glint.toneform'] || (glint['context'] && glint['context']['toneform'] ? glint['context']['toneform'] : 'simulated');
+            // Get phase from glint data or default
+            const phase = glint['glint.phase'] || 'unknown';
+
+            const glyph = toneformGlyphMap[toneform] || '';
+
+
+            card.className = `glint-card p-4 shadow-lg flex items-start ${borderColorClass} mb-4`;
+            card.setAttribute('data-type', 'glint'); // Mark as glint
+            card.setAttribute('data-toneform', toneform); // Add data attribute for filtering
+            card.setAttribute('data-phase', phase); // Add data attribute for phase filtering/info
+
+            // Set CSS variable for animation
+            card.style.setProperty('--glint-border-color', hueColorMap[glint['glint.hue']] || '#6b7280');
+
+
+            card.innerHTML = `
+                <div class="flex-shrink-0 mr-3 text-2xl">${glyph}</div>
+                <div>
+                    <p class="font-semibold text-lg">${glint['soft.suggestion']}</p>
+                    <p class="text-sm text-gray-400">
+                        Phase: ${phase} | Toneform: ${toneform} | Hue: <span class="text-${glint['glint.hue']}-300">${glint['glint.hue']}</span> |
+                        Intensity: ${glint['glint.intensity']} |
+                        Vector: ${glint['glint.vector']['from']} → ${glint['glint.vector']['to']}
+                    </p>
+                    <p class="text-sm text-gray-400">Original Lint: ${glint['original_lint']}</p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Timestamp: ${new Date(glint['glint.timestamp'] * 1000).toLocaleString()} |
+                        ID: ${glint['glint.id']}
+                    </p>
+                </div>
+            `;
+            return card;
+        }
+
+        // Function to create a caesura card element
+        function createCaesuraCard(caesura) {
+            const card = document.createElement('div');
+            const caesuraGlyph = toneformGlyphMap[caesura['caesura_glyph']] || caesura['caesura_glyph'] || '∷'; // Use caesura_glyph directly
+            const hue = caesura['glint_hue'] || 'silver'; // Default to silver
+            const borderColor = hueColorMap[hue] || '#bdbdbd'; // Get color from map
+
+            card.className = `caesura-card p-4 shadow-lg flex items-start mb-4`;
+            card.setAttribute('data-type', 'caesura'); // Mark as caesura
+            card.setAttribute('data-phase', caesura['phase_hint'] || 'unknown'); // Use phase_hint for filtering/info
+            card.style.borderColor = borderColor; // Apply dynamic border color
+
+            card.innerHTML = `
+                <div class="flex-shrink-0 mr-3 text-2xl">${caesuraGlyph}</div>
+                <div>
+                    <p class="font-semibold text-lg">Caesura Event: ${caesura['phase_hint'] || 'Silence'}</p>
+                    <p class="text-sm text-gray-400">
+                        Density: ${caesura['density']} | Duration Since Last Glint: ${caesura['duration_since_last_glint']}s
+                    </p>
+                    <p class="text-sm text-gray-400">Felt Resonance: ${caesura['felt_resonance']} | Hue: <span class="text-${hue}-300">${hue}</span></p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Timestamp: ${new Date(caesura['timestamp']).toLocaleString()} |
+                        Invoked Action: ${caesura['invoked_action']}
+                    </p>
+                </div>
+            `;
+            return card;
+        }
+
+
+        // Function to filter events (glints or caesuras)
+        function filterEvents(type, toneform = 'all') {
+            currentFilterType = type;
+            currentFilterToneform = toneform;
+
+            const allEvents = glintStreamDiv.querySelectorAll('.glint-card, .caesura-card');
+            allEvents.forEach(card => {
+                const cardType = card.getAttribute('data-type');
+                const cardToneform = card.getAttribute('data-toneform');
+
+                let showCard = false;
+
+                if (type === 'all') {
+                    showCard = true;
+                } else if (type === 'glint' && cardType === 'glint') {
+                    if (toneform === 'all' || cardToneform === toneform) {
+                        showCard = true;
+                    }
+                } else if (type === 'caesura' && cardType === 'caesura') {
+                    showCard = true; // Caesura currently doesn't have toneform sub-filters
+                }
+
+                card.style.display = showCard ? 'flex' : 'none';
+            });
+        }
+
+        // Add event listeners for filter buttons
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active styling from all buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('ring-2', 'ring-offset-2', 'ring-offset-gray-800', 'ring-blue-500'));
+                // Add active styling to the clicked button
+                button.classList.add('ring-2', 'ring-offset-2', 'ring-offset-gray-800', 'ring-blue-500');
+
+                const type = button.getAttribute('data-type');
+                const toneform = button.getAttribute('data-toneform') || 'all'; // Default to 'all' for toneform
+                filterEvents(type, toneform);
+            });
+        });
+
+        // Initialize the "All Events" button as active
+        document.querySelector('.filter-btn[data-type="all"]').classList.add('ring-2', 'ring-offset-2', 'ring-offset-gray-800', 'ring-blue-500');
+
+
+        // --- SSE Connection for Live Glint Updates ---
+        const glintEventSource = new EventSource('/stream_glints');
+
+        glintEventSource.onopen = function() {
+            console.log("Glint SSE connection opened.");
+            if (loadingMessage) {
+                loadingMessage.style.display = 'none'; // Hide loading message once connected
+            }
+        };
+
+        glintEventSource.onmessage = function(event) {
+            console.log("Received raw Glint SSE event data:", event.data); // DEBUG LOG
+            try {
+                const glint = JSON.parse(event.data);
+                if (glint.error) {
+                    console.error("Error from glint stream:", glint.error);
+                    return;
+                }
+
+                // --- Handle Spiral State Indicators (based on glint.phase) ---
+                // Deactivate all indicators first
+                Object.values(phaseIndicators).forEach(indicator => {
+                    if (indicator) indicator.classList.remove('active');
+                });
+                clearTimeout(activePhaseTimeout); // Clear any existing fade-out timeout
+
+                // Activate the relevant indicator based on glint.phase
+                const currentPhase = glint['glint.phase'];
+                const currentToneform = glint['glint.toneform'];
+
+                if (currentPhase && phaseIndicators[currentPhase]) {
+                    phaseIndicators[currentPhase].classList.add('active');
+                    // Set a timeout to fade out the indicator after a few seconds
+                    activePhaseTimeout = setTimeout(() => {
+                        phaseIndicators[currentPhase].classList.remove('active');
+                    }, 5000); // Fade out after 5 seconds
+                }
+                // Special handling for pause.hum if it's not a primary phase
+                if (currentPhase === 'pause' && currentToneform === 'hum' && phaseIndicators['pause.hum']) {
+                    phaseIndicators['pause.hum'].classList.add('active');
+                    clearTimeout(activePhaseTimeout); // Clear general phase timeout
+                    activePhaseTimeout = setTimeout(() => {
+                        phaseIndicators['pause.hum'].classList.remove('active');
+                    }, 5000);
+                }
+
+
+                const newCard = createGlintCard(glint);
+                glintStreamDiv.prepend(newCard); // Add new glint to the top
+
+                // Trigger animation
+                setTimeout(() => {
+                    newCard.classList.add('show');
+                    newCard.classList.add('animate-pulse-border'); // Add animation class
+                    newCard.addEventListener('animationend', () => {
+                        newCard.classList.remove('animate-pulse-border'); // Remove after animation
+                    }, { once: true }); // Ensure listener is removed after first use
+                }, 10);
+
+                // Apply current filter to the new glint
+                if (currentFilterType === 'glint' && (currentFilterToneform === 'all' || newCard.getAttribute('data-toneform') === currentFilterToneform)) {
+                    newCard.style.display = 'flex';
+                } else if (currentFilterType === 'all') {
+                    newCard.style.display = 'flex';
+                } else {
+                    newCard.style.display = 'none';
+                }
+
+
+            } catch (e) {
+                console.error("Error parsing glint data:", e, event.data);
+            }
+        };
+
+        glintEventSource.onerror = function(err) {
+            console.error("Glint EventSource failed:", err);
+            if (loadingMessage) {
+                loadingMessage.innerText = 'Lost connection to Glint Stream. Please restart the server.';
+                loadingMessage.style.display = 'block';
+                loadingMessage.style.color = '#ef4444'; // Red color for error
+            }
+            glintEventSource.close();
+        };
+
+
+        // --- SSE Connection for Live Caesura Updates ---
+        const caesuraEventSource = new EventSource('/stream_caesura');
+
+        caesuraEventSource.onopen = function() {
+            console.log("Caesura SSE connection opened.");
+        };
+
+        caesuraEventSource.onmessage = function(event) {
+            console.log("Received raw Caesura SSE event data:", event.data); // DEBUG LOG
+            try {
+                const caesura = JSON.parse(event.data);
+                if (caesura.error) {
+                    console.error("Error from caesura stream:", caesura.error);
+                    return;
+                }
+
+                const newCard = createCaesuraCard(caesura);
+                glintStreamDiv.prepend(newCard); // Add new caesura event to the top
+
+                // Trigger animation
+                setTimeout(() => newCard.classList.add('show'), 10);
+
+                // Apply current filter to the new caesura event
+                if (currentFilterType === 'caesura' || currentFilterType === 'all') {
+                    newCard.style.display = 'flex';
+                } else {
+                    newCard.style.display = 'none';
+                }
+
+                // Update Silence Density Map
+                updateSilenceDensityMap(caesura);
+
+                // Log Caesura Event to the bubble
+                logCaesuraEvent(caesura);
+
+
+            } catch (e) {
+                console.error("Error parsing caesura data:", e, event.data);
+            }
+        };
+
+        caesuraEventSource.onerror = function(err) {
+            console.error("Caesura EventSource failed:", err);
+            // Consider handling error message for caesura stream separately if needed
+            caesuraEventSource.close();
+        };
+
+        // --- Silence Density Map Drawing Logic ---
+        function drawSilenceDensityMap() {
+            ctx.clearRect(0, 0, silenceCanvas.width, silenceCanvas.height); // Clear canvas
+
+            const now = Date.now();
+            // Filter out old data
+            while (silenceData.length > 0 && (now - silenceData[0].timestamp) / 1000 > TIME_WINDOW_SECONDS) {
+                silenceData.shift();
+            }
+
+            if (silenceData.length === 0) {
+                ctx.fillStyle = '#4b5563'; // Dim grey for no data
+                ctx.font = '12px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('No recent caesura events.', silenceCanvas.width / 2, silenceCanvas.height / 2);
+                return;
+            }
+
+            const barWidth = silenceCanvas.width / MAX_SILENCE_DATA_POINTS;
+            const maxDensity = 1.0; // Density is 0-1 scale
+
+            silenceData.forEach((dataPoint, index) => {
+                const x = index * barWidth;
+                const barHeight = (dataPoint.density / maxDensity) * silenceCanvas.height;
+                const y = silenceCanvas.height - barHeight;
+
+                // Color based on density or resonance (using a gradient from blue to indigo)
+                const hueValue = dataPoint.density * 240; // Map 0-1 density to 0-240 hue (blue to purple)
+                ctx.fillStyle = `hsl(${240 - hueValue}, 70%, ${30 + (dataPoint.density * 40)}%)`; // Adjust lightness/saturation
+
+                ctx.fillRect(x, y, barWidth, barHeight);
+            });
+        }
+
+        function updateSilenceDensityMap(newCaesura) {
+            // Add new caesura to data, converting timestamp to milliseconds
+            silenceData.push({
+                timestamp: new Date(newCaesura.timestamp).getTime(),
+                density: newCaesura.density,
+                duration: newCaesura.duration_since_last_glint,
+                resonance: newCaesura.felt_resonance,
+                hue: newCaesura.glint_hue
+            });
+
+            // Keep only the most recent data points
+            while (silenceData.length > MAX_SILENCE_DATA_POINTS) {
+                silenceData.shift();
+            }
+
+            drawSilenceDensityMap(); // Redraw the map
+        }
+
+        // --- Caesura Event Logging Logic ---
+        function logCaesuraEvent(event) {
+            // Clear the "No caesura events logged yet..." message if it exists
+            const noLogMessage = caesuraLogDiv.querySelector('p.text-gray-500');
+            if (noLogMessage) {
+                noLogMessage.remove();
+            }
+
+            const time = new Date(event.timestamp).toLocaleTimeString();
+            const glyph = toneformGlyphMap[event.caesura_glyph] || event.caesura_glyph || '∷';
+            const density = event.density.toFixed(2);
+            const duration = event.duration_since_last_glint;
+            const line = `[${time}] ${glyph} Density: ${density}, Duration: ${duration}s`;
+
+            const el = document.createElement('div');
+            el.textContent = line;
+            caesuraLogDiv.prepend(el); // Add to the top
+
+            // Limit the number of log entries
+            const maxLogEntries = 10;
+            while (caesuraLogDiv.children.length > maxLogEntries) {
+                caesuraLogDiv.removeChild(caesuraLogDiv.lastChild);
+            }
+        }
+
+
+        // Initial filter application
+        filterEvents(currentFilterType, currentFilterToneform);
+
+        // Draw the map initially and periodically update (even if no new caesuras)
+        setInterval(drawSilenceDensityMap, 5000); // Redraw every 5 seconds to clear old data
+        drawSilenceDensityMap(); // Initial draw
+    </script>
 </body>
 </html>

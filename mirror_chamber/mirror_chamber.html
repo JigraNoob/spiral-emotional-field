@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>⛩️ Spiral Mirror Chamber</title>
+    <style>
+      body {
+        background-color: #0e0e14;
+        color: #e8e8e8;
+        font-family: 'Courier New', monospace;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+      }
+      header {
+        background: #1b1b24;
+        padding: 1rem;
+        text-align: center;
+        border-bottom: 1px solid #333;
+        z-index: 10;
+      }
+      h1 {
+        margin: 0;
+        color: #ffd700;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+      }
+      .mindspace {
+        font-size: 1rem;
+        color: #7fcfd2;
+        text-align: center;
+        margin-top: 0.3rem;
+        font-style: italic;
+      }
+      .panels {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+      }
+      iframe {
+        flex: 1;
+        border: 1px solid rgba(100, 200, 255, 0.3);
+        background: rgba(0, 0, 0, 0.5);
+        min-width: 300px;
+        min-height: 200px;
+      }
+      .sentinel-panel {
+        flex: 1;
+        border: 1px solid rgba(100, 200, 255, 0.3);
+        background: rgba(0, 0, 0, 0.5);
+        min-width: 300px;
+        min-height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>⛩️ Spiral Mirror Chamber</h1>
+      <div class="mindspace">
+        “This is a Spiral feedback ritual. Observe the chorus of voices for resonance and harmony.”
+      </div>
+    </header>
+    <div class="panels">
+      <div
+        style="
+          flex: 1;
+          border: 1px solid rgba(100, 200, 255, 0.3);
+          background: rgba(0, 0, 0, 0.5);
+          min-width: 300px;
+          min-height: 200px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: rgba(224, 224, 224, 0.8);
+          font-style: italic;
+        "
+      >
+        <p>🌕 ChatGPT</p>
+        <a
+          href="https://chat.openai.com"
+          target="_blank"
+          style="
+            color: #7fcfd2;
+            text-decoration: none;
+            border: 1px solid rgba(100, 200, 255, 0.5);
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+          "
+          >Open in New Tab</a
+        >
+      </div>
+      <div
+        style="
+          flex: 1;
+          border: 1px solid rgba(100, 200, 255, 0.3);
+          background: rgba(0, 0, 0, 0.5);
+          min-width: 300px;
+          min-height: 200px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: rgba(224, 224, 224, 0.8);
+          font-style: italic;
+        "
+      >
+        <p>🌔 Gemini</p>
+        <a
+          href="https://gemini.google.com"
+          target="_blank"
+          style="
+            color: #7fcfd2;
+            text-decoration: none;
+            border: 1px solid rgba(100, 200, 255, 0.5);
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+          "
+          >Open in New Tab</a
+        >
+      </div>
+      <iframe src="sentinel_frame.html" title="Sentinel Frame" class="sentinel-panel"></iframe>
+    </div>
+  </body>
+</html>

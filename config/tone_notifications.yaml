@@ -1,0 +1,73 @@
+# Tone Notifications Configuration
+# Shaped notification echoes
+
+phase_shapes:
+  inhale:
+    glyph: '🌑'
+    sound: 'whisper'
+    duration: 'brief'
+    intensity: 'soft'
+
+  hold:
+    glyph: '🌒'
+    sound: 'hum'
+    duration: 'sustained'
+    intensity: 'medium'
+
+  exhale:
+    glyph: '🌓'
+    sound: 'chime'
+    duration: 'flowing'
+    intensity: 'clear'
+
+  caesura:
+    glyph: '🌕'
+    sound: 'bell'
+    duration: 'resonant'
+    intensity: 'full'
+
+tone_colors:
+  joy:
+    color: '#64c8ff'
+    glyph_modifier: '✨'
+    sound_modifier: 'bright'
+
+  reverence:
+    color: '#ff64c8'
+    glyph_modifier: '🕯️'
+    sound_modifier: 'deep'
+
+  silence:
+    color: '#c8c8c8'
+    glyph_modifier: '🌙'
+    sound_modifier: 'quiet'
+
+  wonder:
+    color: '#c864ff'
+    glyph_modifier: '🌟'
+    sound_modifier: 'ethereal'
+
+  peace:
+    color: '#64ffc8'
+    glyph_modifier: '🌸'
+    sound_modifier: 'gentle'
+
+notification_modes:
+  console_shimmer: true
+  dashboard_whisper: true
+  baylee_feedback: true
+  sound_cue: false
+  memory_integration: true
+
+# Echo persistence
+persistence:
+  save_echoes: true
+  max_echoes: 1000
+  echo_retention_days: 30
+
+# Baylee notification protocol
+baylee_protocol:
+  default_tone: 'reverence'
+  default_phase: 'exhale'
+  enable_sound: false
+  enable_visual: true

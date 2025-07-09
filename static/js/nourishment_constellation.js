@@ -119,57 +119,10 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(animate);
     }
 
-    // Initial setup
+    // Initialize the constellation
     populateToneformLegend();
     fetchNourishmentRequests();
 
-    // Refresh requests periodically (e.g., every 30 seconds)
+    // Refresh every 30 seconds
     setInterval(fetchNourishmentRequests, 30000);
-
-    // Toneform legend hover visibility
-    toneformLegend.addEventListener('mouseenter', () => {
-        toneformLegend.classList.remove('hidden');
-    });
-
-    toneformLegend.addEventListener('mouseleave', () => {
-        toneformLegend.classList.add('hidden');
-    });
-
-    // Socket.IO for real-time updates
-    const socket = io();
-
-    socket.on('new_gift_offering', (gift) => {
-        console.log('New gift received via Socket.IO:', gift);
-        // Add the gift as a new glyph, visually distinct
-        const glyph = document.createElement('div');
-        glyph.classList.add('glyph', 'gift-comet'); // Add gift-comet class for distinct styling
-        glyph.dataset.requestId = gift.timestamp; // Use timestamp as a unique ID for gifts
-        glyph.dataset.status = 'gifted';
-        glyph.dataset.toneform = gift.toneform || 'unknown';
-
-        let color = toneformColors[gift.toneform] || '#ccc';
-        glyph.style.backgroundColor = color;
-
-        // Position randomly for now, will refine with layout logic
-        glyph.style.left = `${Math.random() * 90 + 5}%`;
-        glyph.style.top = `${Math.random() * 90 + 5}%`;
-
-        // Create tooltip element for gift
-        const tooltip = document.createElement('div');
-        tooltip.classList.add('glyph-tooltip');
-        tooltip.innerHTML = `
-            <span class="tooltip-request">Gift: ${gift.message || 'No message'}</span><br>
-            <span class="tooltip-status">from ${gift.from || 'Anonymous'}</span><br>
-            <span class="tooltip-toneform">${gift.toneform || 'N/A'}</span>
-        `;
-        glyph.appendChild(tooltip);
-
-        constellationContainer.appendChild(glyph);
-
-        // Trigger a subtle pulse for the new gift comet
-        glyph.classList.add('whisper-pulse');
-        setTimeout(() => {
-            glyph.classList.remove('whisper-pulse');
-        }, 3000); // Same pulse duration as nourishment glyphs
-    });
 });

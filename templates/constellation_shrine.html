@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌌 Constellation Shrine</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+        color: #e0e0e0;
+        font-family: 'Courier New', monospace;
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      .constellation-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+      }
+
+      .constellation-canvas {
+        flex: 1;
+        position: relative;
+      }
+
+      canvas {
+        display: block;
+        cursor: crosshair;
+      }
+
+      .shrine-controls {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 15px;
+        min-width: 250px;
+        backdrop-filter: blur(10px);
+      }
+
+      .shrine-title {
+        color: #4a9eff;
+        margin: 0 0 10px 0;
+        font-size: 18px;
+      }
+
+      .control-section {
+        margin-bottom: 15px;
+      }
+
+      .control-label {
+        display: block;
+        margin-bottom: 5px;
+        color: #888;
+        font-size: 12px;
+      }
+
+      .control-button {
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        border: 1px solid #4a9eff;
+        color: #4a9eff;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 8px;
+        margin-bottom: 5px;
+        font-size: 11px;
+        transition: all 0.3s ease;
+      }
+
+      .control-button:hover {
+        background: linear-gradient(135deg, #4a9eff, #357abd);
+        color: white;
+      }
+
+      .node-details {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.9);
+        border: 1px solid #4a9eff;
+        border-radius: 8px;
+        padding: 15px;
+        min-width: 300px;
+        max-width: 400px;
+        backdrop-filter: blur(10px);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .node-details.visible {
+        transform: translateX(0);
+      }
+
+      .ritual-panel {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.9);
+        border: 1px solid #ff6b6b;
+        border-radius: 8px;
+        padding: 15px;
+        min-width: 300px;
+        backdrop-filter: blur(10px);
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .ritual-panel.visible {
+        transform: translateY(0);
+      }
+
+      .ritual-button {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        border: none;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+        margin-bottom: 5px;
+        font-size: 12px;
+        transition: all 0.3s ease;
+      }
+
+      .ritual-button:hover {
+        background: linear-gradient(135deg, #ee5a52, #d63447);
+        transform: translateY(-1px);
+      }
+
+      .status-display {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-size: 12px;
+        color: #888;
+      }
+
+      .constellation-stats {
+        margin-top: 10px;
+        font-size: 11px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="constellation-container">
+      <div class="constellation-canvas">
+        <canvas id="constellationCanvas"></canvas>
+      </div>
+
+      <!-- Shrine Controls -->
+      <div class="shrine-controls">
+        <h3 class="shrine-title">🌌 Constellation Shrine</h3>
+
+        <div class="control-section">
+          <label class="control-label">Visualization</label>
+          <button class="control-button" onclick="constellationView.resetView()">🎯 Center</button>
+          <button class="control-button" onclick="constellationView.toggleAnimation()">⏯️ Animate</button>
+          <button class="control-button" onclick="constellationView.saveState()">💾 Save</button>
+        </div>
+
+        <div class="control-section">
+          <label class="control-label">Filters</label>
+          <button class="control-button" onclick="constellationView.filterByToneform('all')">All</button>
+          <button class="control-button" onclick="constellationView.filterByToneform('practical')">⟁ Practical</button>
+          <button class="control-button" onclick="constellationView.filterByToneform('emotional')">❦ Emotional</button>
+          <button class="control-button" onclick="constellationView.filterByToneform('intellectual')">
+            ∿ Intellectual
+          </button>
+          <button class="control-button" onclick="constellationView.filterByToneform('spiritual')">∞ Spiritual</button>
+        </div>
+
+        <div class="constellation-stats">
+          <div>Nodes: <span id="nodeCount">0</span></div>
+          <div>Max Depth: <span id="maxDepth">0</span></div>
+          <div>Selected: <span id="selectedNode">None</span></div>
+        </div>
+      </div>
+
+      <!-- Node Details Panel -->
+      <div class="node-details" id="nodeDetails">
+        <h4>🌟 Glint Details</h4>
+        <div><strong>ID:</strong> <span id="nodeId">-</span></div>
+        <div><strong>Toneform:</strong> <span id="nodeToneform">-</span></div>
+        <div><strong>Depth:</strong> <span id="nodeDepth">-</span></div>
+        <div><strong>Timestamp:</strong> <span id="nodeTimestamp">-</span></div>
+        <div style="margin-top: 10px"><strong>Content:</strong></div>
+        <div id="nodeContent" style="font-size: 11px; color: #ccc; margin-top: 5px">-</div>
+      </div>
+
+      <!-- Ritual Panel -->
+      <div class="ritual-panel" id="ritualPanel">
+        <h4>🔮 Ritual Invocation</h4>
+        <p style="font-size: 11px; color: #ccc; margin-bottom: 10px">Invoke rituals from the selected glint node</p>
+        <button class="ritual-button" onclick="invokeReflection()">🪪 Reflect</button>
+        <button class="ritual-button" onclick="invokeGeminiFlash()">⚡ Gemini Flash</button>
+        <button class="ritual-button" onclick="invokeLineageTrace()">🕸️ Trace Lineage</button>
+        <div id="ritualResult" style="margin-top: 10px; font-size: 11px; color: #888"></div>
+      </div>
+
+      <!-- Status Display -->
+      <div class="status-display">
+        <span id="statusText">🌌 Constellation awakening...</span>
+      </div>
+    </div>
+
+    <script>
+      class ConstellationView {
+        constructor(canvasId) {
+          this.canvas = document.getElementById(canvasId);
+          this.ctx = this.canvas.getContext('2d');
+          this.nodes = [];
+          this.edges = [];
+          this.selectedNode = null;
+          this.animating = true;
+          this.filter = 'all';
+
+          this.setupCanvas();
+          this.setupEventListeners();
+          this.loadData();
+          this.startAnimation();
+        }
+
+        setupCanvas() {
+          this.resizeCanvas();
+          window.addEventListener('resize', () => this.resizeCanvas());
+        }
+
+        resizeCanvas() {
+          this.canvas.width = window.innerWidth;
+          this.canvas.height = window.innerHeight;
+        }
+
+        setupEventListeners() {
+          this.canvas.addEventListener('click', (e) => {
+            const rect = this.canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            this.handleClick(x, y);
+          });
+        }
+
+        async loadData() {
+          try {
+            const response = await fetch('/api/glints/lineage_map');
+            const data = await response.json();
+
+            this.nodes = data.nodes || [];
+            this.edges = data.edges || [];
+
+            this.updateStats();
+            this.updateStatus(`✨ Loaded ${this.nodes.length} glints`);
+          } catch (error) {
+            console.error('Failed to load constellation data:', error);
+            this.updateStatus('⚠️ Failed to load constellation');
+          }
+        }
+
+        updateStats() {
+          document.getElementById('nodeCount').textContent = this.nodes.length;
+          document.getElementById('maxDepth').textContent =
+            this.nodes.length > 0 ? Math.max(...this.nodes.map((n) => n.depth)) : 0;
+        }
+
+        updateStatus(message) {
+          document.getElementById('statusText').textContent = message;
+        }
+
+        handleClick(x, y) {
+          const clickedNode = this.findNodeAt(x, y);
+          if (clickedNode) {
+            this.selectNode(clickedNode);
+          } else {
+            this.deselectNode();
+          }
+        }
+
+        findNodeAt(x, y) {
+          for (const node of this.nodes) {
+            const distance = Math.sqrt(Math.pow(x - node.x, 2) + Math.pow(y - node.y, 2));
+            if (distance <= node.radius + 5) {
+              return node;
+            }
+          }
+          return null;
+        }
+
+        selectNode(node) {
+          this.selectedNode = node;
+          this.showNodeDetails(node);
+          document.getElementById('selectedNode').textContent = node.id;
+        }
+
+        deselectNode() {
+          this.selectedNode = null;
+          this.hideNodeDetails();
+          document.getElementById('selectedNode').textContent = 'None';
+        }
+
+        showNodeDetails(node) {
+          document.getElementById('nodeId').textContent = node.id;
+          document.getElementById('nodeToneform').textContent = node.toneform;
+          document.getElementById('nodeDepth').textContent = node.depth;
+          document.getElementById('nodeTimestamp').textContent = new Date(node.timestamp).toLocaleString();
+          document.getElementById('nodeContent').textContent = node.content;
+          document.getElementById('nodeDetails').classList.add('visible');
+        }
+
+        hideNodeDetails() {
+          document.getElementById('nodeDetails').classList.remove('visible');
+        }
+
+        toggleAnimation() {
+          this.animating = !this.animating;
+          if (this.animating) {
+            this.startAnimation();
+          } else {
+            cancelAnimationFrame(this.animationFrame);
+          }
+        }
+
+        resetView() {
+          // Reset view logic here
+        }
+
+        saveState() {
+          // Save state logic here
+        }
+
+        filterByToneform(toneform) {
+          this.filter = toneform;
+          // Filter nodes based on toneform
+        }
+
+        startAnimation() {
+          const animate = () => {
+            this.draw();
+            if (this.animating) {
+              this.animationFrame = requestAnimationFrame(animate);
+            }
+          };
+          animate();
+        }
+
+        draw() {
+          // Drawing logic here
+        }
+      }
+
+      let constellationView;
+
+      document.addEventListener('DOMContentLoaded', function () {
+        constellationView = new ConstellationView('constellationCanvas');
+
+        // Add keyboard shortcuts for constellation navigation
+        document.addEventListener('keydown', function (e) {
+          switch (e.key) {
+            case 'r':
+              if (constellationView.selectedNode) invokeReflection();
+              break;
+            case 'f':
+              if (constellationView.selectedNode) invokeGeminiFlash();
+              break;
+            case 'l':
+              if (constellationView.selectedNode) invokeLineageTrace();
+              break;
+            case 'Escape':
+              constellationView.deselectNode();
+              break;
+            case ' ':
+              e.preventDefault();
+              constellationView.toggleAnimation();
+              break;
+            case 'c':
+              constellationView.resetView();
+              break;
+          }
+        });
+      });
+
+      // Ritual Invocation Functions
+      function invokeReflection() {
+        if (!constellationView.selectedNode) return;
+
+        fetch(`/reflect/echo/${constellationView.selectedNode.id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              showRitualResult(
+                `🪪 Reflection Complete`,
+                `Toneform: ${data.toneform}\nLineage Depth: ${data.lineage_depth}\nDivergence: ${
+                  data.divergence_type || 'None'
+                }`
+              );
+              // Refresh constellation to show new connections
+              setTimeout(() => constellationView.loadData(), 1000);
+            } else {
+              showRitualResult('❌ Reflection Failed', data.error || 'Unknown error');
+            }
+          })
+          .catch((err) => showRitualResult('❌ Connection Error', err.message));
+      }
+
+      function invokeGeminiFlash() {
+        if (!constellationView.selectedNode) return;
+
+        fetch(`/flash/gemini`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            parent_id: constellationView.selectedNode.id,
+            context: `Constellation node: ${
+              constellationView.selectedNode.toneform
+            } - ${constellationView.selectedNode.content.substring(0, 100)}`,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              showRitualResult(
+                `⚡ Gemini Flash Ignited`,
+                `New Glint ID: ${data.glint_id}\nToneform: ${data.toneform}\nContent: ${data.content.substring(
+                  0,
+                  100
+                )}...`
+              );
+              // Refresh constellation to show new node
+              setTimeout(() => constellationView.loadData(), 1000);
+            } else {
+              showRitualResult('❌ Flash Failed', data.error || 'Unknown error');
+            }
+          })
+          .catch((err) => showRitualResult('❌ Connection Error', err.message));
+      }
+
+      function invokeLineageTrace() {
+        if (!constellationView.selectedNode) return;
+
+        fetch(`/trace/lineage/${constellationView.selectedNode.id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              showRitualResult(
+                `🕸️ Lineage Traced`,
+                `Ancestral Nodes: ${data.ancestral_nodes.join(', ')}\nDivergent Paths: ${data.divergent_paths.join(
+                  ', '
+                )}`
+              );
+            } else {
+              showRitualResult('❌ Trace Failed', data.error || 'Unknown error');
+            }
+          })
+          .catch((err) => showRitualResult('❌ Connection Error', err.message));
+      }
+
+      function closeRitualPanel() {
+        document.getElementById('ritualPanel').classList.remove('visible');
+        document.getElementById('nodeDetails').classList.remove('visible');
+        constellationView.deselectNode();
+      }
+
+      // Show ritual results in a temporary overlay
+      function showRitualResult(title, message) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(0, 0, 0, 0.9);
+          color: white;
+          padding: 20px;
+          border-radius: 10px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          backdrop-filter: blur(10px);
+          z-index: 200;
+          max-width: 400px;
+          text-align: center;
+          animation: fadeIn 0.3s ease;
+        `;
+
+        overlay.innerHTML = `
+          <div style="font-size: 16px; margin-bottom: 10px; color: #4a90e2;">${title}</div>
+          <div style="font-size: 12px; line-height: 1.4; white-space: pre-line;">${message}</div>
+          <button onclick="this.parentElement.remove()" style="
+            margin-top: 15px;
+            padding: 5px 15px;
+            background: rgba(74, 144, 226, 0.3);
+            border: 1px solid #4a90e2;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+          ">Close</button>
+        `;
+
+        document.body.appendChild(overlay);
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+          if (overlay.parentElement) overlay.remove();
+        }, 5000);
+      }
+    </script>
+  </body>
+</html>

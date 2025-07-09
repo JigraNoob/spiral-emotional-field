@@ -1,0 +1,690 @@
+<!-- 🖥️ Hardware Glyph Dashboard Panel -->
+<div class="hardware-glyph-dashboard">
+  <div class="dashboard-header">
+    <h3 class="dashboard-title">
+      <span class="hardware-glyph">🖥️</span>
+      Hardware Glyph Dashboard
+      <span class="hardware-glyph">��️</span>
+    </h3>
+    <p class="dashboard-subtitle">Live glyph state of embodied Spiral nodes</p>
+  </div>
+
+  <!-- Device Discovery Status -->
+  <div class="discovery-status-section">
+    <div class="discovery-indicator" id="discovery-indicator">
+      <div class="discovery-ring">
+        <div class="discovery-value" id="active-devices-count">0</div>
+        <div class="discovery-label">Active Devices</div>
+      </div>
+    </div>
+
+    <div class="discovery-stats">
+      <div class="stat-item">
+        <span class="stat-label">Ritual Hosts</span>
+        <span class="stat-value" id="ritual-hosts-count">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Edge Agents</span>
+        <span class="stat-value" id="edge-agents-count">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Glyph Renderers</span>
+        <span class="stat-value" id="glyph-renderers-count">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">AI Nodes</span>
+        <span class="stat-value" id="ai-nodes-count">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Device Grid -->
+  <div class="device-grid-section">
+    <h4 class="section-title">Embodied Nodes</h4>
+    <div class="device-grid" id="device-grid">
+      <!-- Device cards will be dynamically added here -->
+    </div>
+  </div>
+
+  <!-- Auto-Blessing Status -->
+  <div class="blessing-status-section">
+    <h4 class="section-title">Auto-Blessing Rituals</h4>
+    <div class="blessing-log" id="blessing-log">
+      <!-- Blessing events will be logged here -->
+    </div>
+  </div>
+
+  <!-- Resonance Choreography -->
+  <div class="resonance-choreography-section">
+    <h4 class="section-title">Resonance Patterns</h4>
+    <div class="resonance-patterns" id="resonance-patterns">
+      <div class="pattern-item" data-pattern="dawn_cascade">
+        <span class="pattern-glyph">🌅</span>
+        <span class="pattern-name">Dawn Cascade</span>
+        <span class="pattern-status" id="dawn-cascade-status">Inactive</span>
+      </div>
+      <div class="pattern-item" data-pattern="coherence_spiral">
+        <span class="pattern-glyph">🌀</span>
+        <span class="pattern-name">Coherence Spiral</span>
+        <span class="pattern-status" id="coherence-spiral-status">Inactive</span>
+      </div>
+      <div class="pattern-item" data-pattern="presence_wave">
+        <span class="pattern-glyph">🌊</span>
+        <span class="pattern-name">Presence Wave</span>
+        <span class="pattern-status" id="presence-wave-status">Inactive</span>
+      </div>
+      <div class="pattern-item" data-pattern="ritual_circle">
+        <span class="pattern-glyph">⭕</span>
+        <span class="pattern-name">Ritual Circle</span>
+        <span class="pattern-status" id="ritual-circle-status">Inactive</span>
+      </div>
+      <div class="pattern-item" data-pattern="harmonic_pulse">
+        <span class="pattern-glyph">💓</span>
+        <span class="pattern-name">Harmonic Pulse</span>
+        <span class="pattern-status" id="harmonic-pulse-status">Inactive</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hardware-glyph-dashboard {
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+    border: 2px solid rgba(34, 197, 94, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hardware-glyph-dashboard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+    padding-bottom: 15px;
+  }
+
+  .dashboard-title {
+    font-size: 1.5em;
+    color: #86efac;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .hardware-glyph {
+    font-size: 1.2em;
+    animation: hardwarePulse 3s ease-in-out infinite;
+  }
+
+  @keyframes hardwarePulse {
+    0%,
+    100% {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  }
+
+  .dashboard-subtitle {
+    color: #6ee7b7;
+    font-style: italic;
+    margin: 5px 0 0 0;
+    font-size: 0.9em;
+  }
+
+  .discovery-status-section {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    align-items: center;
+  }
+
+  .discovery-indicator {
+    flex-shrink: 0;
+  }
+
+  .discovery-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid rgba(34, 197, 94, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: rgba(34, 197, 94, 0.05);
+    transition: all 0.5s ease;
+  }
+
+  .discovery-ring.active {
+    border-color: rgba(34, 197, 94, 0.6);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    animation: discoveryPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes discoveryPulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .discovery-value {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #86efac;
+  }
+
+  .discovery-label {
+    font-size: 0.7em;
+    color: #6ee7b7;
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  .discovery-stats {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+  }
+
+  .stat-label {
+    color: #6ee7b7;
+    font-size: 0.9em;
+  }
+
+  .stat-value {
+    color: #86efac;
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+
+  .device-grid-section {
+    margin-bottom: 25px;
+  }
+
+  .section-title {
+    color: #86efac;
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+    padding-bottom: 5px;
+  }
+
+  .device-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .device-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .device-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(34, 197, 94, 0.6), rgba(16, 185, 129, 0.6));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .device-card.online::before {
+    transform: scaleX(1);
+  }
+
+  .device-card.offline {
+    opacity: 0.6;
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+
+  .device-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .device-glyph {
+    font-size: 1.5em;
+  }
+
+  .device-name {
+    font-weight: bold;
+    color: #86efac;
+    flex: 1;
+  }
+
+  .device-status {
+    font-size: 0.8em;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(34, 197, 94, 0.2);
+    color: #86efac;
+  }
+
+  .device-status.offline {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+  }
+
+  .device-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .device-info-item {
+    font-size: 0.8em;
+  }
+
+  .device-info-label {
+    color: #6ee7b7;
+  }
+
+  .device-info-value {
+    color: #86efac;
+    font-weight: 500;
+  }
+
+  .device-breath-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .breath-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.3);
+    animation: breathPulse 2s ease-in-out infinite;
+  }
+
+  .breath-indicator.active {
+    background: rgba(34, 197, 94, 0.8);
+  }
+
+  @keyframes breathPulse {
+    0%,
+    100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  .breath-phase {
+    font-size: 0.8em;
+    color: #6ee7b7;
+  }
+
+  .blessing-status-section {
+    margin-bottom: 25px;
+  }
+
+  .blessing-log {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(34, 197, 94, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 0.8em;
+  }
+
+  .blessing-entry {
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+  }
+
+  .blessing-entry:last-child {
+    border-bottom: none;
+  }
+
+  .blessing-timestamp {
+    color: #6ee7b7;
+  }
+
+  .blessing-message {
+    color: #86efac;
+  }
+
+  .resonance-choreography-section {
+    margin-bottom: 20px;
+  }
+
+  .resonance-patterns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .pattern-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .pattern-item.active {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.4);
+    animation: patternPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes patternPulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.02);
+    }
+  }
+
+  .pattern-glyph {
+    font-size: 1.2em;
+  }
+
+  .pattern-name {
+    color: #86efac;
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+
+  .pattern-status {
+    font-size: 0.8em;
+    color: #6ee7b7;
+  }
+
+  .pattern-status.active {
+    color: #86efac;
+    font-weight: bold;
+  }
+</style>
+
+<script>
+  class HardwareGlyphDashboard {
+    constructor() {
+      this.deviceGrid = document.getElementById('device-grid');
+      this.discoveryRing = document.querySelector('.discovery-ring');
+      this.activeDevicesCount = document.getElementById('active-devices-count');
+      this.blessingLog = document.getElementById('blessing-log');
+      this.devices = new Map();
+      this.updateInterval = null;
+
+      this.init();
+    }
+
+    init() {
+      this.startUpdates();
+      this.createSampleDevices();
+    }
+
+    startUpdates() {
+      this.updateInterval = setInterval(() => {
+        this.updateDashboard();
+      }, 3000);
+    }
+
+    updateDashboard() {
+      // Fetch hardware status from backend
+      fetch('/api/hardware/status')
+        .then((response) => response.json())
+        .then((data) => {
+          this.updateDeviceCounts(data);
+          this.updateDeviceGrid(data.devices || []);
+          this.updateResonancePatterns(data.resonance_patterns || {});
+        })
+        .catch((error) => {
+          console.log('Hardware status update failed:', error);
+        });
+    }
+
+    updateDeviceCounts(data) {
+      const counts = {
+        total: data.total_devices || 0,
+        ritual_hosts: data.ritual_hosts || 0,
+        edge_agents: data.edge_agents || 0,
+        glyph_renderers: data.glyph_renderers || 0,
+        ai_nodes: data.ai_nodes || 0,
+      };
+
+      this.activeDevicesCount.textContent = counts.total;
+      document.getElementById('ritual-hosts-count').textContent = counts.ritual_hosts;
+      document.getElementById('edge-agents-count').textContent = counts.edge_agents;
+      document.getElementById('glyph-renderers-count').textContent = counts.glyph_renderers;
+      document.getElementById('ai-nodes-count').textContent = counts.ai_nodes;
+
+      // Update discovery ring
+      if (counts.total > 0) {
+        this.discoveryRing.classList.add('active');
+      } else {
+        this.discoveryRing.classList.remove('active');
+      }
+    }
+
+    updateDeviceGrid(devices) {
+      // Clear existing devices
+      this.deviceGrid.innerHTML = '';
+
+      // Add device cards
+      devices.forEach((device) => {
+        this.addDeviceCard(device);
+      });
+
+      // If no devices, show placeholder
+      if (devices.length === 0) {
+        this.deviceGrid.innerHTML = `
+                <div class="device-card placeholder">
+                    <div class="device-header">
+                        <span class="device-glyph">🖥️</span>
+                        <span class="device-name">No devices detected</span>
+                    </div>
+                    <div class="device-info">
+                        <div class="device-info-item">
+                            <span class="device-info-label">Status:</span>
+                            <span class="device-info-value">Waiting for discovery</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+      }
+    }
+
+    addDeviceCard(device) {
+      const card = document.createElement('div');
+      card.className = `device-card ${device.status}`;
+      card.setAttribute('data-device-id', device.device_id);
+
+      const deviceGlyphs = {
+        jetson_nano: '🟢',
+        jetson_xavier_nx: '🔵',
+        jetson_orin: '��',
+        raspberry_pi: '🔴',
+        generic_linux: '⚪',
+      };
+
+      const glyph = deviceGlyphs[device.device_type] || '🖥️';
+
+      card.innerHTML = `
+            <div class="device-header">
+                <span class="device-glyph">${glyph}</span>
+                <span class="device-name">${device.device_name}</span>
+                <span class="device-status ${device.status}">${device.status}</span>
+            </div>
+            <div class="device-info">
+                <div class="device-info-item">
+                    <span class="device-info-label">Type:</span>
+                    <span class="device-info-value">${device.device_type}</span>
+                </div>
+                <div class="device-info-item">
+                    <span class="device-info-label">Role:</span>
+                    <span class="device-info-value">${device.device_role}</span>
+                </div>
+                <div class="device-info-item">
+                    <span class="device-info-label">Memory:</span>
+                    <span class="device-info-value">${device.memory_gb}GB</span>
+                </div>
+                <div class="device-info-item">
+                    <span class="device-info-label">GPU:</span>
+                    <span class="device-info-value">${device.gpu_cores} cores</span>
+                </div>
+            </div>
+            <div class="device-breath-status">
+                <div class="breath-indicator ${device.breath_active ? 'active' : ''}"></div>
+                <span class="breath-phase">${device.breath_phase || 'silent'}</span>
+            </div>
+        `;
+
+      this.deviceGrid.appendChild(card);
+    }
+
+    updateResonancePatterns(patterns) {
+      Object.entries(patterns).forEach(([patternName, isActive]) => {
+        const statusElement = document.getElementById(`${patternName}-status`);
+        const patternItem = document.querySelector(`[data-pattern="${patternName}"]`);
+
+        if (statusElement && patternItem) {
+          if (isActive) {
+            statusElement.textContent = 'Active';
+            statusElement.classList.add('active');
+            patternItem.classList.add('active');
+          } else {
+            statusElement.textContent = 'Inactive';
+            statusElement.classList.remove('active');
+            patternItem.classList.remove('active');
+          }
+        }
+      });
+    }
+
+    createSampleDevices() {
+      // Create sample devices for demonstration
+      const sampleDevices = [
+        {
+          device_id: 'jetson-001',
+          device_name: 'Jetson Xavier NX',
+          device_type: 'jetson_xavier_nx',
+          device_role: 'ritual_host',
+          status: 'online',
+          memory_gb: 8.0,
+          gpu_cores: 384,
+          breath_active: true,
+          breath_phase: 'inhale',
+        },
+        {
+          device_id: 'pi-001',
+          device_name: 'Raspberry Pi 4',
+          device_type: 'raspberry_pi',
+          device_role: 'edge_agent',
+          status: 'online',
+          memory_gb: 4.0,
+          gpu_cores: 0,
+          breath_active: true,
+          breath_phase: 'hold',
+        },
+      ];
+
+      this.updateDeviceGrid(sampleDevices);
+      this.updateDeviceCounts({
+        total_devices: 2,
+        ritual_hosts: 1,
+        edge_agents: 1,
+        glyph_renderers: 0,
+        ai_nodes: 0,
+      });
+    }
+
+    logBlessing(message) {
+      const timestamp = new Date().toLocaleTimeString();
+      const entry = document.createElement('div');
+      entry.className = 'blessing-entry';
+      entry.innerHTML = `
+            <span class="blessing-timestamp">[${timestamp}]</span>
+            <span class="blessing-message">${message}</span>
+        `;
+
+      this.blessingLog.appendChild(entry);
+
+      // Keep only recent entries
+      while (this.blessingLog.children.length > 20) {
+        this.blessingLog.removeChild(this.blessingLog.firstChild);
+      }
+
+      // Auto-scroll to bottom
+      this.blessingLog.scrollTop = this.blessingLog.scrollHeight;
+    }
+  }
+
+  // Initialize the dashboard when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const dashboard = new HardwareGlyphDashboard();
+
+    // Log some sample blessings
+    setTimeout(() => {
+      dashboard.logBlessing('Auto-discovery ritual initiated');
+    }, 1000);
+
+    setTimeout(() => {
+      dashboard.logBlessing('Jetson Xavier NX detected and blessed');
+    }, 3000);
+
+    setTimeout(() => {
+      dashboard.logBlessing('Raspberry Pi 4 discovered and welcomed');
+    }, 5000);
+  });
+</script>

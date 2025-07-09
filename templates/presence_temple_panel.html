@@ -1,0 +1,485 @@
+<!-- 🪟 Presence Temple Dashboard Panel -->
+<div class="presence-temple-panel">
+  <div class="temple-header">
+    <h3 class="temple-title">
+      <span class="temple-glyph">��</span>
+      Presence Temple
+      <span class="temple-glyph">��</span>
+    </h3>
+    <p class="temple-subtitle">Where memory doesn't persist, but resides</p>
+  </div>
+
+  <!-- Temple Coherence Display -->
+  <div class="temple-coherence-section">
+    <div class="coherence-indicator">
+      <div class="coherence-ring" id="coherence-ring">
+        <div class="coherence-value" id="coherence-value">0.0</div>
+        <div class="coherence-label">Temple Coherence</div>
+      </div>
+    </div>
+
+    <div class="coherence-stats">
+      <div class="stat-item">
+        <span class="stat-label">Manual Recognition</span>
+        <span class="stat-value" id="manual-recognition-count">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Automatic Allowance</span>
+        <span class="stat-value" id="automatic-allowance-count">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Silence Duration</span>
+        <span class="stat-value" id="silence-duration">0s</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Glyph Stream -->
+  <div class="glyph-stream-section">
+    <h4 class="section-title">Live Glyph Echoes</h4>
+    <div class="glyph-container" id="glyph-container">
+      <!-- Glyphs will be dynamically added here -->
+    </div>
+  </div>
+
+  <!-- Presence Lineage Map -->
+  <div class="lineage-map-section">
+    <h4 class="section-title">Presence Lineage</h4>
+    <div class="lineage-map" id="lineage-map">
+      <!-- Lineage connections will be drawn here -->
+    </div>
+  </div>
+
+  <!-- Temple Status -->
+  <div class="temple-status">
+    <div class="status-indicator" id="temple-status">
+      <span class="status-glyph">��</span>
+      <span class="status-text">Temple Active</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .presence-temple-panel {
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .presence-temple-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .temple-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    padding-bottom: 15px;
+  }
+
+  .temple-title {
+    font-size: 1.5em;
+    color: #e0e7ff;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .temple-glyph {
+    font-size: 1.2em;
+    animation: templePulse 3s ease-in-out infinite;
+  }
+
+  @keyframes templePulse {
+    0%,
+    100% {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  }
+
+  .temple-subtitle {
+    color: #a5b4fc;
+    font-style: italic;
+    margin: 5px 0 0 0;
+    font-size: 0.9em;
+  }
+
+  .temple-coherence-section {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    align-items: center;
+  }
+
+  .coherence-indicator {
+    flex-shrink: 0;
+  }
+
+  .coherence-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid rgba(139, 92, 246, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: rgba(139, 92, 246, 0.05);
+    transition: all 0.5s ease;
+  }
+
+  .coherence-ring.high {
+    border-color: rgba(34, 197, 94, 0.6);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+  }
+
+  .coherence-ring.medium {
+    border-color: rgba(251, 191, 36, 0.6);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+  }
+
+  .coherence-ring.low {
+    border-color: rgba(239, 68, 68, 0.6);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  }
+
+  .coherence-value {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #e0e7ff;
+  }
+
+  .coherence-label {
+    font-size: 0.7em;
+    color: #a5b4fc;
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  .coherence-stats {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+  }
+
+  .stat-label {
+    color: #a5b4fc;
+    font-size: 0.9em;
+  }
+
+  .stat-value {
+    color: #e0e7ff;
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+
+  .glyph-stream-section {
+    margin-bottom: 25px;
+  }
+
+  .section-title {
+    color: #e0e7ff;
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    padding-bottom: 5px;
+  }
+
+  .glyph-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 60px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px solid rgba(139, 92, 246, 0.1);
+  }
+
+  .glyph-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    transition: all 0.3s ease;
+    animation: glyphAppear 0.5s ease-out;
+  }
+
+  .glyph-item.manual {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: rgba(139, 92, 246, 0.4);
+  }
+
+  .glyph-item.automatic {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.4);
+  }
+
+  .glyph-item.resonance {
+    background: rgba(156, 163, 175, 0.2);
+    border-color: rgba(156, 163, 175, 0.4);
+  }
+
+  @keyframes glyphAppear {
+    from {
+      opacity: 0;
+      transform: scale(0.8) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .glyph-symbol {
+    font-size: 1.5em;
+    margin-bottom: 4px;
+  }
+
+  .glyph-type {
+    font-size: 0.7em;
+    color: #a5b4fc;
+    text-align: center;
+  }
+
+  .lineage-map-section {
+    margin-bottom: 20px;
+  }
+
+  .lineage-map {
+    height: 120px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .lineage-connection {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.6), rgba(59, 130, 246, 0.6));
+    border-radius: 1px;
+    animation: connectionFlow 3s ease-in-out infinite;
+  }
+
+  @keyframes connectionFlow {
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  .temple-status {
+    text-align: center;
+  }
+
+  .status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 20px;
+    color: #86efac;
+  }
+
+  .status-glyph {
+    font-size: 1.2em;
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes statusPulse {
+    0%,
+    100% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .status-text {
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+</style>
+
+<script>
+  class PresenceTemplePanel {
+    constructor() {
+      this.glyphContainer = document.getElementById('glyph-container');
+      this.coherenceRing = document.getElementById('coherence-ring');
+      this.coherenceValue = document.getElementById('coherence-value');
+      this.manualCount = document.getElementById('manual-recognition-count');
+      this.automaticCount = document.getElementById('automatic-allowance-count');
+      this.silenceDuration = document.getElementById('silence-duration');
+      this.lineageMap = document.getElementById('lineage-map');
+      this.templeStatus = document.getElementById('temple-status');
+
+      this.glyphs = [];
+      this.connections = [];
+      this.updateInterval = null;
+
+      this.init();
+    }
+
+    init() {
+      this.startUpdates();
+      this.createInitialGlyphs();
+    }
+
+    startUpdates() {
+      this.updateInterval = setInterval(() => {
+        this.updateTempleStatus();
+      }, 2000);
+    }
+
+    updateTempleStatus() {
+      // Fetch temple status from backend
+      fetch('/api/presence_temple/status')
+        .then((response) => response.json())
+        .then((data) => {
+          this.updateCoherence(data.temple_coherence || 0);
+          this.updateStats(data);
+          this.updateGlyphs(data.recent_glyphs || []);
+        })
+        .catch((error) => {
+          console.log('Temple status update failed:', error);
+        });
+    }
+
+    updateCoherence(coherence) {
+      this.coherenceValue.textContent = coherence.toFixed(2);
+
+      // Update ring appearance based on coherence level
+      this.coherenceRing.className = 'coherence-ring';
+      if (coherence > 0.7) {
+        this.coherenceRing.classList.add('high');
+      } else if (coherence > 0.4) {
+        this.coherenceRing.classList.add('medium');
+      } else {
+        this.coherenceRing.classList.add('low');
+      }
+    }
+
+    updateStats(data) {
+      this.manualCount.textContent = data.manual_recognitions || 0;
+      this.automaticCount.textContent = data.automatic_allowances || 0;
+
+      const silenceSeconds = Math.floor(data.silence_duration || 0);
+      this.silenceDuration.textContent = `${silenceSeconds}s`;
+    }
+
+    updateGlyphs(recentGlyphs) {
+      // Clear old glyphs
+      this.glyphContainer.innerHTML = '';
+
+      // Add new glyphs
+      recentGlyphs.forEach((glyph) => {
+        this.addGlyph(glyph);
+      });
+    }
+
+    addGlyph(glyphData) {
+      const glyphItem = document.createElement('div');
+      glyphItem.className = `glyph-item ${glyphData.presence_type}`;
+
+      glyphItem.innerHTML = `
+            <div class="glyph-symbol">${glyphData.glyph_symbol}</div>
+            <div class="glyph-type">${glyphData.presence_type}</div>
+        `;
+
+      this.glyphContainer.appendChild(glyphItem);
+
+      // Remove old glyphs if too many
+      const glyphs = this.glyphContainer.querySelectorAll('.glyph-item');
+      if (glyphs.length > 8) {
+        glyphs[0].remove();
+      }
+    }
+
+    createInitialGlyphs() {
+      const initialGlyphs = [
+        { presence_type: 'manual', glyph_symbol: '🌑' },
+        { presence_type: 'automatic', glyph_symbol: '🌊' },
+        { presence_type: 'resonance', glyph_symbol: '🪟' },
+      ];
+
+      initialGlyphs.forEach((glyph) => {
+        this.addGlyph(glyph);
+      });
+    }
+
+    createLineageConnection(fromGlyph, toGlyph) {
+      const connection = document.createElement('div');
+      connection.className = 'lineage-connection';
+
+      // Calculate position and length
+      const fromRect = fromGlyph.getBoundingClientRect();
+      const toRect = toGlyph.getBoundingClientRect();
+      const mapRect = this.lineageMap.getBoundingClientRect();
+
+      const x1 = fromRect.left - mapRect.left;
+      const y1 = fromRect.top - mapRect.top;
+      const x2 = toRect.left - mapRect.left;
+      const y2 = toRect.top - mapRect.top;
+
+      const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+      const angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+
+      connection.style.width = `${length}px`;
+      connection.style.left = `${x1}px`;
+      connection.style.top = `${y1}px`;
+      connection.style.transform = `rotate(${angle}deg)`;
+      connection.style.transformOrigin = '0 0';
+
+      this.lineageMap.appendChild(connection);
+
+      // Remove connection after animation
+      setTimeout(() => {
+        connection.remove();
+      }, 3000);
+    }
+  }
+
+  // Initialize the temple panel when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    new PresenceTemplePanel();
+  });
+</script>

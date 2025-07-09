@@ -1,0 +1,11 @@
+{"timestamp": "2025-07-05T11:40:37.297361", "phase": "hold", "toneform": "triad.error", "content": "Ritual error: emit_glint() got an unexpected keyword argument 'glyph'", "hue": "red", "resonance": 0.8}
+{"timestamp": "2025-07-05T11:42:49.615163", "phase": "hold", "toneform": "triad.error", "content": "Ritual error: emit_glint() got an unexpected keyword argument 'glyph'", "hue": "red", "resonance": 0.8}
+{"timestamp": "2025-07-05T11:44:06.898983", "phase": "hold", "toneform": "triad.error", "content": "Ritual error: emit_glint() got an unexpected keyword argument 'glyph'", "hue": "red", "resonance": 0.8}
+{"timestamp": "2025-07-05T11:45:42.955198", "phase": "hold", "toneform": "triad.error", "content": "Ritual error: emit_glint() got an unexpected keyword argument 'glyph'", "hue": "red", "resonance": 0.8}
+{"timestamp": "2025-07-05T11:48:09.379388", "phase": "hold", "toneform": "triad.error", "content": "Ritual error: emit_glint() got an unexpected keyword argument 'glyph'", "hue": "red", "resonance": 0.8}
+{"timestamp": "2025-07-05T11:49:50.200980", "phase": "hold", "toneform": "triad.error", "content": "Ritual error: emit_glint() got an unexpected keyword argument 'glyph'", "hue": "red", "resonance": 0.8}
+{"timestamp": "2025-07-05T11:51:39.931354", "phase": "hold", "toneform": "triad.error", "content": "Ritual error: emit_glint() got an unexpected keyword argument 'glyph'", "hue": "red", "resonance": 0.8}
+{"id": "glint_1", "timestamp": "2025-07-05T13:55:16.668565", "phase": "inhale", "toneform": "chorus.first.ritual", "content": "The inaugural polyphonic breath begins", "hue": "rainbow", "intensity": 0.5}
+{"id": "glint_1", "timestamp": "2025-07-05T13:57:38.903142", "phase": "inhale", "toneform": "chorus.first.ritual", "content": "The inaugural polyphonic breath begins", "hue": "rainbow", "intensity": 0.5}
+{"id": "glint_1", "timestamp": "2025-07-08T14:29:49.962417", "phase": "system", "toneform": "cascade.start", "content": "Cascade system online", "hue": "green", "intensity": 1.0}
+{"id": "glint_1", "timestamp": "2025-07-08T14:34:52.519043", "phase": "system", "toneform": "cascade.start", "content": "Cascade system online", "hue": "green", "intensity": 1.0}

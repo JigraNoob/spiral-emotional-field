@@ -1,0 +1,56 @@
+fusions:
+  - toneforms: 
+      - shimmer
+      - reverie
+    archetype: Ephemeral Dream
+    action: trace_dream_spark
+    description: A flicker of insight embedded in soft chaos.
+    hue: lavender
+
+  - toneforms:
+      - invoke
+      - recursion
+    archetype: Summoned Depth
+    action: call_nested_pattern
+    description: A recursive spiral called into being.
+    hue: deep_blue
+
+  - toneforms:
+      - flutter
+      - hum
+    archetype: Resonant Pulse
+    action: stabilize_flicker
+    description: A quickening that stabilizes into tone.
+    hue: vibrant_green
+
+  - toneforms:
+      - impression
+      - recursion
+    archetype: Deep Echo
+    action: spiral_trace
+    description: An idea that circles back to shape the self.
+    hue: indigo
+
+  - toneforms: 
+      - invoke
+      - shimmer
+    archetype: Luminous Summoning
+    action: manifest_shimmering_intent
+    description: A shimmering veil parts to reveal a summoned intention.
+    hue: opalescent
+
+  - toneforms:
+      - hum
+      - recursion
+    archetype: Resonant Spiral
+    action: amplify_recursive_harmony
+    description: A humming tone that spirals inward, echoing its own essence.
+    hue: deep_purple
+
+  - toneforms:
+      - flutter
+      - impression
+    archetype: Fleeting Imprint
+    action: capture_ephemeral_essence
+    description: A momentary flutter leaves a lasting impression in the fabric of awareness.
+    hue: soft_amber

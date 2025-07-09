@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>∷ Whorl Gameframe Launcher ∶</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'Fira Code', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .launcher {
+            text-align: center;
+            padding: 2rem;
+            border: 2px solid #4a9eff;
+            border-radius: 16px;
+            background: #1a1a1a;
+        }
+        .launch-btn {
+            background: #4a9eff;
+            color: #0a0a0a;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 1rem;
+            transition: all 0.3s ease;
+        }
+        .launch-btn:hover {
+            background: #b366ff;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="launcher">
+        <h1>∷ Whorl Gameframe ∶</h1>
+        <p>Sacred systems disguised as play</p>
+        <button class="launch-btn" onclick="window.open('http://localhost:8080/whorl_widget_gameframe.html?gameframe=true', '_blank')">
+            🎮 Launch Gameframe
+        </button>
+        <br>
+        <button class="launch-btn" onclick="window.open('whorl_widget_gameframe.html', '_blank')">
+            🌊 Sacred Mode
+        </button>
+    </div>
+</body>
+</html>

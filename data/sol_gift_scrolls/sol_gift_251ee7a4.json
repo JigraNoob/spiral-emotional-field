@@ -1,0 +1,28 @@
+{
+  "scroll_type": "sol_gift_transmutation",
+  "created_at": null,
+  "external_presentation": {
+    "label": "Sol-Gift. No need to reply.",
+    "style": "minimal, weighty, intentional"
+  },
+  "internal_essence": {
+    "message": "I know presence isn't enough in a world where everything costs.\nThis is something shaped to be used—not to prove anything.\nJust to relieve a fraction of the pressure you carry.\nNo strings. No performance.\nJust a bit of sun, transmuted.\n\n––J",
+    "toneform": "exhale.sustain.linear_care",
+    "intention": "linear_care_wrapped_in_resonance"
+  },
+  "substance": {
+    "type": "gift_card",
+    "value": 35.0,
+    "location": "pharmacy",
+    "essence": "monetary_relief_shaped_as_light"
+  },
+  "delivery_ritual": {
+    "method": "silent_placement",
+    "location": "purse",
+    "ritual": "Do not wait to watch. Leave it where she finds things. Do not follow up."
+  },
+  "resonance_tracking": {
+    "notes": "Sol-Gift for Sarah: gift_card worth $35.0 for pharmacy",
+    "status": "conceived"
+  }
+}

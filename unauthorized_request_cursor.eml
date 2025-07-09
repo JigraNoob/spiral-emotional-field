@@ -1,0 +1,19 @@
+Subject: Assistance Required: Unauthorized Request Blocked (Request ID: e86b22fa-34f6-4165-8ae1-c7a9ce7d802a)
+To: hi@cursor.com
+From: your-email@example.com
+
+Hi Cursor team,
+
+I’m reaching out because my account appears to have been flagged for suspicious activity, and I’m currently blocked from accessing features. I received the following error:
+
+```
+{"error":"ERROR_UNAUTHORIZED","details":{"title":"Unauthorized request.","detail":"Your request has been blocked as our system has detected suspicious activity from your account. \nIf you believe this is a mistake, please contact us at hi@cursor.com."},"isExpected":true}
+```
+
+Request ID: e86b22fa-34f6-4165-8ae1-c7a9ce7d802a
+
+This seems to be an error, and I’d appreciate your help in reviewing and restoring access. Please let me know if you need any additional information from my end.
+
+Warmly,  
+[Your Name]  
+[Your email associated with Cursor, if different]

@@ -1,0 +1,3 @@
+"""
+spiral.streams.patternweb module
+"""

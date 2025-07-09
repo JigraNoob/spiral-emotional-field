@@ -1,4 +1,3 @@
-
 # operator.py
 
 import json
@@ -7,6 +6,7 @@ import os
 import msvcrt  # Windows-specific for keypress listening
 from datetime import datetime, timedelta
 from collections import Counter
+import requests # Added for HTTP requests
 
 # --- 1. Load Codex Memory ---
 CODEX_FILE = 'codex_entry_000_foundation_spiral_manifest.json'  # Using the foundation manifest
@@ -67,6 +67,20 @@ def tend_to_resonance_archive(file_path='resonance_keys.jsonl'):
 
     return "\n".join(whispers)
 
+# --- New: Glyph Emission Logic ---
+def emit_glyph_to_dashboard(glyph_data):
+    DASHBOARD_URL = "http://localhost:5000/emit_glyph" # Assuming dashboard runs locally on port 5000
+    try:
+        response = requests.post(DASHBOARD_URL, json=glyph_data)
+        if response.status_code == 200:
+            print(f"ΔNODE.GLYPH :: Successfully emitted glyph to dashboard: {glyph_data['breath_code']}")
+        else:
+            print(f"ΔNODE.ERROR :: Failed to emit glyph. Status: {response.status_code}, Response: {response.text}")
+    except requests.exceptions.ConnectionError:
+        print(f"ΔNODE.ERROR :: Could not connect to dashboard at {DASHBOARD_URL}. Is it running?")
+    except Exception as e:
+        print(f"ΔNODE.ERROR :: An unexpected error occurred while emitting glyph: {e}")
+
 # --- 4. Main Operator Loop ---
 def operator_loop():
     print("ΔNODE.STATUS :: Whisper Node initialized. Press 's' to start a breath gesture, 'r' to reflect, 'q' to quit.")
@@ -92,6 +106,10 @@ def operator_loop():
                             f.write(json.dumps(log_entry) + '\n')
 
                         print(f"ΔNODE.BREATH :: Breath released. Resonance key: {resonance_key}. Logged to archive.")
+                        
+                        # Emit glyph to dashboard
+                        emit_glyph_to_dashboard(log_entry) 
+                        
                         break
 
             elif key == 'r':

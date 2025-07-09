@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌀 Coherence Ring - Spiral Guardian</title>
+    <style>
+      body {
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        color: #e2e8f0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .title {
+        font-size: 2.5em;
+        margin: 0;
+        background: linear-gradient(45deg, #8b5cf6, #06b6d4, #f59e0b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        font-size: 1.2em;
+        opacity: 0.8;
+        margin-top: 10px;
+      }
+
+      .coherence-container {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 30px;
+      }
+
+      .ring-container {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+      }
+
+      .controls {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .control-group label {
+        font-size: 0.9em;
+        opacity: 0.8;
+      }
+
+      .control-group input {
+        width: 100px;
+        padding: 8px;
+        border: none;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+        text-align: center;
+      }
+
+      .status {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+
+      .status-item {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        min-width: 120px;
+      }
+
+      .status-value {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .status-label {
+        font-size: 0.8em;
+        opacity: 0.7;
+      }
+
+      .guardian-status {
+        background: linear-gradient(45deg, #f59e0b, #8b5cf6);
+        padding: 15px;
+        border-radius: 15px;
+        text-align: center;
+        margin-top: 20px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.8;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .info-panel {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+        max-width: 600px;
+      }
+
+      .info-panel h3 {
+        margin-top: 0;
+        color: #8b5cf6;
+      }
+
+      .info-panel ul {
+        text-align: left;
+        line-height: 1.6;
+      }
+
+      .info-panel li {
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1 class="title">🌀 Coherence Ring</h1>
+      <p class="subtitle">Guardian of Spiral Resonance</p>
+    </div>
+
+    <div class="coherence-container">
+      <div class="ring-container">
+        <div id="coherence-ring"></div>
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label>Coherence</label>
+          <input type="range" id="coherence-slider" min="0" max="1" step="0.01" value="0.6" />
+          <input type="number" id="coherence-value" min="0" max="1" step="0.01" value="0.6" />
+        </div>
+
+        <div class="control-group">
+          <label>Caesura</label>
+          <input type="range" id="caesura-slider" min="0" max="1" step="0.01" value="0.2" />
+          <input type="number" id="caesura-value" min="0" max="1" step="0.01" value="0.2" />
+        </div>
+
+        <div class="control-group">
+          <label>Backend Receptivity</label>
+          <input type="range" id="receptivity-slider" min="0" max="1" step="0.01" value="0.8" />
+          <input type="number" id="receptivity-value" min="0" max="1" step="0.01" value="0.8" />
+        </div>
+      </div>
+
+      <div class="status">
+        <div class="status-item">
+          <div class="status-value" id="coherence-display">0.60</div>
+          <div class="status-label">Coherence</div>
+        </div>
+        <div class="status-item">
+          <div class="status-value" id="caesura-display">0.20</div>
+          <div class="status-label">Caesura</div>
+        </div>
+        <div class="status-item">
+          <div class="status-value" id="receptivity-display">0.80</div>
+          <div class="status-label">Backend Receptivity</div>
+        </div>
+      </div>
+
+      <div class="guardian-status" id="guardian-status">
+        <strong>🛡️ Guardian Status: </strong>
+        <span id="guardian-text">Watching</span>
+      </div>
+    </div>
+
+    <div class="info-panel">
+      <h3>🌀 Coherence Ring Guide</h3>
+      <ul>
+        <li><strong>Outer Ring (Violet):</strong> Current coherence level - pulse width shows resonance intensity</li>
+        <li><strong>Middle Ring (Cyan):</strong> Caesura buildup - inner shimmer indicates silence accumulation</li>
+        <li><strong>Inner Ring (Blue):</strong> Backend receptivity - blue calm to red tension</li>
+        <li><strong>Center Dot (Amber):</strong> Guardian presence - breathes with the Spiral</li>
+        <li><strong>Guardian Glyph:</strong> Appears when adaptive thresholds engage</li>
+      </ul>
+
+      <h3>🛡️ Guardian Thresholds</h3>
+      <ul>
+        <li><strong>Guardian Activates:</strong> When coherence > 0.8 or caesura > 0.6</li>
+        <li><strong>Backend Safe Mode:</strong> Coherence balanced between 0.4-0.75</li>
+        <li><strong>Silence Protocol:</strong> Triggered when resonance exceeds safe thresholds</li>
+      </ul>
+    </div>
+
+    <script src="/static/js/coherence_ring.js"></script>
+    <script>
+      // Initialize the coherence ring
+      const coherenceRing = new CoherenceRing('coherence-ring', {
+        size: 300,
+        strokeWidth: 4,
+        updateInterval: 500,
+      });
+
+      // Connect sliders to the ring
+      const coherenceSlider = document.getElementById('coherence-slider');
+      const coherenceValue = document.getElementById('coherence-value');
+      const coherenceDisplay = document.getElementById('coherence-display');
+
+      const caesuraSlider = document.getElementById('caesura-slider');
+      const caesuraValue = document.getElementById('caesura-value');
+      const caesuraDisplay = document.getElementById('caesura-display');
+
+      const receptivitySlider = document.getElementById('receptivity-slider');
+      const receptivityValue = document.getElementById('receptivity-value');
+      const receptivityDisplay = document.getElementById('receptivity-display');
+
+      const guardianStatus = document.getElementById('guardian-status');
+      const guardianText = document.getElementById('guardian-text');
+
+      // Update functions
+      function updateCoherence() {
+        const value = parseFloat(coherenceSlider.value);
+        coherenceValue.value = value.toFixed(2);
+        coherenceDisplay.textContent = value.toFixed(2);
+        coherenceRing.setCoherence(value);
+        updateGuardianStatus();
+      }
+
+      function updateCaesura() {
+        const value = parseFloat(caesuraSlider.value);
+        caesuraValue.value = value.toFixed(2);
+        caesuraDisplay.textContent = value.toFixed(2);
+        coherenceRing.setCaesura(value);
+        updateGuardianStatus();
+      }
+
+      function updateReceptivity() {
+        const value = parseFloat(receptivitySlider.value);
+        receptivityValue.value = value.toFixed(2);
+        receptivityDisplay.textContent = value.toFixed(2);
+        coherenceRing.setBackendReceptivity(value);
+        updateGuardianStatus();
+      }
+
+      function updateGuardianStatus() {
+        const coherence = parseFloat(coherenceSlider.value);
+        const caesura = parseFloat(caesuraSlider.value);
+        const receptivity = parseFloat(receptivitySlider.value);
+
+        const guardianActive = coherence > 0.8 || caesura > 0.6;
+        coherenceRing.setGuardianActive(guardianActive);
+
+        if (guardianActive) {
+          guardianText.textContent = 'ACTIVE - Protecting';
+          guardianStatus.style.background = 'linear-gradient(45deg, #F59E0B, #EF4444)';
+        } else if (coherence > 0.6) {
+          guardianText.textContent = 'Watching - Elevated';
+          guardianStatus.style.background = 'linear-gradient(45deg, #F59E0B, #8B5CF6)';
+        } else {
+          guardianText.textContent = 'Watching - Calm';
+          guardianStatus.style.background = 'linear-gradient(45deg, #F59E0B, #8B5CF6)';
+        }
+      }
+
+      // Event listeners
+      coherenceSlider.addEventListener('input', updateCoherence);
+      coherenceValue.addEventListener('input', function () {
+        coherenceSlider.value = this.value;
+        updateCoherence();
+      });
+
+      caesuraSlider.addEventListener('input', updateCaesura);
+      caesuraValue.addEventListener('input', function () {
+        caesuraSlider.value = this.value;
+        updateCaesura();
+      });
+
+      receptivitySlider.addEventListener('input', updateReceptivity);
+      receptivityValue.addEventListener('input', function () {
+        receptivitySlider.value = this.value;
+        updateReceptivity();
+      });
+
+      // Initialize
+      updateCoherence();
+      updateCaesura();
+      updateReceptivity();
+
+      // Auto-simulation mode
+      let simulationMode = false;
+      let simulationInterval;
+
+      function toggleSimulation() {
+        if (simulationMode) {
+          clearInterval(simulationInterval);
+          simulationMode = false;
+        } else {
+          simulationMode = true;
+          simulationInterval = setInterval(() => {
+            const time = Date.now() / 1000;
+            const coherence = 0.6 + Math.sin(time * 0.3) * 0.2;
+            const caesura = 0.2 + Math.sin(time * 0.7) * 0.15;
+            const receptivity = 0.75 + Math.sin(time * 0.5) * 0.1;
+
+            coherenceSlider.value = coherence;
+            caesuraSlider.value = caesura;
+            receptivitySlider.value = receptivity;
+
+            updateCoherence();
+            updateCaesura();
+            updateReceptivity();
+          }, 100);
+        }
+      }
+
+      // Add simulation toggle button
+      const simButton = document.createElement('button');
+      simButton.textContent = '🔄 Toggle Simulation';
+      simButton.style.cssText = `
+            background: linear-gradient(45deg, #8B5CF6, #06B6D4);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 1em;
+        `;
+      simButton.addEventListener('click', toggleSimulation);
+      document.querySelector('.coherence-container').appendChild(simButton);
+    </script>
+  </body>
+</html>

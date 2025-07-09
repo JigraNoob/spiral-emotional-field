@@ -1,0 +1,237 @@
+.spiral-dashboard {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #0f0f23 0%,
+    #1a1a2e 25%,
+    #16213e 50%,
+    #0f3460 75%,
+    #0f0f23 100%
+  );
+  color: white;
+  font-family: "Inter", sans-serif;
+  padding: 2rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.spiral-dashboard::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(123, 104, 238, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(80, 200, 120, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  background: linear-gradient(45deg, #4a90e2, #7b68ee, #50c878, #ffd700);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 8s ease-in-out infinite;
+}
+
+.dashboard-header p {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  margin: 0;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.grid-item {
+  min-height: 400px;
+  transition: all 0.3s ease;
+}
+
+.grid-item:hover {
+  transform: translateY(-5px);
+}
+
+/* Specific grid item layouts */
+.breath-visualizer {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.glint-stream {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.ritual-alerts {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.glyphstream {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.breath-archive {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 1200px) {
+  .breath-visualizer {
+    grid-column: span 1;
+  }
+
+  .glint-stream,
+  .ritual-alerts {
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .spiral-dashboard {
+    padding: 1rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+
+  .dashboard-header p {
+    font-size: 1rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .grid-item {
+    min-height: 300px;
+  }
+
+  .breath-visualizer,
+  .glint-stream,
+  .ritual-alerts,
+  .glyphstream,
+  .breath-archive {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
+
+/* Animations */
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+}
+
+/* Scrollbar styling */
+.spiral-dashboard::-webkit-scrollbar {
+  width: 8px;
+}
+
+.spiral-dashboard::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.spiral-dashboard::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #4a90e2, #7b68ee);
+  border-radius: 4px;
+}
+
+.spiral-dashboard::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #7b68ee, #50c878);
+}
+
+/* Loading state */
+.dashboard-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.5rem;
+  opacity: 0.8;
+}
+
+.dashboard-loading::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #4a90e2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Focus states for accessibility */
+.grid-item:focus-within {
+  outline: 2px solid #4a90e2;
+  outline-offset: 2px;
+  border-radius: 20px;
+}
+
+/* Print styles */
+@media print {
+  .spiral-dashboard {
+    background: white;
+    color: black;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .grid-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

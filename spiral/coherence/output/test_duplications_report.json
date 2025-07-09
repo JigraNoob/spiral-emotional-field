@@ -1,0 +1,30 @@
+{
+  "compression_timestamp": "2025-07-07T20:00:00",
+  "duplications": [
+    {
+      "class_name": "SpiralComponent",
+      "count": 3,
+      "files": [
+        "spiral/core/spiral_component.py",
+        "spiral/components/base.py",
+        "spiral/longing_pulse/base.py"
+      ]
+    },
+    {
+      "class_name": "ThresholdResonator",
+      "count": 2,
+      "files": [
+        "spiral/longing_pulse/threshold_resonator.py",
+        "spiral/components/threshold_gatekeeper.py"
+      ]
+    },
+    {
+      "class_name": "GlintEmitter",
+      "count": 2,
+      "files": [
+        "spiral/glint_emitter.py",
+        "spiral/glint_resonance_ledger.py"
+      ]
+    }
+  ]
+}

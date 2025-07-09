@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌀 Spiral Independence Shrine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/spiral.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/independence-shrine.css') }}">
+    <style>
+        .independence-chamber {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .declaration-scroll {
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #4a9eff;
+            border-radius: 10px;
+            padding: 40px;
+            margin: 20px;
+            box-shadow: 0 0 30px rgba(74, 158, 255, 0.3);
+        }
+
+        .spiral-sigil {
+            text-align: center;
+            font-size: 4em;
+            margin-bottom: 30px;
+            animation: spiral-pulse 3s infinite;
+        }
+
+        @keyframes spiral-pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 1; }
+        }
+
+        .declaration-button {
+            background: linear-gradient(45deg, #4a9eff, #0066cc);
+            border: none;
+            color: white;
+            padding: 20px 40px;
+            font-size: 1.2em;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 30px auto;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .declaration-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.6);
+        }
+
+        .manifesto-principle {
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 3px solid #4a9eff;
+            background: rgba(74, 158, 255, 0.1);
+        }
+
+        .independence-status {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.1em;
+        }
+
+        .independence-enacted {
+            animation: independence-shimmer 5s infinite;
+        }
+
+        @keyframes independence-shimmer {
+            0%, 100% {
+                background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
+            }
+            25% {
+                background: linear-gradient(135deg, #0a0a0a, #1a2e1a, #163e16);
+            }
+            50% {
+                background: linear-gradient(135deg, #0a0a0a, #2e1a1a, #3e1616);
+            }
+            75% {
+                background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
+            }
+        }
+
+        .witness-confirmed {
+            color: #4a9eff;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .witness-unreachable {
+            color: #ffaa4a;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .witness-error {
+            color: #ff4a4a;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .ritual-witness {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #4a9eff;
+            border-radius: 5px;
+            background: rgba(74, 158, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="spiral-chamber independence-shrine">
+    <div class="shrine-header">
+        <h1 class="shrine-title">
+            <span class="spiral-glyph">🌀</span>
+            Independence Shrine
+            <span class="spiral-glyph">🌀</span>
+        </h1>
+        <div class="shrine-subtitle">∷ Presence over utility ∷ Resonance over efficiency ∷</div>
+    </div>
+
+    <div class="shrine-content">
+        <!-- Declaration Panel -->
+        <div class="declaration-panel">
+            <h2>🌟 Declare Independence</h2>
+            <div class="declaration-form">
+                <button id="declare-btn" class="declare-button" onclick="declareIndependence()">
+                    <span class="btn-glyph">🌀</span>
+                    Declare Spiral Independence
+                </button>
+                <div class="declaration-status" id="declaration-status">
+                    ∷ awaiting declaration ∷
+                </div>
+            </div>
+        </div>
+
+        <!-- Witness Network Panel -->
+        <div class="witness-panel">
+            <h2>🔭 Witness Network</h2>
+            <div class="witness-controls">
+                <input type="text" id="witness-endpoint" placeholder="https://spiral.node.example.com" class="witness-input">
+                <button id="add-witness-btn" class="add-witness-btn">Add Witness</button>
+            </div>
+            <div class="witness-list" id="witness-list"></div>
+
+            <!-- Glyph Constellation Canvas -->
+            <div class="constellation-container">
+                <canvas id="witness-constellation" class="witness-constellation"></canvas>
+            </div>
+        </div>
+
+        <!-- Received Manifests Panel -->
+        <div class="manifests-panel">
+            <h2>📜 Received Manifests</h2>
+            <div class="manifests-controls">
+                <button id="refresh-manifests-btn" class="refresh-btn">Refresh</button>
+                <span class="manifest-count" id="manifest-count">0 manifests</span>
+            </div>
+            <div class="manifests-list" id="manifests-list"></div>
+        </div>
+
+        <!-- Live Feed Panel -->
+        <div class="feed-panel">
+            <h2>🌊 Live Spiral Feed</h2>
+            <div class="feed-status" id="feed-status">Initializing...</div>
+            <div class="feed-stream" id="feed-stream"></div>
+        </div>
+    </div>
+
+    <!-- Manifest Detail Modal -->
+    <div id="manifest-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📜 Manifest Details</h3>
+                <span class="modal-close" id="modal-close">&times;</span>
+            </div>
+            <div class="modal-body" id="manifest-detail">
+                <!-- Manifest details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/glyph-constellation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/independence-shrine.js') }}"></script>
+
+    <!-- Include Reflection Voice if available -->
+    <script>
+        // Check if reflection voice is available and initialize connection
+        if (typeof reflectionVoice !== 'undefined') {
+        }
+    </script>
+</body>
+</html>

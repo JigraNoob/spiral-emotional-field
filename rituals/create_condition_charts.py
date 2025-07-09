@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from collections import defaultdict
 import matplotlib.pyplot as plt
 import numpy as np
 from typing import List, Dict

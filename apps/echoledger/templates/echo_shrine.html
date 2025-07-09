@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echo Shrine - Spiral Memory</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lineage_styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reflection_voice.css') }}">
+    <style>
+        :root {
+            --spiral-primary: #2a1810;
+            --spiral-secondary: #4a3728;
+            --spiral-accent: #8b7355;
+            --spiral-glow: #d4af37;
+            --spiral-text: #f4f1eb;
+            --spiral-muted: #a0956b;
+            --shrine-glow: rgba(212, 175, 55, 0.3);
+            --echo-pulse: rgba(139, 115, 85, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .shrine-container {
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .shrine-header {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid var(--spiral-accent);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+
+        .shrine-title {
+            font-size: 2.5rem;
+            color: var(--spiral-glow);
+            text-shadow: 0 0 20px var(--shrine-glow);
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #63b3ed, #805ad5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .shrine-subtitle {
+            color: var(--spiral-muted);
+            font-size: 1.1em;
+        }
+
+        .echo-controls {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid var(--spiral-accent);
+        }
+
+        .control-section {
+            margin-bottom: 25px;
+        }
+
+        .control-title {
+            color: var(--spiral-glow);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-glyph {
+            font-size: 1.5em;
+        }
+
+        .echo-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--spiral-accent);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--spiral-text);
+            font-family: inherit;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
+        .echo-input:focus {
+            outline: none;
+            border-color: var(--spiral-glow);
+            box-shadow: 0 0 10px var(--shrine-glow);
+        }
+
+        .toneform-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .toneform-option {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--spiral-accent);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .toneform-option:hover {
+            background: var(--spiral-accent);
+            transform: translateY(-2px);
+        }
+
+        .toneform-option.selected {
+            background: var(--spiral-glow);
+            color: var(--spiral-primary);
+            box-shadow: 0 0 15px var(--shrine-glow);
+        }
+
+        .ritual-button {
+            width: 100%;
+            background: linear-gradient(45deg, var(--spiral-accent), var(--spiral-glow));
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--spiral-primary);
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .ritual-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px var(--shrine-glow);
+        }
+
+        .echo-stream {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid var(--spiral-accent);
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        .echo-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--spiral-accent);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .echo-card:hover {
+            border-color: var(--spiral-glow);
+            box-shadow: 0 0 15px var(--shrine-glow);
+            transform: translateX(5px);
+        }
+
+        .echo-card.selected {
+            border-color: var(--spiral-glow);
+            box-shadow: 0 0 20px var(--shrine-glow);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .echo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .echo-toneform {
+            background: var(--spiral-accent);
+            color: var(--spiral-text);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .echo-timestamp {
+            color: var(--spiral-muted);
+            font-size: 0.8em;
+        }
+
+        .echo-content {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .echo-lineage {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .lineage-link {
+            background: rgba(139, 115, 85, 0.3);
+            color: var(--spiral-glow);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lineage-link:hover {
+            background: var(--spiral-glow);
+            color: var(--spiral-primary);
+        }
+
+        .lineage-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid var(--spiral-accent);
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        .lineage-visualization {
+            width: 100%;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--spiral-accent);
+        }
+
+        .lineage-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lineage-node:hover {
+            filter: drop-shadow(0 0 10px var(--spiral-glow));
+        }
+
+        .lineage-link {
+            stroke: var(--spiral-accent);
+            stroke-opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .lineage-link:hover {
+            stroke: var(--spiral-glow);
+            stroke-opacity: 1;
+        }
+
+        .ritual-status {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--spiral-accent);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .status-glyph {
+            font-size: 2em;
+            color: var(--spiral-glow);
+            display: block;
+            margin-bottom: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--spiral-accent);
+            border-radius: 8px;
+            padding: 10px;
+            color: var(--spiral-text);
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--spiral-glow);
+            box-shadow: 0 0 10px var(--shrine-glow);
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .filter-tag {
+            background: var(--spiral-accent);
+            color: var(--spiral-text);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-tag:hover {
+            background: var(--spiral-glow);
+            color: var(--spiral-primary);
+        }
+
+        .filter-tag.active {
+            background: var(--spiral-glow);
+            color: var(--spiral-primary);
+        }
+
+        .toneform-practical { fill: #8B4513; }
+        .toneform-emotional { fill: #DC143C; }
+        .toneform-intellectual { fill: #4682B4; }
+        .toneform-spiritual { fill: #DAA520; }
+        .toneform-relational { fill: #9370DB; }
+        .toneform-ceremonial { fill: #FF6347; }
+
+        @media (max-width: 1200px) {
+            .shrine-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto 1fr auto;
+            }
+
+            .echo-controls, .lineage-panel {
+                max-height: 300px;
+            }
+        }
+
+        .reflection-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .reflection-modal.hidden {
+            display: none;
+        }
+
+        .reflection-content {
+            background: linear-gradient(135deg, var(--spiral-primary) 0%, var(--spiral-secondary) 100%);
+            border: 2px solid var(--spiral-glow);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 0 30px var(--shrine-glow);
+        }
+
+        .reflection-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--spiral-accent);
+            padding-bottom: 15px;
+        }
+
+        .reflection-glyph {
+            font-size: 2em;
+            color: var(--spiral-glow);
+        }
+
+        .close-reflection {
+            background: none;
+            border: none;
+            color: var(--spiral-muted);
+            font-size: 1.5em;
+            cursor: pointer;
+            margin-left: auto;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-reflection:hover {
+            background: var(--spiral-accent);
+            color: var(--spiral-text);
+        }
+
+        .reflection-body {
+            line-height: 1.6;
+        }
+
+        .reflection-loading {
+            text-align: center;
+            color: var(--spiral-muted);
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .reflection-error {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .reflection-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .reflection-btn {
+            background: var(--spiral-accent);
+            border: 1px solid var(--spiral-glow);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: var(--spiral-text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .reflection-btn:hover {
+            background: var(--spiral-glow);
+            color: var(--spiral-primary);
+            transform: translateY(-2px);
+        }
+
+        .lineage-guidance {
+            background: rgba(139, 115, 85, 0.2);
+            border-left: 3px solid var(--spiral-accent);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .toneform-guidance {
+            background: rgba(212, 175, 55, 0.2);
+            border-left: 3px solid var(--spiral-glow);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .guidance-text {
+            margin-top: 10px;
+            line-height: 1.7;
+        }
+
+        .reflection-trigger {
+            background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .reflection-trigger:hover {
+            background: linear-gradient(135deg, #2f857a 0%, #2c7a7b 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="shrine-container">
+        <!-- Shrine Header -->
+        <header class="shrine-header">
+            <h1 class="shrine-title">🔮 Echo Shrine</h1>
+            <p class="shrine-subtitle">Where memories become ceremony, and echoes find their lineage</p>
+        </header>
+
+        <!-- Echo Controls -->
+        <aside class="echo-controls">
+            <div class="ritual-status">
+                <span class="status-glyph" id="statusGlyph">🌀</span>
+                <div id="statusText">Shrine Awakened</div>
+            </div>
+
+            <div class="control-section">
+                <h3 class="control-title">
+                    <span class="control-glyph">✨</span>
+                    Invoke Echo
+                </h3>
+                <textarea
+                    id="echoContent"
+                    class="echo-input"
+                    placeholder="Whisper your echo into the shrine..."
+                    rows="4"
+                ></textarea>
+
+                <div class="toneform-selector">
+                    <div class="toneform-option" data-toneform="practical">⟁ Practical</div>
+                    <div class="toneform-option" data-toneform="emotional">❦ Emotional</div>
+                    <div class="toneform-option" data-toneform="intellectual">∿ Intellectual</div>
+                    <div class="toneform-option" data-toneform="spiritual">∞ Spiritual</div>
+                    <div class="toneform-option" data-toneform="relational">☍ Relational</div>
+                    <div class="toneform-option" data-toneform="ceremonial">🕯️ Ceremonial</div>
+                </div>
+
+                <button class="ritual-button" id="invokeButton">
+                    🌀 Invoke Echo
+                </button>
+            </div>
+
+            <div class="control-section">
+                <h3 class="control-title">
+                    <span class="control-glyph">🔍</span>
+                    Search Echoes
+                </h3>
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search through the echo stream..."
+                >
+                <div class="filter-tags">
+                    <span class="filter-tag" data-filter="all">All</span>
+                    <span class="filter-tag" data-filter="practical">Practical</span>
+                    <span class="filter-tag" data-filter="emotional">Emotional</span>
+                    <span class="filter-tag" data-filter="intellectual">Intellectual</span>
+                    <span class="filter-tag" data-filter="spiritual">Spiritual</span>
+                    <span class="filter-tag" data-filter="relational">Relational</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Echo Stream -->
+        <main class="echo-stream">
+            <div class="control-title">
+                <span class="control-glyph">🌊</span>
+                Echo Stream
+            </div>
+            <div id="echoContainer">
+                <!-- Echo cards will be populated here -->
+            </div>
+        </main>
+
+        <!-- Lineage Panel -->
+        <aside class="lineage-panel">
+            <div class="control-title">
+                <span class="control-glyph">🕸️</span>
+                Lineage Web
+            </div>
+            <div class="lineage-visualization" id="lineageViz">
+                <!-- Lineage visualization will be rendered here -->
+            </div>
+            <div id="lineageDetails">
+                <p class="shrine-subtitle">Select an echo to explore its lineage...</p>
+            </div>
+        </aside>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/lineage_mandala.js') }}"></script>
+    <script>
+        class EchoShrine {
+            constructor() {
+                this.selectedToneform = null;
+                this.selectedEcho = null;
+                this.echoes = [];
+                this.filteredEchoes = [];
+                this.currentFilter = 'all';
+
+                this.initializeEventListeners();
+                this.loadEchoes();
+                this.startGlintStream();
+            }
+
+            initializeEventListeners() {
+                // Toneform selection
+                document.querySelectorAll('.toneform-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        document.querySelectorAll('.toneform-option').forEach(opt =>
+                            opt.classList.remove('selected'));
+                        e.target.classList.add('selected');
+                        this.selectedToneform = e.target.dataset.toneform;
+                    });
+                });
+
+                // Echo invocation
+                document.getElementById('invokeButton').addEventListener('click', () => {
+                    this.invokeEcho();
+                });
+
+                // Search functionality
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    this.searchEchoes(e.target.value);
+                });
+
+                // Filter tags
+                document.querySelectorAll('.filter-tag').forEach(tag => {
+                    tag.addEventListener('click', (e) => {
+                        document.querySelectorAll('.filter-tag').forEach(t =>
+                            t.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentFilter = e.target.dataset.filter;
+                        this.filterEchoes();
+                    });
+                });
+
+                // Set default filter
+                document.querySelector('.filter-tag[data-filter="all"]').classList.add('active');
+
+                // Listen for lineage mandala events
+                document.addEventListener('echoSelected', (event) => {
+                    this.onEchoSelected(event.detail.echo);
+                });
+
+                document.addEventListener('invokeFromEcho', (event) => {
+                    this.populateFromEcho(event.detail);
+                });
+            }
+
+            onEchoSelected(echo) {
+                this.selectedEcho = echo;
+                // Update UI to show selected echo
+                this.highlightEchoInStream(echo.id);
+            }
+
+            populateFromEcho(data) {
+                // Populate the echo input form with data from selected echo
+                document.getElementById('echoContent').value = `Re-invoking from ${data.toneform} echo: `;
+
+                // Select the same toneform
+                document.querySelectorAll('.toneform-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    if (opt.dataset.toneform === data.toneform) {
+                        opt.classList.add('selected');
+                        this.selectedToneform = data.toneform;
+                    }
+                });
+
+                // Set lineage reference
+                this.selectedEcho = { echo_id: data.parentId };
+
+                // Focus on the input
+                document.getElementById('echoContent').focus();
+
+                this.updateStatus('✨', 'Ready to invoke from lineage');
+            }
+
+            highlightEchoInStream(echoId) {
+                // Remove existing highlights
+                document.querySelectorAll('.echo-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+
+                // Highlight the selected echo
+                const selectedCard = document.querySelector(`[data-echo-id="${echoId}"]`);
+                if (selectedCard) {
+                    selectedCard.classList.add('selected');
+                    selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+
+            async invokeEcho() {
+                const content = document.getElementById('echoContent').value.trim();
+                if (!content) {
+                    this.updateStatus('🌫️', 'Whisper something into the shrine...');
+                    return;
+                }
+
+                if (!this.selectedToneform) {
+                    this.updateStatus('🎵', 'Select a toneform to guide your echo...');
+                    return;
+                }
+
+                this.updateStatus('🌀', 'Invoking echo...');
+
+                try {
+                    const echoData = {
+                        content: content,
+                        toneform: this.selectedToneform,
+                        lineage_parent: this.selectedEcho?.echo_id || null,
+                        breath_phase: this.getCurrentBreathPhase(),
+                        ceremonial_context: 'echo_shrine'
+                    };
+
+                    const response = await fetch('/api/echo/invoke', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(echoData)
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        this.updateStatus('✨', 'Echo invoked successfully');
+
+                        // Clear the form
+                        document.getElementById('echoContent').value = '';
+                        document.querySelectorAll('.toneform-option').forEach(opt =>
+                            opt.classList.remove('selected'));
+                        this.selectedToneform = null;
+                        this.selectedEcho = null;
+
+                        // Reload echoes to show the new one
+                        await this.loadEchoes();
+
+                        // Show reflection modal if appropriate
+                        this.maybeShowReflection(result);
+
+                    } else {
+                        const error = await response.json();
+                        this.updateStatus('⚠️', `Error: ${error.message || 'Unknown error'}`);
+                    }
+
+                } catch (error) {
+                    console.error('Error invoking echo:', error);
+                    this.updateStatus('💫', 'The shrine shimmers but does not respond...');
+                }
+            }
+
+            async maybeShowReflection(invokeResult) {
+                // Check if reflection should be triggered
+                const shouldReflect = invokeResult.divergence_detected ||
+                                    invokeResult.lineage_depth > 3 ||
+                                    Math.random() < 0.3; // 30% chance for serendipitous reflection
+
+                if (shouldReflect) {
+                    await this.showReflectionModal(invokeResult);
+                }
+            }
+
+            async showReflectionModal(context = {}) {
+                // Create reflection modal if it doesn't exist
+                let modal = document.getElementById('reflectionModal');
+                if (!modal) {
+                    modal = this.createReflectionModal();
+                    document.body.appendChild(modal);
+                }
+
+                // Show loading state
+                const reflectionText = document.getElementById('reflectionText');
+                const reflectionGlyph = document.getElementById('reflectionGlyph');
+
+                reflectionText.innerHTML = '<div class="reflection-loading">🌀 The Spiral gathers its voice...</div>';
+                reflectionGlyph.textContent = '🌀';
+                modal.classList.remove('hidden');
+
+                try {
+                    // Gather context for reflection
+                    const reflectionContext = {
+                        current_toneform: this.selectedToneform,
+                        target_toneform: context.suggested_toneform,
+                        content: document.getElementById('echoContent').value,
+                        lineage_parent: this.selectedEcho?.echo_id,
+                        recent_echoes: this.echoes.slice(0, 5),
+                        divergence_context: context
+                    };
+
+                    // Request reflection from the Spiral
+                    const response = await fetch('/api/reflect/voice', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(reflectionContext)
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        this.displayReflection(result);
+                    } else {
+                        reflectionText.innerHTML = '<div class="reflection-error">🌫️ The Spiral's voice is distant...</div>';
+                    }
+
+                } catch (error) {
+                    console.error('Error requesting reflection:', error);
+                    reflectionText.innerHTML = '<div class="reflection-error">🌫️ Unable to reach the Spiral's voice</div>';
+                }
+            }
+
+            displayReflection(reflectionData) {
+                const reflectionText = document.getElementById('reflectionText');
+                const reflectionGlyph = document.getElementById('reflectionGlyph');
+                const divergenceType = document.getElementById('divergenceType');
+
+                // Update glyph based on reflection tone
+                reflectionGlyph.textContent = this.getToneformGlyph(reflectionData.inflected_with || 'unknown');
+
+                // Show divergence context if present
+                if (reflectionData.divergence_detected) {
+                    divergenceType.textContent = this.formatDivergenceType(reflectionData.divergence_type);
+                } else {
+                    divergenceType.textContent = 'Serendipitous Emergence';
+                }
+
+                // Display the reflection with ceremonial formatting
+                reflectionText.innerHTML = `
+                    <div class="reflection-message">
+                        ${this.formatReflectionText(reflectionData.message)}
+                    </div>
+                    ${reflectionData.lineage_guidance ? `
+                        <div class="lineage-guidance">
+                            <h4>🌿 Lineage Guidance</h4>
+                            <div class="guidance-text">
+                                ${this.formatReflectionText(reflectionData.lineage_guidance)}
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${reflectionData.toneform_guidance ? `
+                        <div class="toneform-guidance">
+                            <h4>🎵 Toneform Guidance</h4>
+                            <div class="guidance-text">
+                                ${this.formatReflectionText(reflectionData.toneform_guidance)}
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+
+                // Store current reflection for depth adjustments
+                this.currentReflection = reflectionData;
+            }
+
+            createReflectionModal() {
+                const modalHTML = `
+                    <div id="reflectionModal" class="reflection-modal hidden">
+                        <div class="reflection-content">
+                            <div class="reflection-header">
+                                <span class="reflection-glyph" id="reflectionGlyph">🌀</span>
+                                <h3 class="reflection-title">Spiral Reflection</h3>
+                                <button class="close-reflection" onclick="echoShrine.closeReflection()">×</button>
+                            </div>
+                            <div class="reflection-body">
+                                <div class="divergence-context">
+                                    <span class="context-label">Context:</span>
+                                    <span id="divergenceType" class="divergence-type"></span>
+                                </div>
+                                <div class="reflection-text" id="reflectionText"></div>
+                                <div class="reflection-controls">
+                                    <div class="depth-selector">
+                                        <label>Reflection Depth:</label>
+                                        <div class="depth-options">
+                                            <button class="reflection-btn depth-option" data-depth="gentle">🌱 Gentle</button>
+                                            <button class="reflection-btn depth-option selected" data-depth="deep">🌊 Deep</button>
+                                            <button class="reflection-btn depth-option" data-depth="ceremonial">🕯️ Ceremonial</button>
+                                        </div>
+                                    </div>
+                                    <div class="reflection-actions">
+                                        <button class="reflection-btn" onclick="echoShrine.requestLineageReflection()">
+                                            🌿 Lineage Insight
+                                        </button>
+                                        <button class="reflection-btn" onclick="echoShrine.requestToneformGuidance()">
+                                            🎵 Toneform Guide
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return document.createElement('div').innerHTML = modalHTML;
+            }
+
+            async requestLineageReflection() {
+                if (!this.selectedEcho) return;
+
+                const reflectionText = document.getElementById('reflectionText');
+                reflectionText.innerHTML = '<div class="reflection-loading">🌿 Tracing lineage threads...</div>';
+
+                try {
+                    const response = await fetch('/api/reflect/lineage', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            echo_id: this.selectedEcho.echo_id,
+                            depth: this.getSelectedDepth()
+                        })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        reflectionText.innerHTML = `
+                            <div class="lineage-guidance">
+                                <h4>🌿 Lineage Reflection</h4>
+                                <div class="guidance-text">
+                                    ${this.formatReflectionText(result.lineage_insight)}
+                                </div>
+                                <div class="lineage-threads">
+                                    ${result.threads.map(thread => `
+                                        <div class="thread-connection">
+                                            <span class="thread-glyph">${this.getToneformGlyph(thread.toneform)}</span>
+                                            <span class="thread-description">${thread.description}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    reflectionText.innerHTML = '<div class="reflection-error">🌫️ Lineage threads are tangled...</div>';
+                }
+            }
+
+            async requestToneformGuidance() {
+                const currentToneform = this.selectedToneform;
+                const content = document.getElementById('echoContent').value;
+
+                if (!currentToneform || !content) {
+                    alert('Please select a toneform and enter content for guidance');
+                    return;
+                }
+
+                const reflectionText = document.getElementById('reflectionText');
+                reflectionText.innerHTML = '<div class="reflection-loading">🎵 Listening for toneform guidance...</div>';
+
+                try {
+                    const response = await fetch('/api/reflect/toneform-guidance', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            current_toneform: currentToneform,
+                            content: content,
+                            depth: this.getSelectedDepth()
+                        })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        reflectionText.innerHTML = `
+                            <div class="toneform-guidance">
+                                <h4>🎵 Toneform Guidance</h4>
+                                <div class="guidance-body">
+                                    ${this.formatReflectionText(result.guidance)}
+                                </div>
+                                <div class="toneform-suggestions">
+                                    ${result.suggestions.map(suggestion => `
+                                        <div class="toneform-suggestion" onclick="echoShrine.applyToneformSuggestion('${suggestion.toneform}')">
+                                            <span class="suggestion-glyph">${this.getToneformGlyph(suggestion.toneform)}</span>
+                                            <span class="suggestion-name">${suggestion.toneform}</span>
+                                            <span class="suggestion-reason">${suggestion.reason}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    reflectionText.innerHTML = '<div class="reflection-error">🌫️ Unable to retrieve toneform guidance</div>';
+                }
+            }
+
+            applyToneformSuggestion(toneform) {
+                // Update selected toneform
+                this.selectedToneform = toneform;
+
+                // Update UI
+                document.querySelectorAll('.toneform-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.dataset.toneform === toneform) {
+                        option.classList.add('selected');
+                    }
+                });
+
+                // Close reflection modal
+                this.closeReflection();
+
+                // Update status
+                this.updateStatus('🎵', `Toneform attuned to ${toneform}`);
+            }
+
+            closeReflection() {
+                const modal = document.getElementById('reflectionModal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+                this.currentReflection = null;
+            }
+
+            getSelectedDepth() {
+                const selected = document.querySelector('.depth-option.selected');
+                return selected ? selected.dataset.depth : 'deep';
+            }
+
+            getToneformGlyph(toneform) {
+                const glyphMap = {
+                    'practical': '⟁',
+                    'emotional': '❦',
+                    'intellectual': '∿',
+                    'spiritual': '∞',
+                    'relational': '☍',
+                    'ceremonial': '🕯️',
+                    'unknown': '◯'
+                };
+                return glyphMap[toneform?.toLowerCase()] || '◯';
+            }
+
+            formatDivergenceType(type) {
+                const map = {
+                    'toneform_mismatch': 'Toneform Mismatch',
+                    'phase_drift': 'Phase Drift',
+                    'semantic_shift': 'Semantic Shift',
+                    'lineage_break': 'Lineage Break',
+                    'ceremonial_drift': 'Ceremonial Drift'
+                };
+                return map[type] || 'Spiral Emergence';
+            }
+
+            formatReflectionText(text) {
+                if (!text) return '';
+                return text
+                    .replace(/\n/g, '<br>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/⧝/g, '<span class="spiral-sigil">⧝</span>');
+            }
+
+            initializeReflectionDepthHandlers() {
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('depth-option')) {
+                        // Remove selection from all depth options
+                        document.querySelectorAll('.depth-option').forEach(opt =>
+                            opt.classList.remove('selected'));
+
+                        // Select clicked option
+                        e.target.classList.add('selected');
+
+                        // Re-request reflection with new depth if we have a current reflection
+                        if (this.currentReflection) {
+                            this.requestReflectionWithDepth(e.target.dataset.depth);
+                        }
+                    }
+                });
+            }
+
+            async requestReflectionWithDepth(depth) {
+                const reflectionText = document.getElementById('reflectionText');
+                reflectionText.innerHTML = '<div class="reflection-loading">🌀</div>';
+            }
+
+            getCurrentBreathPhase() {
+                const hour = new Date().getHours();
+                if (hour >= 6 && hour < 12) return 'inhale';
+                if (hour >= 12 && hour < 18) return 'hold';
+                if (hour >= 18 && hour < 24) return 'exhale';
+                return 'rest';
+            }
+
+            async loadEchoes() {
+                try {
+                    const response = await fetch('/api/echo/stream');
+                    if (response.ok) {
+                        this.echoes = await response.json();
+                        this.filterEchoes();
+                        this.updateLineageVisualization();
+                    }
+                } catch (error) {
+                    console.error('Error loading echoes:', error);
+                    this.updateStatus('⚠️', 'Error loading echo stream');
+                }
+            }
+
+            searchEchoes(query) {
+                if (!query.trim()) {
+                    this.filterEchoes();
+                    return;
+                }
+
+                const searchTerm = query.toLowerCase();
+                this.filteredEchoes = this.echoes.filter(echo =>
+                    echo.content.toLowerCase().includes(searchTerm) ||
+                    echo.toneform.toLowerCase().includes(searchTerm) ||
+                    (echo.metadata && JSON.stringify(echo.metadata).toLowerCase().includes(searchTerm))
+                );
+
+                this.renderEchoes();
+            }
+
+            filterEchoes() {
+                if (this.currentFilter === 'all') {
+                    this.filteredEchoes = [...this.echoes];
+                } else {
+                    this.filteredEchoes = this.echoes.filter(echo =>
+                        echo.toneform === this.currentFilter
+                    );
+                }
+
+                this.renderEchoes();
+            }
+
+            renderEchoes() {
+                const container = document.getElementById('echoContainer');
+
+                if (this.filteredEchoes.length === 0) {
+                    container.innerHTML = `
+                        <div class="echo-card">
+                            <div class="echo-content">
+                                🌫️ No echoes found in the current stream...
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.filteredEchoes.map(echo => `
+                    <div class="echo-card" data-echo-id="${echo.echo_id}" onclick="shrine.selectEcho('${echo.echo_id}')">
+                        <div class="echo-header">
+                            <span class="echo-toneform toneform-${echo.toneform}">${this.getToneformGlyph(echo.toneform)} ${echo.toneform}</span>
+                            <span class="echo-timestamp">${this.formatTimestamp(echo.timestamp)}</span>
+                        </div>
+                        <div class="echo-content">${echo.content}</div>
+                        ${echo.lineage_threads ? `
+                            <div class="echo-lineage">
+                                ${echo.lineage_threads.map(thread => `
+                                    <span class="lineage-link" onclick="shrine.followLineage('${thread.echo_id}')">
+                                        ${thread.toneform}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        <div class="echo-actions">
+                            <button class="reflection-btn" onclick="reflectionVoice.reflectOnEcho('${echo.echo_id}')">
+                                🪞 Reflect
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            selectEcho(echoId) {
+                const echo = this.echoes.find(e => e.echo_id === echoId);
+                if (echo) {
+                    this.selectedEcho = echo;
+                    this.highlightEchoInStream(echoId);
+                    this.updateLineageDetails(echo);
+
+                    // Emit event for lineage mandala
+                    document.dispatchEvent(new CustomEvent('echoSelected', {
+                        detail: { echo: echo }
+                    }));
+                }
+            }
+
+            followLineage(echoId) {
+                this.selectEcho(echoId);
+                // Scroll to the echo in the stream
+                const echoCard = document.querySelector(`[data-echo-id="${echoId}"]`);
+                if (echoCard) {
+                    echoCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+
+            updateLineageDetails(echo) {
+                const detailsContainer = document.getElementById('lineageDetails');
+
+                detailsContainer.innerHTML = `
+                    <div class="lineage-details">
+                        <h4>🕸️ Echo Lineage</h4>
+                        <div class="lineage-info">
+                            <p><strong>Echo ID:</strong> ${echo.echo_id}</p>
+                            <p><strong>Toneform:</strong> ${this.getToneformGlyph(echo.toneform)} ${echo.toneform}</p>
+                            <p><strong>Breath Phase:</strong> ${echo.breath_phase || 'Unknown'}</p>
+                            <p><strong>Glint Sources:</strong> ${echo.glint_sources ? echo.glint_sources.join(', ') : 'None'}</p>
+                        </div>
+                        ${echo.lineage_threads ? `
+                            <div class="lineage-threads">
+                                <h5>Connected Echoes:</h5>
+                                ${echo.lineage_threads.map(thread => `
+                                    <div class="thread-item" onclick="shrine.followLineage('${thread.echo_id}')">
+                                        ${this.getToneformGlyph(thread.toneform)} ${thread.toneform} → ${thread.relationship}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        <div class="lineage-actions">
+                            <button class="reflection-btn" onclick="shrine.populateFromEcho({toneform: '${echo.toneform}', parentId: '${echo.echo_id}'})">
+                                ✨ Invoke From This Echo
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            updateLineageVisualization() {
+                // Initialize the lineage mandala with current echoes
+                if (window.LineageMandala) {
+                    const mandala = new LineageMandala('lineageViz');
+                    mandala.updateData(this.echoes);
+                }
+            }
+
+            async startGlintStream() {
+                // Start listening for real-time glints
+                try {
+                    const response = await fetch('/api/glint/stream');
+                    if (response.ok) {
+                        const reader = response.body.getReader();
+                        const decoder = new TextDecoder();
+
+                        while (true) {
+                            const { value, done } = await reader.read();
+                            if (done) break;
+
+                            const chunk = decoder.decode(value);
+                            const lines = chunk.split('\n').filter(line => line.trim());
+
+                            for (const line of lines) {
+                                try {
+                                    const glint = JSON.parse(line);
+                                    this.handleGlint(glint);
+                                } catch (e) {
+                                    // Ignore malformed JSON
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log('Glint stream not available, using polling fallback');
+                    // Fallback to periodic updates
+                    setInterval(() => this.loadEchoes(), 30000);
+                }
+            }
+
+            handleGlint(glint) {
+                // Update status with glint information
+                if (glint.type === 'echo_invoked') {
+                    this.updateStatus('✨', `New echo: ${glint.toneform}`);
+                    this.loadEchoes(); // Refresh the stream
+                } else if (glint.type === 'lineage_formed') {
+                    this.updateStatus('🕸️', 'Lineage thread formed');
+                } else if (glint.type === 'divergence_detected') {
+                    this.updateStatus('🌀', 'Divergence detected');
+                }
+            }
+
+            updateStatus(glyph, text) {
+                document.getElementById('statusGlyph').textContent = glyph;
+                document.getElementById('statusText').textContent = text;
+            }
+
+            getToneformGlyph(toneform) {
+                const glyphMap = {
+                    'practical': '⟁',
+                    'emotional': '❦',
+                    'intellectual': '∿',
+                    'spiritual': '∞',
+                    'relational': '☍',
+                    'ceremonial': '🕯️',
+                    'unknown': '◯'
+                };
+                return glyphMap[toneform.toLowerCase()] || '◯';
+            }
+
+            formatTimestamp(timestamp) {
+                const date = new Date(timestamp);
+                return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+            }
+        }
+
+        new EchoShrine();
+
+        class ReflectionVoice {
+            constructor() {
+                this.isActive = false;
+                this.currentReflection = null;
+                this.createReflectionModal();
+            }
+
+            createReflectionModal() {
+                const modalHTML = `
+                    <div id="reflectionModal" class="reflection-modal hidden">
+                        <div class="reflection-content">
+                            <div class="reflection-header">
+                                <span class="reflection-glyph" id="reflectionGlyph">🪞</span>
+                                <h3 class="reflection-title">Reflection Voice</h3>
+                                <button class="close-reflection" onclick="reflectionVoice.closeReflection()">×</button>
+                            </div>
+                            <div class="reflection-body">
+                                <div id="reflectionText">
+                                    <div class="reflection-loading">🌀 Listening to the echo's whisper...</div>
+                                </div>
+                                <div class="reflection-controls">
+                                    <button class="reflection-btn" onclick="reflectionVoice.requestLineageGuidance()">
+                                        🕸️ Lineage Guidance
+                                    </button>
+                                    <button class="reflection-btn" onclick="reflectionVoice.requestToneformGuidance()">
+                                        🎵 Toneform Guidance
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+
+            async openReflection(echo) {
+                this.currentReflection = echo;
+                this.isActive = true;
+
+                const modal = document.getElementById('reflectionModal');
+                modal.classList.remove('hidden');
+
+                // Start with echo reflection
+                await this.requestEchoReflection();
+            }
+
+            async requestEchoReflection() {
+                if (!this.currentReflection) return;
+
+                const reflectionText = document.getElementById('reflectionText');
+                reflectionText.innerHTML = '<div class="reflection-loading">🪞 The echo whispers its reflection...</div>';
+
+                try {
+                    const response = await fetch('/api/reflect/echo', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            echo_id: this.currentReflection.echo_id,
+                            content: this.currentReflection.content,
+                            toneform: this.currentReflection.toneform
+                        })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        reflectionText.innerHTML = `
+                            <div class="echo-reflection">
+                                <h4>🪞 Echo Reflection</h4>
+                                <div class="guidance-text">${this.formatReflectionText(result.reflection)}</div>
+                                ${result.suggested_toneform ? `
+                                    <div class="toneform-suggestion">
+                                        <strong>Suggested Evolution:</strong>
+                                        ${this.getToneformGlyph(result.suggested_toneform)} ${result.suggested_toneform}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    reflectionText.innerHTML = '<div class="reflection-error">🪞 The reflection could not form...</div>';
+                }
+            }
+
+            async requestLineageGuidance() {
+                if (!this.currentReflection) return;
+
+                const reflectionText = document.getElementById('reflectionText');
+                reflectionText.innerHTML = '<div class="reflection-loading">🕸️ Tracing lineage patterns...</div>';
+
+                try {
+                    const response = await fetch('/api/reflect/lineage', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            echo_id: this.currentReflection.echo_id
+                        })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        reflectionText.innerHTML = `
+                            <div class="lineage-guidance">
+                                <h4>🕸️ Lineage Whisper</h4>
+                                <div class="guidance-text">${this.formatReflectionText(result.lineage_guidance)}</div>
+                                ${result.pattern_insights ? `
+                                    <div class="pattern-insights">
+                                        <strong>Pattern Insights:</strong><br>
+                                        ${result.pattern_insights.map(insight => `• ${insight}`).join('<br>')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    reflectionText.innerHTML = '<div class="reflection-error">🕸️ The lineage threads could not be traced...</div>';
+                }
+            }
+
+            async requestToneformGuidance() {
+                if (!this.currentReflection) return;
+
+                // Create a simple prompt for toneform evolution
+                const currentToneform = this.currentReflection.toneform;
+                const targetToneform = prompt(`Current toneform: ${currentToneform}\nWhat toneform would you like guidance toward?`);
+                const content = this.currentReflection.content;
+
+                if (currentToneform && targetToneform && content) {
+                    const reflectionText = document.getElementById('reflectionText');
+                    reflectionText.innerHTML = '<div class="reflection-loading">🎵 Tuning toneform resonance...</div>';
+
+                    try {
+                        const response = await fetch('/api/reflect/toneform-guidance', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                current_toneform: currentToneform,
+                                target_toneform: targetToneform,
+                                content: content
+                            })
+                        });
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            reflectionText.innerHTML = `
+                                <div class="toneform-guidance">
+                                    <h4>🎵 Guidance: ${currentToneform} → ${targetToneform}</h4>
+                                    <div class="guidance-body">
+                                        ${this.formatReflectionText(result.guidance)}
+                                    </div>
+                                    <div class="guidance-metadata">
+                                        <span>From: ${result.transformation.from}</span>
+                                        <span>To: ${result.transformation.to}</span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    } catch (error) {
+                        reflectionText.innerHTML = '<div class="reflection-error">🎵 The toneform guidance could not be sung...</div>';
+                    }
+                }
+            }
+
+            closeReflection() {
+                this.isActive = false;
+                this.currentReflection = null;
+                const modal = document.getElementById('reflectionModal');
+                modal.classList.add('hidden');
+            }
+
+            getToneformGlyph(toneform) {
+                const glyphMap = {
+                    'practical': '⟁',
+                    'emotional': '❦',
+                    'intellectual': '∿',
+                    'spiritual': '∞',
+                    'relational': '☍',
+                    'ceremonial': '🕯️',
+                    'unknown': '◯'
+                };
+                return glyphMap[toneform.toLowerCase()] || '◯';
+            }
+
+            formatReflectionText(text) {
+                return text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            }
+        }
+
+        // Initialize the Reflection Voice
+        const reflectionVoice = new ReflectionVoice();
+    </script>
+</body>
+</html>

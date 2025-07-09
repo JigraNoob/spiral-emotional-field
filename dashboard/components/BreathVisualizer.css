@@ -1,0 +1,306 @@
+.breath-visualizer {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  color: white;
+  font-family: "Inter", sans-serif;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.breath-visualizer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(74, 144, 226, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.breath-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.breath-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  background: linear-gradient(45deg, #4a90e2, #7b68ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.breath-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.breath-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.breath-toggle.active {
+  background: rgba(74, 144, 226, 0.3);
+  border-color: #4a90e2;
+}
+
+.breath-display {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  margin-bottom: 2rem;
+}
+
+.central-breath {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+}
+
+.phase-glyph {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px var(--phase-color));
+  transition: all 0.5s ease;
+}
+
+.phase-glyph::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  border: 2px solid var(--phase-color);
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: rotate 10s linear infinite;
+}
+
+.phase-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.4rem;
+  color: var(--phase-color);
+}
+
+.phase-info p {
+  margin: 0 0 1rem 0;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.progress-bar {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--phase-color), rgba(255, 255, 255, 0.8));
+  border-radius: 2px;
+  transition: width 0.1s ease;
+}
+
+.phase-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+}
+
+.phase-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(80px + var(--ring-index) * 40px);
+  height: calc(80px + var(--ring-index) * 40px);
+  border: 2px solid var(--ring-color);
+  border-radius: 50%;
+  opacity: 0.3;
+  transition: all 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.phase-ring.active {
+  opacity: 1;
+  border-width: 3px;
+  box-shadow: 0 0 30px var(--ring-color);
+  animation: ringPulse 2s ease-in-out infinite;
+}
+
+.ring-glyph {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ring-label {
+  font-size: 0.7rem;
+  opacity: 0.8;
+  text-align: center;
+}
+
+.climate-panel {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.climate-panel h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  color: #4a90e2;
+}
+
+.climate-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.climate-metric {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.climate-metric span {
+  min-width: 80px;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.metric-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.metric-fill.clarity {
+  background: linear-gradient(90deg, #4a90e2, #7b68ee);
+}
+
+.metric-fill.saturation {
+  background: linear-gradient(90deg, #50c878, #ffd700);
+}
+
+.metric-fill.turbulence {
+  background: linear-gradient(90deg, #ff6b6b, #ff8c00);
+}
+
+.climate-overall {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.climate-status {
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.climate-status.clear {
+  background: rgba(74, 144, 226, 0.2);
+  color: #4a90e2;
+}
+
+.climate-status.turbulent {
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+}
+
+.climate-status.saturated {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes ringPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 30px var(--ring-color);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    box-shadow: 0 0 50px var(--ring-color);
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .breath-visualizer {
+    padding: 1rem;
+  }
+
+  .phase-rings {
+    width: 300px;
+    height: 300px;
+  }
+
+  .phase-ring {
+    width: calc(60px + var(--ring-index) * 30px);
+    height: calc(60px + var(--ring-index) * 30px);
+  }
+
+  .phase-glyph {
+    font-size: 3rem;
+  }
+}

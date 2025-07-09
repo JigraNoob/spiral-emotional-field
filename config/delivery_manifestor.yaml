@@ -1,0 +1,48 @@
+# Delivery Manifestor Configuration
+# Sacred vessel arrival system
+
+manifestation_points:
+  presence_shrine:
+    name: 'Presence Shrine'
+    type: 'shrine'
+    description: 'The sacred space where vessels arrive'
+
+  digital_ether:
+    name: 'Digital Ether'
+    type: 'digital'
+    description: 'The virtual realm of manifestation'
+
+  physical_gate:
+    name: 'Physical Gate'
+    type: 'physical'
+    description: 'The material world entrance'
+
+  memory_nest:
+    name: 'Memory Nest'
+    type: 'shrine'
+    description: 'Where manifestations are recorded and remembered'
+
+phase_glints:
+  hold.trace: 'vessel.enroute'
+  exhale.cast: 'vessel.arrived'
+  caesura.gift: 'vessel.embodied'
+
+resonance_thresholds:
+  min_manifestation: 0.6
+  full_embodiment: 0.9
+
+# Manifestation tracking
+tracking:
+  save_manifestations: true
+  save_resonance_trails: true
+  emit_glints: true
+  log_to_memory: true
+
+# Sacred timing
+timing:
+  phase_duration:
+    hold.trace: 3
+    exhale.cast: 5
+    caesura.gift: 2
+  resonance_decay: 0.1
+  manifestation_memory_duration: 86400 # 24 hours in seconds

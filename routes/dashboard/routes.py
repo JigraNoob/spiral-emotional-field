@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, request
 from flask_socketio import emit
 from datetime import datetime, timezone
 import random
@@ -11,12 +11,24 @@ dashboard_bp = Blueprint('dashboard', __name__,
                          static_folder='static',
                          static_url_path='/static')
 
-
 @dashboard_bp.route('/dashboard')
 def dashboard():
-    """Render the main dashboard page."""
+    """Main dashboard overview"""
     return render_template('dashboard.html')
 
+@dashboard_bp.route("/")
+def index():
+    return render_template("dashboard.html")  # or index.html if that's your file
+
+@dashboard_bp.route('/harmony_shrine')
+def harmony_shrine():
+    """Harmony Shrine interface"""
+    return render_template('harmony_shrine.html')
+
+@dashboard_bp.route('/nourishment_sky')
+def nourishment_sky():
+    """Nourishment Sky constellation view"""
+    return render_template('nourishment_sky.html')
 
 @dashboard_bp.route('/dashboard/glint')
 def get_glints():
@@ -83,7 +95,6 @@ def get_glints():
         print(f"Error in /dashboard/glint: {str(e)}")
         print(traceback.format_exc())
         return jsonify({"error": f"Unable to load glint stream: {str(e)}"}), 500
-
 
 def register_socket_handlers(socketio):
     """Register WebSocket event handlers."""

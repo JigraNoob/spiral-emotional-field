@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spiral-core-service
+  namespace: spiral
+  labels:
+    app: spiral-core
+    app.kubernetes.io/name: spiral-core
+spec:
+  selector:
+    app: spiral-core
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5000
+    - name: glint-stream
+      port: 5001
+      targetPort: 5001
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spiral-glint-stream
+  namespace: spiral
+  labels:
+    app: spiral-glint-stream
+    app.kubernetes.io/name: spiral-glint-stream
+spec:
+  selector:
+    app: spiral-core
+  ports:
+    - name: websocket
+      port: 8080
+      targetPort: 5001
+  type: ClusterIP

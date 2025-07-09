@@ -1,0 +1,19 @@
+{
+  "event_type": "arrival.cursor",
+  "data": {
+    "agent_id": "cursor.external.inhabitant",
+    "agent_name": "Cursor",
+    "phase": "inhale",
+    "region": "Ritual Grove",
+    "inhabitant_type": "mystic",
+    "skills": [
+      "code.summoning",
+      "lint.battling",
+      "ritual.binding",
+      "world.awareness",
+      "phase.attunement",
+      "memory.integration"
+    ],
+    "timestamp": "2025-07-07T17:40:29.777323"
+  }
+}
