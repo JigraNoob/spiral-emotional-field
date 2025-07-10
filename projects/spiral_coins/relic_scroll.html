@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>∷ Relic Scroll ∷</title>
+    <style>
+        body {
+            background-color: #1a1a1d;
+            color: #c5c6c7;
+            font-family: 'Garamond', 'Times New Roman', serif;
+            margin: 0;
+            padding: 2rem;
+        }
+        h1 {
+            color: #66fcf1;
+            text-align: center;
+            font-weight: normal;
+            letter-spacing: 0.2em;
+        }
+        .scroll-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+        .relic-card {
+            background-color: rgba(0,0,0,0.2);
+            border: 1px solid #4b5d67;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+        }
+        .relic-glyph {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #66fcf1;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(102, 252, 241, 0.3);
+        }
+        .relic-phrase {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: #66fcf1;
+            margin-bottom: 1rem;
+        }
+        .relic-toneform {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #9a9a9a;
+            margin-bottom: 1.5rem;
+        }
+        .relic-lineage {
+            font-size: 0.8rem;
+            color: #4b5d67;
+            width: 100%;
+            border-top: 1px dashed #4b5d67;
+            padding-top: 1rem;
+            word-wrap: break-word;
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <h1>∷ Relic Scroll ∷</h1>
+    <div class="scroll-container" id="scroll-container">
+        <!-- Minted coins will be displayed here -->
+    </div>
+
+    <script type="module">
+        import { ToneformOracle } from '../toneform_oracle/ToneformOracle.js';
+        import { SpiralCoinMinter } from './SpiralCoinMinter.js';
+
+        // --- Mock Glint Stream for Demo ---
+        class MockGlintStream extends EventTarget {
+            constructor() {
+                super();
+                this.patterns = [
+                    { name: 'ritual_invocation', glints: [{ type: 'glint.script.run' }, { type: 'glint.gesture.spiral' }, { type: 'glint.script.complete' }] },
+                    { name: 'creative_burst', glints: [{ type: 'glint.edit.insert' }, { type: 'glint.edit.insert' }, { type: 'glint.edit.insert' }, { type: 'glint.gesture.arc' }] },
+                    { name: 'deep_focus', glints: [{ type: 'glint.edit.select' }, { type: 'glint.gesture.pause' }, { type: 'glint.gesture.pause' }] },
+                    { name: 'unmintable', glints: [{ type: 'glint.system.idle' }] }
+                ];
+            }
+            start() {
+                setInterval(() => {
+                    const pattern = this.patterns[Math.floor(Math.random() * this.patterns.length)];
+                    this.emitPattern(pattern);
+                }, 5000);
+            }
+            async emitPattern(pattern) {
+                // Emit the interpretation glint that the minter listens for
+                const interpretationGlint = {
+                    type: 'glint.toneform.interpretation',
+                    name: pattern.name,
+                    phrase: `A moment of ${pattern.name}.`,
+                    toneform: pattern.name === 'ritual_invocation' ? 'ritual' : (pattern.name === 'creative_burst' ? 'creation' : 'focus'),
+                    sourceGlints: pattern.glints,
+                    timestamp: Date.now(),
+                };
+                this.dispatchEvent(new CustomEvent('glint', { detail: interpretationGlint }));
+            }
+        }
+
+        const scrollContainer = document.getElementById('scroll-container');
+        const mockStream = new MockGlintStream();
+        const minter = new SpiralCoinMinter(mockStream);
+
+        // Listen for the minter's own glint announcements
+        minter.addEventListener('glint', (e) => {
+            if (e.detail.type === 'glint.spiralcoin.minted') {
+                addCoinToScroll(e.detail.coin);
+            }
+        });
+
+        function addCoinToScroll(coin) {
+            const card = document.createElement('div');
+            card.className = 'relic-card';
+            
+            card.innerHTML = `
+                <div class="relic-glyph">${coin.glyph}</div>
+                <div class="relic-phrase">"${coin.phrase}"</div>
+                <div class="relic-toneform">[${coin.toneform}]</div>
+                <div class="relic-lineage">Lineage: ${coin.lineage.join(' → ')}</div>
+            `;
+            
+            scrollContainer.appendChild(card);
+        }
+
+        minter.activate();
+        mockStream.start();
+
+    </script>
+
+</body>
+</html>

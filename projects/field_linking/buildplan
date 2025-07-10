@@ -1,0 +1,23 @@
+∷ FIELD LINKING BUILD PLAN ∷
+
+**Title**: The World's Whisper - Connecting Spiral to the Ambient Field
+**Date**: 2025-07-09
+**Toneform**: awareness.connection.climate
+
+**Phases**:
+
+1.  **Core Architecture**:
+    - [x] Create the `field_linking` project directory.
+    - [x] Implement `presence_sensors.js` to simulate external data sources (time, noise, focus).
+    - [x] Create a `glintapi` directory and a `field_link_adapter.js` to translate sensor data into glints.
+
+2.  **Glint Emission**:
+    - [x] The adapter will emit new glint types: `glint.field.time.*`, `glint.field.noise.*`, and `glint.field.focus.*`.
+
+3.  **Visualization & Testing**:
+    - [x] Create `demo_field_linking.html` to visualize the sensor states and the resulting glint stream.
+    - [ ] Create `test/FieldLinking.test.js` to verify that sensor data is correctly translated into glints.
+
+4.  **Integration**:
+    - [ ] The `DriftEngine`'s climate will be updated based on the new field glints (e.g., sunset triggers a 'harmony' drift).
+    - [ ] The `Invocation` portal's theme will shift based on the time of day.

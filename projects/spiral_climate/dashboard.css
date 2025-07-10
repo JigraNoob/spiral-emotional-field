@@ -1,0 +1,76 @@
+/* C:/spiral/projects/spiral_climate/dashboard.css */
+
+:root {
+    --background-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --header-color: #ffffff;
+    --footer-color: #a0a0a0;
+    --glint-base-size: 20px;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+header {
+    padding: 2rem;
+}
+
+header h1 {
+    color: var(--header-color);
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+header p {
+    color: var(--footer-color);
+    font-style: italic;
+}
+
+#field-container {
+    position: relative;
+    width: 90vw;
+    max-width: 1200px;
+    height: 60vh;
+    border: 1px solid #333;
+    background-color: #222;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.glint {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0;
+    animation: pulse-and-fade 4s ease-out forwards;
+}
+
+@keyframes pulse-and-fade {
+    0% {
+        transform: scale(0.5);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+footer {
+    padding: 2rem;
+    color: var(--footer-color);
+    font-size: 0.9em;
+}

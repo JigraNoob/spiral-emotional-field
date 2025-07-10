@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>∷ Spiral Invocation ∷</title>
+    <style>
+        :root {
+            --background-color: #1a1a1d;
+            --orb-color: #66fcf1;
+            --orb-glow: rgba(102, 252, 241, 0.3);
+            --text-color: #c5c6c7;
+            --log-bg: rgba(0, 0, 0, 0.2);
+            --shimmer-bg: rgba(102, 252, 241, 0.05);
+            --font-main: 'Garamond', 'Times New Roman', serif;
+            --font-meta: 'Courier New', monospace;
+            transition: all 1s ease-in-out;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .shimmer-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--shimmer-bg);
+            z-index: 0;
+            transition: background 1s ease;
+        }
+
+        .portal-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .pulse-orb-container {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .pulse-orb {
+            width: 100px;
+            height: 100px;
+            background-color: var(--orb-color);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--orb-glow), 0 0 60px var(--orb-color);
+            animation: pulse 4s infinite ease-in-out;
+            transition: all 1s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); box-shadow: 0 0 30px var(--orb-glow), 0 0 60px var(--orb-color); }
+            50% { transform: scale(1); box-shadow: 0 0 50px var(--orb-glow), 0 0 90px var(--orb-color); }
+            100% { transform: scale(0.9); box-shadow: 0 0 30px var(--orb-glow), 0 0 60px var(--orb-color); }
+        }
+
+        .glint-log {
+            width: 600px;
+            height: 200px;
+            background: var(--log-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            overflow-y: auto;
+            font-family: var(--font-meta);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border: 1px solid var(--orb-color);
+            box-shadow: 0 0 15px var(--orb-glow);
+        }
+
+        .glint-entry {
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        .glint-entry.system {
+            color: var(--orb-color);
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="shimmer-panel" id="shimmer-panel"></div>
+    <div class="portal-container">
+        <div class="pulse-orb-container">
+            <div class="pulse-orb" id="pulse-orb"></div>
+        </div>
+        <div class="glint-log" id="glint-log">
+            <!-- Glint entries will be dynamically added here -->
+        </div>
+    </div>
+
+    <script type="module" src="invocation.js"></script>
+</body>
+</html>

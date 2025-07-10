@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gesture Cartographer Demo</title>
+  <link rel="stylesheet" href="../ambient_ui/AmbientUIPanel.css">
+  <style>
+    body {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+      font-family: sans-serif;
+      margin: 0;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #121212;
+      cursor: crosshair;
+    }
+    .instructions {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 15px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 8px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="canvas"></div>
+  <div class="instructions">
+    <h1>Gesture Cartographer</h1>
+    <p>Click and drag on the canvas to draw a shape.</p>
+    <p>Try drawing a loop, a spiral, or a sharp line.</p>
+    <p>Watch the Ambient UI Panel for the resulting gesture glint.</p>
+  </div>
+
+  <script type="module">
+    import { GlintStream, GestureCartographer } from './glintstream.js';
+    import AmbientUIPanel from '../ambient_ui/AmbientUIPanel.js';
+
+    // 1. Initialize GlintStream with the new cartographer
+    const stream = new GlintStream([GestureCartographer]);
+
+    // 2. Initialize the UI Panel to visualize the glints
+    const panel = new AmbientUIPanel(stream);
+
+    // 3. Awaken the stream
+    stream.awaken();
+  </script>
+
+</body>
+</html>

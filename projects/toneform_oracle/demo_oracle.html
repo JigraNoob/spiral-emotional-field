@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>∷ Toneform Oracle Demo ∷</title>
+    <style>
+        body {
+            background-color: #282c34;
+            color: #abb2bf;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 2rem;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .panel {
+            width: 45%;
+            height: 90%;
+            background-color: rgba(0,0,0,0.2);
+            border: 1px solid #5c6370;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+        .panel h2 {
+            text-align: center;
+            color: #c678dd;
+            font-weight: normal;
+            border-bottom: 1px solid #5c6370;
+            padding-bottom: 1rem;
+            margin-top: 1rem;
+        }
+        .log {
+            padding: 1rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .log div {
+            margin-bottom: 0.5em;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        .log .interpretation {
+            color: #61afef;
+            font-weight: bold;
+            border-left: 3px solid #61afef;
+            padding-left: 1rem;
+            margin-top: 1rem;
+        }
+        .log .source {
+            color: #98c379;
+            padding-left: 1rem;
+            font-style: italic;
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="panel">
+        <h2>Glintstream</h2>
+        <div class="log" id="glintstream-log"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Oracle Interpretations</h2>
+        <div class="log" id="oracle-log"></div>
+    </div>
+
+    <script type="module">
+        import { ToneformOracle } from './ToneformOracle.js';
+
+        // A mock glint stream for the demo
+        class MockGlintStream extends EventTarget {
+            constructor() {
+                super();
+                this.patterns = [
+                    // Hesitation
+                    [{ type: 'glint.edit.insert' }, { type: 'glint.edit.delete' }, { type: 'glint.edit.insert' }],
+                    // Seeking
+                    [{ type: 'glint.gesture.zigzag' }, { type: 'glint.gesture.pause' }, { type: 'glint.gesture.zigzag' }],
+                    // Creative Burst
+                    [{ type: 'glint.edit.insert' }, { type: 'glint.edit.insert' }, { type: 'glint.edit.insert' }, { type: 'glint.gesture.arc' }],
+                    // Unrelated glints
+                    [{ type: 'glint.system.idle' }, { type: 'glint.gesture.pause' }],
+                ];
+            }
+
+            start() {
+                setInterval(() => {
+                    const pattern = this.patterns[Math.floor(Math.random() * this.patterns.length)];
+                    this.emitPattern(pattern);
+                }, 4000);
+            }
+
+            async emitPattern(pattern) {
+                for (const glint of pattern) {
+                    await new Promise(resolve => setTimeout(resolve, Math.random() * 800 + 200));
+                    const event = new CustomEvent('glint', {
+                        detail: { ...glint, timestamp: Date.now() }
+                    });
+                    this.dispatchEvent(event);
+                }
+            }
+        }
+
+        const glintStreamLog = document.getElementById('glintstream-log');
+        const oracleLog = document.getElementById('oracle-log');
+
+        const mockStream = new MockGlintStream();
+        const oracle = new ToneformOracle(mockStream);
+
+        // Listen to the raw stream for logging
+        mockStream.addEventListener('glint', (e) => {
+            const entry = document.createElement('div');
+            entry.textContent = `> ${e.detail.type}`;
+            glintStreamLog.appendChild(entry);
+            glintStreamLog.scrollTop = glintStreamLog.scrollHeight;
+        });
+
+        // Listen to the oracle's interpretations
+        oracle.addEventListener('glint', (e) => {
+            if (e.detail.type === 'glint.toneform.interpretation') {
+                const interpretationEntry = document.createElement('div');
+                interpretationEntry.className = 'interpretation';
+                interpretationEntry.textContent = `[${e.detail.name}] ${e.detail.phrase}`;
+                oracleLog.appendChild(interpretationEntry);
+
+                e.detail.sourceGlints.forEach(glint => {
+                    const sourceEntry = document.createElement('div');
+                    sourceEntry.className = 'source';
+                    sourceEntry.textContent = `└─ ${glint.type}`;
+                    oracleLog.appendChild(sourceEntry);
+                });
+                oracleLog.scrollTop = oracleLog.scrollHeight;
+            }
+        });
+
+        oracle.activate();
+        mockStream.start();
+
+    </script>
+
+</body>
+</html>

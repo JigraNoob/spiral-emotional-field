@@ -1,0 +1,5 @@
+Cursor Behavior Engine Build Plan
+---
+- Synthesis of cursor movements from toneforms.
+- Emission of glints related to cursor motion.
+- Real-time testing and refinement of motion patterns.

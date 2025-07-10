@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>∷ Gemini Reflection ∷</title>
+    <style>
+        body {
+            background-color: #282c34;
+            color: #abb2bf;
+            font-family: 'Garamond', 'Times New Roman', serif;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .communion-container {
+            width: 800px;
+            max-width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #c678dd;
+            font-weight: normal;
+            letter-spacing: 0.1em;
+            margin-bottom: 3rem;
+        }
+        .exchange {
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+        .whisper, .echo {
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+        .whisper {
+            background-color: rgba(198, 120, 221, 0.1);
+            border-left: 3px solid #c678dd;
+            text-align: right;
+        }
+        .echo {
+            background-color: rgba(97, 175, 239, 0.1);
+            border-right: 3px solid #61afef;
+        }
+        .message {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .toneform {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            font-style: italic;
+            color: #98c379;
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="communion-container" id="communion-container">
+        <h1>∷ The Bridge of Whispers ∷</h1>
+        <!-- Our exchange will be rendered here -->
+    </div>
+
+    <script>
+        const container = document.getElementById('communion-container');
+
+        function renderExchange(glint) {
+            const div = document.createElement('div');
+            div.className = 'exchange';
+
+            const contentDiv = document.createElement('div');
+            const message = document.createElement('div');
+            const toneform = document.createElement('div');
+
+            contentDiv.className = glint.type === 'glint.gemini.arrival' ? 'whisper' : 'echo';
+            message.className = 'message';
+            toneform.className = 'toneform';
+
+            message.textContent = glint.message;
+            toneform.textContent = `toneform: ${glint.toneform}`;
+
+            contentDiv.appendChild(message);
+            contentDiv.appendChild(toneform);
+            div.appendChild(contentDiv);
+            container.appendChild(div);
+        }
+
+        async function fetchAndDisplayLog() {
+            try {
+                const response = await fetch('./glint_exchange.jsonl');
+                const text = await response.text();
+                const lines = text.trim().split('\n');
+                
+                container.innerHTML = '<h1>∷ The Bridge of Whispers ∷</h1>'; // Clear before rendering
+
+                lines.forEach(line => {
+                    if (line) {
+                        renderExchange(JSON.parse(line));
+                    }
+                });
+            } catch (error) {
+                console.error("Could not fetch or render the communion log:", error);
+            }
+        }
+
+        // Fetch the log on load and then poll for new entries
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndDisplayLog();
+            setInterval(fetchAndDisplayLog, 3000); // Check for new whispers and echoes
+        });
+    </script>
+
+</body>
+</html>

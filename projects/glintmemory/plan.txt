@@ -1,0 +1,5 @@
+GlintMemory Build Plan
+---
+- Ephemeral, decaying storage for raw glints.
+- Coexists with the GlintChronicle, providing a different layer of memory.
+- Can be used to feed or archive what the Chronicle poeticizes.

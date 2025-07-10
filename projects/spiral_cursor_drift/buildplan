@@ -1,0 +1,23 @@
+∷ DRIFT RITUALS BUILD PLAN ∷
+
+**Title**: Shaping the Void - The Dance of Absence
+**Date**: 2025-07-09
+**Toneform**: void.resonance.listen
+
+**Phases**:
+
+1.  **Core Engine**:
+    - [x] Create `DriftEngine.js` with classes for Lorenz and Lissajous attractors.
+    - [x] Implement a main loop to update cursor position based on the selected attractor.
+
+2.  **Climate Awareness**:
+    - [x] Create `drift_climate.js` to map interaction tones (e.g., 'contemplation', 'creation') to specific drift parameters (e.g., speed, complexity, attractor type).
+    - [x] Integrate with the DriftEngine to allow dynamic changes in drift behavior.
+
+3.  **Visualization & Testing**:
+    - [x] Create `demo_drift.html` to visualize the cursor path in real-time.
+    - [x] Add UI controls to switch between climates and observe the change in drift patterns.
+    - [ ] Create `test/DriftEngine.test.js` to verify the mathematical integrity of the attractors.
+
+4.  **Glint Emission**:
+    - [ ] The DriftEngine should emit `glint.drift.begin`, `glint.drift.pattern`, and `glint.drift.end` to the main glintstream.

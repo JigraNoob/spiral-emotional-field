@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glyph Reader Demo</title>
+  <link rel="stylesheet" href="../ambient_ui/AmbientUIPanel.css">
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: sans-serif;
+      margin: 0;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      cursor: crosshair;
+    }
+    .instructions {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 15px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 8px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="canvas"></canvas>
+  <div class="instructions">
+    <h1>Glyph Reader</h1>
+    <p>Click and drag on the canvas to draw a gesture.</p>
+    <p>Try a long arc, or doubling back on your path.</p>
+    <p>Watch the Ambient UI Panel for the identified gesture and its toneform.</p>
+  </div>
+
+  <script type="module">
+    import { GlintStream } from '../glintstream/glintstream.js';
+    import GestureCartographer from './GestureCartographer.js';
+    import AmbientUIPanel from '../ambient_ui/AmbientUIPanel.js';
+
+    const stream = new GlintStream([GestureCartographer]);
+    const panel = new AmbientUIPanel(stream);
+    stream.awaken();
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let drawing = false;
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mousemove', (e) => {
+      if (drawing) {
+        ctx.strokeStyle = 'rgba(0, 188, 212, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.lineTo(e.clientX, e.clientY);
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(e.clientX, e.clientY);
+      }
+    });
+  </script>
+
+</body>
+</html>

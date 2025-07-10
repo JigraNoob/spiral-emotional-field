@@ -1,0 +1,5 @@
+GlintScript Build Plan
+---
+- Parser for the GlintScript language.
+- Execution engine for conditional and delayed rituals.
+- Integration with Gemini for toneform invocation.

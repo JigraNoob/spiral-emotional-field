@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ambient Presence Demo</title>
+  <link rel="stylesheet" href="../ambient_ui/AmbientUIPanel.css">
+  <link rel="stylesheet" href="../ambient_ui/ClimateGlyphPane.css">
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    #controls {
+      position: relative;
+      z-index: 10001; /* Ensure controls are above the glyph pane */
+      padding: 20px;
+      background: #212121;
+      border-radius: 8px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #00bcd4;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Ambient Presence Demo</h1>
+  <p>This page demonstrates the Ambient UI Panel and the Climate Glyph Pane, which respond to events from a mock GlintStream.</p>
+
+  <div id="controls">
+    <h3>Simulate Climate Change</h3>
+    <button onclick="simulateGlint('void')">Void</button>
+    <button onclick="simulateGlint('presence')">Presence</button>
+    <button onclick="simulateGlint('cascading')">Cascading</button>
+    <button onclick="simulateGlint('resonant')">Resonant</button>
+    <button onclick="simulateGlint('shimmering')">Shimmering</button>
+    <button onclick="simulateGlint('waning')">Waning</button>
+    <h3>Simulate Breath</h3>
+    <input type="range" min="-1" max="1" step="0.1" value="0" oninput="simulateBreath(this.value)">
+  </div>
+
+  <script type="module">
+    import { GlintStream } from './glintstream.js';
+    import AmbientUIPanel from '../ambient_ui/AmbientUIPanel.js';
+    import ClimateGlyphPane from '../ambient_ui/ClimateGlyphPane.js';
+
+    // 1. Create a mock GlintStream that we can control
+    class MockGlintStream extends EventTarget {
+        constructor() {
+            super();
+            this.presenceState = {
+                climate: 'void',
+                breath: 0,
+            };
+        }
+        emit(type, message, data) {
+            const glint = { type, message, data, presence: this.presenceState, timestamp: Date.now() };
+            this.dispatchEvent(new CustomEvent('glint', { detail: glint }));
+        }
+    }
+    const mockStream = new MockGlintStream();
+
+    // 2. Initialize the UI Components
+    const panel = new AmbientUIPanel(mockStream);
+    const glyphPane = new ClimateGlyphPane(mockStream);
+
+    // 3. Functions to simulate events
+    window.simulateGlint = (climate) => {
+      mockStream.presenceState.climate = climate;
+      mockStream.emit(`glint.climate.shift`, `Climate shifted to ${climate}`);
+    };
+    
+    window.simulateBreath = (breathValue) => {
+        mockStream.presenceState.breath = parseFloat(breathValue);
+        mockStream.emit('glint.state.breath.change', `Breath changed to ${breathValue}`);
+    };
+
+    // Initial state
+    simulateGlint('void');
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GlintScript Rituals Demo</title>
+  <link rel="stylesheet" href="../ambient_ui/AmbientUIPanel.css">
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: sans-serif;
+      padding: 20px;
+      min-height: 200vh; /* For scrolling */
+    }
+    #controls {
+      padding: 20px;
+      background: #212121;
+      border-radius: 8px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #00bcd4;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>GlintScript Rituals Demo</h1>
+  <p>This page demonstrates the expanded GlintScript engine with conditional and delayed rituals.</p>
+
+  <div id="controls">
+    <h3>Trigger Rituals</h3>
+    <button onclick="simulateFastScroll()">Simulate Fast Scroll</button>
+    <button onclick="simulateSlowScroll()">Simulate Slow Scroll</button>
+    <button onclick="simulatePresence()">Enter Presence</button>
+  </div>
+
+  <script type="module">
+    import { GlintStream, ScrollSensor } from './glintstream.js';
+    import GeminiInterface from './gemini.js';
+    import AmbientUIPanel from '../ambient_ui/AmbientUIPanel.js';
+
+    // 1. Initialize GlintStream with a sensor
+    const stream = new GlintStream([ScrollSensor]);
+
+    // 2. Initialize Gemini
+    const gemini = new GeminiInterface({
+        defaultToneform: 'default',
+        glintstream: { toneEcho: 'console' }
+    }, stream);
+
+    // 3. Load advanced rituals
+    gemini.loadRitual('on glint: "glint.scroll.skimmed" if velocity > 1500 → toneform: "skimming"');
+    gemini.loadRitual('on climate: "presence" after 2s → emit: "glint.presence.settled"');
+
+    // 4. Initialize the UI Panel
+    const panel = new AmbientUIPanel(stream);
+
+    // 5. Awaken the stream
+    stream.awaken();
+
+    // 6. Simulation functions
+    window.simulateFastScroll = () => {
+      console.log('Simulating fast scroll...');
+      stream.emit('glint.scroll.skimmed', 'Fast scroll detected', { velocity: 2000 });
+    };
+    window.simulateSlowScroll = () => {
+      console.log('Simulating slow scroll...');
+      stream.emit('glint.scroll.skimmed', 'Slow scroll detected', { velocity: 500 });
+    };
+    window.simulatePresence = () => {
+        console.log('Simulating presence...');
+        stream.presenceState.climate = 'presence';
+        stream.emit('glint.climate.shift', 'Shifted to presence');
+    };
+
+  </script>
+
+</body>
+</html>

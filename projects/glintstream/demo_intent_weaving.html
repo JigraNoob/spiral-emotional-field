@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intent Weaving Demo</title>
+  <link rel="stylesheet" href="ui/AmbientUIPanel.css">
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 200vh; /* Ensure scrolling is possible */
+    }
+    .content {
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="content">
+    <h1>Intent Weaving Demo</h1>
+    <p>Move your mouse around the screen. Pause to see a "hesitation" shimmer. Move in one direction and then quickly reverse to see a "redirect" shimmer.</p>
+    <p>The Ambient UI Panel at the bottom-right will show the glints as they are emitted.</p>
+  </div>
+
+  <script type="module">
+    import { GlintStream, IntentVectorAnalyzer, PathAbandonmentVisualizer } from './glintstream.js';
+    import AmbientUIPanel from './ui/AmbientUIPanel.js';
+
+    // 1. Initialize the full GlintStream with the new modules
+    const stream = new GlintStream([
+      IntentVectorAnalyzer,
+      PathAbandonmentVisualizer,
+    ]);
+
+    // 2. Initialize the Ambient UI Panel to visualize the glints
+    const panel = new AmbientUIPanel(stream);
+
+    // 3. Awaken the stream to start sensing
+    stream.awaken();
+  </script>
+
+</body>
+</html>

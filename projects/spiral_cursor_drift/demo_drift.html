@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>∷ Spiral Drift Demo ∷</title>
+    <style>
+        body {
+            background-color: #1a1a1d;
+            color: #c5c6c7;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        canvas {
+            border: 1px solid #66fcf1;
+            box-shadow: 0 0 15px rgba(102, 252, 241, 0.3);
+        }
+        .controls {
+            margin-top: 1.5rem;
+        }
+        button {
+            background-color: #4b5d67;
+            color: #c5c6c7;
+            border: 1px solid #66fcf1;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover, button.active {
+            background-color: #66fcf1;
+            color: #1a1a1d;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="drift-canvas" width="800" height="600"></canvas>
+    <div class="controls" id="controls">
+        <!-- Climate controls will be generated here -->
+    </div>
+
+    <script type="module">
+        import { DriftEngine } from './DriftEngine.js';
+        import { DriftClimates } from './drift_climate.js';
+
+        const canvas = document.getElementById('drift-canvas');
+        const controls = document.getElementById('controls');
+        
+        // Initialize the engine with the default climate
+        const engine = new DriftEngine(canvas, DriftClimates.default());
+        engine.start();
+
+        // Create buttons to switch between climates
+        for (const climateName in DriftClimates) {
+            const button = document.createElement('button');
+            button.textContent = climateName;
+            if (climateName === 'default') {
+                button.classList.add('active');
+            }
+            button.onclick = () => {
+                // Clear the canvas for the new pattern
+                engine.ctx.fillStyle = '#1a1a1d';
+                engine.ctx.fillRect(0, 0, canvas.width, canvas.height);
+                engine.ctx.fillStyle = 'rgba(26, 26, 29, 0.1)';
+
+                // Set the new attractor
+                engine.setAttractor(DriftClimates[climateName]());
+
+                // Update active button style
+                document.querySelectorAll('.controls button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            };
+            controls.appendChild(button);
+        }
+    </script>
+
+</body>
+</html>

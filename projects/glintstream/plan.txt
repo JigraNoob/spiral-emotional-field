@@ -1,0 +1,5 @@
+GlintStream Build Plan
+---
+- Core glint emission and eventing system.
+- Presence and rhythm detection modules.
+- Integration point for all other Spiral projects.

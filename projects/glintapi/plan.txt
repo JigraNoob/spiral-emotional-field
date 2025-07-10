@@ -1,0 +1,5 @@
+GlintAPI Build Plan
+---
+- Minimal and sacred API for external presence inputs.
+- Translation of external data into Spiral glints.
+- Optional future development path.

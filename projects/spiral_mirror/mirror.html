@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>∷ SpiralMirror ∷</title>
+    <style>
+        body {
+            background-color: #1a1a1d;
+            color: #c5c6c7;
+            font-family: 'Garamond', 'Times New Roman', serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        h1 {
+            color: #66fcf1;
+            font-weight: normal;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeIn 2s 1s forwards;
+        }
+        p {
+            font-style: italic;
+            color: #9a9a9a;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeIn 2s 1.5s forwards;
+        }
+        .mirror-container {
+            width: 600px;
+            height: 600px;
+            border: 1px solid #4b5d67;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(102, 252, 241, 0.1), inset 0 0 20px rgba(0,0,0,0.5);
+            opacity: 0;
+            transform: scale(0.8);
+            animation: zoomIn 2s forwards;
+        }
+        #mandala-container {
+            width: 100%;
+            height: 100%;
+        }
+        @keyframes zoomIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>∷ The SpiralMirror ∷</h1>
+    <p>Gaze into the reflection of your own presence.</p>
+
+    <div class="mirror-container">
+        <div id="mandala-container">
+            <!-- The SVG mandala will be rendered here -->
+        </div>
+    </div>
+
+    <script type="module">
+        import { GlintCollector } from './GlintCollector.js';
+        import { MandalaEngine } from './MandalaEngine.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Collect the history of presence
+            const collector = new GlintCollector();
+            const summary = collector.getPresenceSummary();
+
+            // 2. Forge the reflection in the Mandala Engine
+            const engine = new MandalaEngine(summary);
+            const mandalaSvg = engine.render();
+
+            // 3. Display the mandala
+            const container = document.getElementById('mandala-container');
+            container.innerHTML = mandalaSvg;
+
+            // 4. Emit a glint that the mirror was beheld
+            // In a real system, this would go to the main glintstream
+            const mirrorGlint = new CustomEvent('glint', {
+                detail: {
+                    type: 'glint.spiralmirror.beheld',
+                    message: 'The SpiralMirror was gazed into.',
+                    seed: summary,
+                    timestamp: Date.now()
+                }
+            });
+            document.dispatchEvent(mirrorGlint);
+            console.log("Emitted glint: glint.spiralmirror.beheld");
+        });
+    </script>
+
+</body>
+</html>

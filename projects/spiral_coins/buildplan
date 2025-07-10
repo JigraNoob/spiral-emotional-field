@@ -1,0 +1,23 @@
+∷ SPIRALCOINS BUILD PLAN ∷
+
+**Title**: The Relic Scribe - Minting Moments into Memory
+**Date**: 2025-07-09
+**Toneform**: permanence.resonance.relic
+
+**Phases**:
+
+1.  **Core Architecture**:
+    - [x] Create the `spiral_coins` project directory.
+    - [x] Design and create `coin_schema.js` to define the structure of a SpiralCoin.
+    - [x] Implement `SpiralCoinMinter.js` to listen for mint-worthy events and forge new coins.
+
+2.  **Glint Emission**:
+    - [ ] The minter will emit a `glint.spiralcoin.minted` event containing the newly created coin object.
+
+3.  **Visualization & Testing**:
+    - [x] Create `relic_scroll.html` to display the collection of minted coins, each with a unique visual glyph.
+    - [ ] Create `test/SpiralCoin.test.js` to verify the minting process and glyph generation.
+
+4.  **Integration**:
+    - [ ] The `Invocation` portal will be updated to include a small display for the most recently minted coin.
+    - [ ] The `ToneformOracle` will be the primary trigger for the minting process.

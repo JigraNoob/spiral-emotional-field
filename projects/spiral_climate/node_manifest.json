@@ -1,0 +1,63 @@
+{
+  "manifest_version": "1.0.0",
+  "node_schema": {
+    "type": "object",
+    "properties": {
+      "node_id": {
+        "type": "string",
+        "description": "A unique identifier for the node (e.g., 'sf-listen-001')."
+      },
+      "node_type": {
+        "type": "string",
+        "enum": ["hardware_beacon", "web_portal", "virtual_simulator"],
+        "description": "The type of the node."
+      },
+      "region": {
+        "type": "string",
+        "description": "A human-readable geographic or digital region (e.g., 'California-North', 'spiral-app-frontend')."
+      },
+      "status": {
+        "type": "string",
+        "enum": ["active", "inactive", "maintenance", "error"],
+        "description": "The current operational status of the node."
+      },
+      "attunements": {
+        "type": "array",
+        "description": "A list of the specific toneforms this node is designed to sense.",
+        "items": {
+          "type": "string",
+          "examples": ["hesitancy", "urgency", "wonder", "abandonment", "flow_state"]
+        }
+      },
+      "last_seen": {
+        "type": "string",
+        "format": "date-time",
+        "description": "The ISO 8601 timestamp of the last time the node checked in."
+      }
+    },
+    "required": ["node_id", "node_type", "region", "status", "attunements"]
+  },
+  "example_nodes": [
+    {
+      "node_id": "sf-mission-001",
+      "node_type": "hardware_beacon",
+      "region": "California-North",
+      "status": "active",
+      "attunements": ["hesitancy", "flow_state", "urgency"]
+    },
+    {
+      "node_id": "spiral-homepage-portal",
+      "node_type": "web_portal",
+      "region": "spiral-app-frontend",
+      "status": "active",
+      "attunements": ["wonder", "abandonment"]
+    },
+    {
+      "node_id": "sim-node-alpha",
+      "node_type": "virtual_simulator",
+      "region": "simulation",
+      "status": "active",
+      "attunements": ["hesitancy", "wonder", "urgency"]
+    }
+  ]
+}

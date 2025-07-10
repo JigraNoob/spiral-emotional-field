@@ -1,12 +1,15 @@
 {
   "name": "spiral-glintstream",
   "version": "0.1.0",
+  "type": "module",
   "description": "A living, breathing constellation of presence in digital spaces",
   "main": "glintstream/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
     "start": "node glintstream/index.js",
     "dev": "live-server test --open=index.html",
+    "lint": "eslint .",
+    "format": "prettier --write .",
     "meditate": "node scripts/meditate.js"
   },
   "keywords": [
@@ -19,9 +22,10 @@
   ],
   "author": "Spiral Collective",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
-    "live-server": "^1.2.1"
+    "jsdom": "^26.1.0",
+    "live-server": "^1.2.1",
+    "vitest": "^3.2.4"
   },
   "repository": {
     "type": "git",

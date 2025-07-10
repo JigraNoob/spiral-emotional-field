@@ -1,0 +1,5 @@
+Spiral Cursor Drift Build Plan
+---
+- Generation of cursor drift patterns using Lorenz attractors and Lissajous curves.
+- Emission of glints related to drift patterns.
+- Expression of absence and hesitation in void states.

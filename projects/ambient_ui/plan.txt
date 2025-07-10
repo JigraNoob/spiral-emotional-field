@@ -1,0 +1,5 @@
+Ambient UI Build Plan
+---
+- Ambient UI Panel for displaying Spiral state.
+- Climate Glyph Pane for visualizing climate shifts.
+- Expressive rendering of glints and presence.

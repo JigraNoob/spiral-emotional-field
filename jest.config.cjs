@@ -1,5 +1,5 @@
 module.exports = {
-    preset: 'jest-puppeteer',
+    
     transform: {
         '^.+\\.js$': 'babel-jest',
         '^.+\\.jsx?$': 'babel-jest'

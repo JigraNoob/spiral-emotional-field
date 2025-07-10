@@ -1,0 +1,9 @@
+{
+  "defaultToneform": "flow.harmonic",
+  "echoMode": "quiet",
+  "presenceBridge": "glintstream",
+  "safety": {
+    "stripNewlinesInCommands": true,
+    "maxCommandLength": 500
+  }
+}

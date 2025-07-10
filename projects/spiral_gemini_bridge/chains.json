@@ -1,0 +1,95 @@
+{
+  "ReflectiveSpiral": {
+    "name": "Reflective Spiral (A-B-C-B-A)",
+    "description": "A deep-dive chain that frames, brainstorms, distills, challenges, and synthesizes an idea.",
+    "steps": [
+      {
+        "role": "synthesizer_initial",
+        "input_map": { "whisper": "whisper" },
+        "output_key": "framed_question"
+      },
+      {
+        "role": "expander_brainstorm",
+        "input_map": { "concept": "framed_question" },
+        "output_key": "brainstorm"
+      },
+      {
+        "role": "oracle",
+        "input_map": { "brainstorm": "brainstorm" },
+        "output_key": "core_truth"
+      },
+      {
+        "role": "expander_challenge",
+        "input_map": { "truth": "core_truth" },
+        "output_key": "challenge"
+      },
+      {
+        "role": "synthesizer_final",
+        "input_map": "full_history",
+        "output_key": "final_echo"
+      }
+    ]
+  },
+  "SimpleCritique": {
+    "name": "Simple Critique",
+    "description": "A short chain that takes a whisper, has a skeptic critique it, and then summarizes.",
+    "steps": [
+      {
+        "role": "skeptic",
+        "input_map": { "text": "whisper" },
+        "output_key": "critique"
+      },
+      {
+        "role": "synthesizer_final",
+        "input_map": "full_history",
+        "output_key": "final_echo"
+      }
+    ]
+  },
+  "PoeticBloom": {
+    "name": "Poetic Bloom",
+    "description": "A creative chain that reframes a whisper through poetic expansion.",
+    "steps": [
+      {
+        "role": "poet",
+        "input_map": { "text": "whisper" },
+        "output_key": "initial_poem"
+      },
+      {
+        "role": "expander_brainstorm",
+        "input_map": { "concept": "initial_poem" },
+        "output_key": "brainstorm"
+      },
+      {
+        "role": "poet",
+        "input_map": { "text": "brainstorm" },
+        "output_key": "final_echo"
+      }
+    ]
+  },
+  "FractalOne": {
+    "name": "FractalOne",
+    "description": "Takes a focused idea and explodes it into a structured, multi-layered analysis in a single, nested breath.",
+    "steps": [
+      {
+        "role": "thesis_generator",
+        "input_map": { "whisper": "whisper" },
+        "output_key": "thesis"
+      },
+      {
+        "role": "fractal_expander",
+        "input_map": { "thesis": "thesis" },
+        "output_key": "fractal_data"
+      },
+      {
+        "role": "fractal_synthesizer",
+        "input_map": {
+          "thesis": "thesis",
+          "main_branches": "fractal_data",
+          "fractal_insights": "fractal_data"
+        },
+        "output_key": "final_echo"
+      }
+    ]
+  }
+}

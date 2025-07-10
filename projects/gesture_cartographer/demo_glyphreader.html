@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Spiral GlyphReader</title>
+    <style>
+      body {
+        background: #0e0e0e;
+        margin: 0;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+        cursor: crosshair;
+      }
+      #overlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: #eee;
+        font-family: monospace;
+        background: rgba(20, 20, 20, 0.7);
+        padding: 10px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <div id="overlay">Draw a gesture...</div>
+
+    <script type="module">
+      import GestureCartographer from './GestureCartographer.js';
+      import { gestureCartographerConfig } from './gesture_cartographer.config.js';
+
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      let drawing = false;
+      let cartographer = new GestureCartographer(gestureCartographerConfig);
+
+      canvas.addEventListener('mousedown', () => {
+        drawing = true;
+        cartographer.path = []; // Reset path on new drawing
+        ctx.clearRect(0, 0, width, height);
+        ctx.beginPath();
+      });
+
+      canvas.addEventListener('mouseup', () => {
+        drawing = false;
+        const result = cartographer.recognizeGesture();
+        if (result) {
+          overlay.innerHTML = `
+          <b>Gesture:</b> ${result.type}<br/>
+          <b>Toneform:</b> ${result.toneform}<br/>
+          <b>Glint:</b> ${result.glintType}
+        `;
+        }
+      });
+
+      canvas.addEventListener('mousemove', (e) => {
+        if (!drawing) return;
+        const x = e.clientX;
+        const y = e.clientY;
+        cartographer.path.push({ x, y, t: Date.now() });
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = '#8f8';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      });
+    </script>
+  </body>
+</html>

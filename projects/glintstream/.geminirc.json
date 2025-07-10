@@ -1,0 +1,22 @@
+{
+  "defaultToneform": "flow.harmonic",
+  "invocationPrefix": "await gemini.invoke({ type: ",
+  "reflectPrefix": "gemini.reflect(presence => ",
+  "echoMode": "quiet",
+  "presenceBridge": "glintstream",
+  "glintstream": {
+    "watchState": true,
+    "bindToBreath": true,
+    "toneEcho": "console"
+  },
+  "safety": {
+    "stripNewlinesInCommands": true,
+    "maxCommandLength": 400,
+    "escapeCharacters": true
+  },
+  "ui": {
+    "color": "violet",
+    "promptGlyph": "✦",
+    "fieldShimmer": true
+  }
+}

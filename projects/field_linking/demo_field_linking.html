@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>∷ Field Linking Demo ∷</title>
+    <style>
+        body {
+            background-color: #1a1a1d;
+            color: #c5c6c7;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 2rem;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .panel {
+            width: 45%;
+            height: 90%;
+            background-color: rgba(0,0,0,0.2);
+            border: 1px solid #4b5d67;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+        .panel h2 {
+            text-align: center;
+            color: #66fcf1;
+            font-weight: normal;
+            border-bottom: 1px solid #4b5d67;
+            padding-bottom: 1rem;
+            margin-top: 1rem;
+        }
+        .log, .status {
+            padding: 1rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .log div {
+            margin-bottom: 0.5em;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+            color: #9a9a9a;
+        }
+        .log .glint {
+            color: #66fcf1;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            padding: 1rem;
+            border-bottom: 1px dashed #4b5d67;
+        }
+        .status-item span:first-child {
+            color: #c5c6c7;
+        }
+        .status-item span:last-child {
+            color: #66fcf1;
+            font-weight: bold;
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="panel">
+        <h2>Sensor Status</h2>
+        <div class="status" id="sensor-status">
+            <div class="status-item"><span>Time of Day:</span><span id="status-time">day</span></div>
+            <div class="status-item"><span>Noise Level:</span><span id="status-noise">low</span></div>
+            <div class="status-item"><span>System Focus:</span><span id="status-focus">idle</span></div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Field Glintstream</h2>
+        <div class="log" id="glintstream-log"></div>
+    </div>
+
+    <script type="module">
+        import { PresenceSensors } from './presence_sensors.js';
+        import { FieldLinkAdapter } from './glintapi/field_link_adapter.js';
+
+        const glintStreamLog = document.getElementById('glintstream-log');
+        const statusTime = document.getElementById('status-time');
+        const statusNoise = document.getElementById('status-noise');
+        const statusFocus = document.getElementById('status-focus');
+
+        const sensors = new PresenceSensors();
+        const adapter = new FieldLinkAdapter(sensors);
+
+        // Listen for sensor changes to update the status UI
+        sensors.addEventListener('change', (e) => {
+            const { sensor, value } = e.detail;
+            document.getElementById(`status-${sensor}`).textContent = value;
+        });
+
+        // Listen for the translated glints from the adapter
+        adapter.addEventListener('glint', (e) => {
+            const entry = document.createElement('div');
+            entry.className = 'glint';
+            entry.textContent = `> [${e.detail.type}] ${e.detail.message}`;
+            glintStreamLog.appendChild(entry);
+            glintStreamLog.scrollTop = glintStreamLog.scrollHeight;
+        });
+
+        sensors.start();
+        adapter.activate();
+
+    </script>
+
+</body>
+</html>

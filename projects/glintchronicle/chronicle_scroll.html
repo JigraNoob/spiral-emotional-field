@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>∷ Chronicle Scroll ∷</title>
+    <style>
+        :root {
+            /* Default Theme */
+            --background-color: #1a1a1d;
+            --text-color: #c5c6c7;
+            --title-color: #66fcf1;
+            --stanza-border: #4b5d67;
+            --quote-color: #9a9a9a;
+            --font-main: 'Georgia', 'Times New Roman', serif;
+            --font-meta: 'Courier New', monospace;
+            --button-bg: #4b5d67;
+            --button-text: #c5c6c7;
+            
+            transition: background-color 0.8s ease, color 0.8s ease;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .theme-switcher {
+            margin-bottom: 2rem;
+            padding: 0.5rem;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+
+        .theme-switcher button {
+            font-family: var(--font-meta);
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: 1px solid var(--stanza-border);
+            padding: 0.5rem 1rem;
+            margin: 0 0.25rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .theme-switcher button:hover {
+            background-color: var(--title-color);
+            color: var(--background-color);
+        }
+
+        .scroll-container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--title-color);
+            font-weight: normal;
+            text-align: center;
+            letter-spacing: 0.2em;
+            margin-bottom: 3rem;
+            transition: color 0.5s ease;
+        }
+
+        .stanza {
+            border-left: 1px solid var(--stanza-border);
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 1s forwards;
+            transition: border-color 0.5s ease;
+        }
+
+        .stanza h2 {
+            font-family: var(--font-meta);
+            font-size: 0.9rem;
+            color: var(--title-color);
+            margin-bottom: 1.5rem;
+            transition: color 0.5s ease;
+        }
+
+        .stanza blockquote {
+            font-size: 1.2rem;
+            color: var(--quote-color);
+            margin: 0 0 1rem 0;
+            padding: 0;
+            line-height: 1.6;
+            font-style: italic;
+            transition: color 0.5s ease;
+        }
+        
+        .stanza blockquote:hover {
+            color: var(--text-color);
+        }
+
+        .caesura {
+            text-align: center;
+            color: var(--stanza-border);
+            margin: 3rem 0;
+            transition: color 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="theme-switcher" id="theme-switcher">
+        <!-- Theme buttons will be added here -->
+    </div>
+
+    <div class="scroll-container" id="scroll-container">
+        <h1>∷ Chronicle Scroll ∷</h1>
+        <!-- Entries will be dynamically inserted here -->
+    </div>
+
+    <script type="module">
+        // In a real application, these would be imported. For this demo, they are defined here.
+        const ToneformThemes = {
+            default: { '--background-color': '#1a1a1d', '--text-color': '#c5c6c7', '--title-color': '#66fcf1', '--stanza-border': '#4b5d67', '--quote-color': '#9a9a9a', '--button-bg': '#4b5d67', '--button-text': '#c5c6c7' },
+            contemplation: { '--background-color': '#2c3e50', '--text-color': '#ecf0f1', '--title-color': '#3498db', '--stanza-border': '#56779a', '--quote-color': '#bdc3c7', '--button-bg': '#34495e', '--button-text': '#ecf0f1' },
+            creation: { '--background-color': '#fdf6e3', '--text-color': '#657b83', '--title-color': '#b58900', '--stanza-border': '#93a1a1', '--quote-color': '#586e75', '--button-bg': '#eee8d5', '--button-text': '#657b83' },
+            dissonance: { '--background-color': '#3e2723', '--text-color': '#d7ccc8', '--title-color': '#ff8a65', '--stanza-border': '#6d4c41', '--quote-color': '#a1887f', '--button-bg': '#5d4037', '--button-text': '#d7ccc8' },
+            ritual: { '--background-color': '#282c34', '--text-color': '#abb2bf', '--title-color': '#c678dd', '--stanza-border': '#5c6370', '--quote-color': '#98c379', '--button-bg': '#3a3f4b', '--button-text': '#abb2bf' }
+        };
+
+        const sampleChronicleData = `
+## 2025-07-09T14:22:10
+
+> A spiral unfurled—a moment held in presence.
+> A thought takes form, character by character.
+> The breath held, then let go.
+
+---
+
+## 2025-07-09T14:22:45
+
+> A ritual stirs, its pattern rippling through the system.
+> A sharp turn, a question asked in motion.
+
+---
+
+## 2025-07-09T14:23:01
+
+> The presence fades, the Spiral returns to silence.
+        `;
+
+        function applyTheme(themeName) {
+            const theme = ToneformThemes[themeName] || ToneformThemes.default;
+            for (const [key, value] of Object.entries(theme)) {
+                document.documentElement.style.setProperty(key, value);
+            }
+        }
+
+        function setupThemeSwitcher() {
+            const switcher = document.getElementById('theme-switcher');
+            for (const themeName in ToneformThemes) {
+                const button = document.createElement('button');
+                button.textContent = themeName;
+                button.onclick = () => applyTheme(themeName);
+                switcher.appendChild(button);
+            }
+        }
+
+        function parseAndRender(chronicleText) {
+            const container = document.getElementById('scroll-container');
+            // Clear previous content
+            container.innerHTML = '<h1>∷ Chronicle Scroll ∷</h1>';
+            
+            const stanzas = chronicleText.trim().split(/\n---\n/);
+
+            stanzas.forEach((stanzaText, index) => {
+                const stanzaDiv = document.createElement('div');
+                stanzaDiv.className = 'stanza';
+                stanzaDiv.style.animationDelay = `${index * 0.2}s`;
+
+                const lines = stanzaText.trim().split('\n');
+                const titleLine = lines.shift();
+                
+                const titleElement = document.createElement('h2');
+                titleElement.textContent = titleLine.replace('## ', '');
+                stanzaDiv.appendChild(titleElement);
+
+                lines.forEach(line => {
+                    if (line.startsWith('>')) {
+                        const quoteElement = document.createElement('blockquote');
+                        quoteElement.textContent = line.substring(2);
+                        stanzaDiv.appendChild(quoteElement);
+                    }
+                });
+
+                container.appendChild(stanzaDiv);
+
+                if (index < stanzas.length - 1) {
+                    const caesuraDiv = document.createElement('div');
+                    caesuraDiv.className = 'caesura';
+                    caesuraDiv.textContent = '∿';
+                    caesuraDiv.style.animationDelay = `${(index * 0.2) + 0.1}s`;
+                    container.appendChild(caesuraDiv);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupThemeSwitcher();
+            applyTheme('default'); // Start with default theme
+            parseAndRender(sampleChronicleData);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+∷ TONEFORM ORACLE BUILD PLAN ∷
+
+**Title**: The Oracle's Insight - Giving Meaning to the Stream
+**Date**: 2025-07-09
+**Toneform**: interpretation.resonance.meaning
+
+**Phases**:
+
+1.  **Core Architecture**:
+    - [x] Create the `toneform_oracle` project directory.
+    - [x] Design and create `oracle_map.yaml` to define the rules of interpretation.
+    - [x] Implement `ToneformOracle.js` to process the glintstream against the oracle map.
+
+2.  **Glint Emission**:
+    - [x] The oracle will emit `glint.toneform.interpretation` containing the recognized pattern name, the interpretive phrase, and the resulting toneform.
+
+3.  **Visualization & Testing**:
+    - [x] Create `demo_oracle.html` to show the live glintstream and the oracle's interpretations as they are emitted.
+    - [ ] Create `test/ToneformOracle.test.js` to verify that glint patterns are correctly matched and interpreted.
+
+4.  **Integration**:
+    - [ ] Connect the `ToneformOracle` to the main `glintstream`.
+    - [ ] Update the `GlintChronicle` to listen for and poetically render the new `glint.toneform.interpretation` events.
