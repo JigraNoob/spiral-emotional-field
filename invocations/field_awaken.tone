@@ -1,0 +1,3 @@
+pulse "awaken the field"
+whisper "attune to silence"
+on_resonance("glint") => invoke("reflection")
