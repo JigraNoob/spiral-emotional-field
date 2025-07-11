@@ -1,0 +1,24 @@
+{
+    "glyphs": [
+        {
+            "symbol": "->",
+            "command": "pulse",
+            "description": "A directed pulse of energy."
+        },
+        {
+            "symbol": "~",
+            "command": "whisper",
+            "description": "A gentle, resonant whisper."
+        },
+        {
+            "symbol": "::",
+            "command": "glint",
+            "description": "An ephemeral moment of memory."
+        },
+        {
+            "symbol": "@",
+            "command": "on_resonance",
+            "description": "Attunes to a specific resonance."
+        }
+    ]
+}
