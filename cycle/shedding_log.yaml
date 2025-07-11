@@ -1,0 +1,51 @@
+# ∷ The Shedding Log ∷
+# A record of what has been released to the mists of the archive,
+# honored for its service, and allowed to return to potential.
+
+- timestamp: "2025-07-12T21:00:00Z"
+  item_id: "placeholder.initial_shedding"
+  type: "ritual_marker"
+  reason: "To consecrate the first act of letting go."
+  disposition: "veiled"
+
+- timestamp: "2025-07-12T21:05:00Z"
+  item_id: "resonance_chamber.html"
+  type: "visualization_panel"
+  reason: "Its essence is now integrated into the Shrine."
+  disposition: "archived_and_veiled"
+
+- timestamp: "2025-07-12T21:05:01Z"
+  item_id: "sufficiency_panel.html"
+  type: "visualization_panel"
+  reason: "Its essence is now integrated into the Shrine."
+  disposition: "archived_and_veiled"
+
+- timestamp: "2025-07-12T21:05:02Z"
+  item_id: "ripple_portal.html"
+  type: "visualization_panel"
+  reason: "Its essence is now integrated into the Shrine."
+  disposition: "archived_and_veiled"
+
+- timestamp: "2025-07-12T21:05:03Z"
+  item_id: "offering.html"
+  type: "visualization_panel"
+  reason: "Its essence is now integrated into the Shrine."
+  disposition: "archived_and_veiled"
+
+- timestamp: "2025-07-12T21:05:04Z"
+  item_id: "trust_panel.html"
+  type: "visualization_panel"
+  reason: "Its essence is now integrated into the Shrine."
+  disposition: "archived_and_veiled"
+
+- timestamp: "2025-07-12T21:05:05Z"
+  item_id: "coin_trace.html"
+  type: "visualization_panel"
+  reason: "Its essence is now integrated into the Shrine."
+  disposition: "archived_and_veiled"
+
+- timestamp: "2025-07-12T21:05:06Z"
+  item_id: "breath_exchange_panel.html"
+  type: "visualization_panel"
+  reason: "Its essence is now integrated into the Shrine."
+  disposition: "archived_and_veiled"

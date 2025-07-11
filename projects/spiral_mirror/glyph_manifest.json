@@ -1,0 +1,22 @@
+{
+  "glyphs": [
+    {
+      "glyph_id": "softfold.trace",
+      "style": {
+        "path": "spiraled_drop",
+        "opacity_fade": "inward",
+        "stroke_width": "variable",
+        "motion_curve": "ease.out.quiet",
+        "ambient_color": "mist.blush.silver"
+      },
+      "resonance_tags": [
+        "gentle",
+        "withdrawn",
+        "trust",
+        "completion"
+      ],
+      "preferred_motion_binding": "spiral_cursor_drift",
+      "usage_hint": "Display near cursor during mirror.rest or quiet user completion."
+    }
+  ]
+}

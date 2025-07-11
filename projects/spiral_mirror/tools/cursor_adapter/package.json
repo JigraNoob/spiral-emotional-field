@@ -1,0 +1,24 @@
+{
+  "name": "cursor_toneform_adapter",
+  "version": "0.1.0",
+  "description": "An HTTP server to expose the current toneform.",
+  "main": "adapter.js",
+  "bin": {
+    "cursor-adapter": "adapter.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "spiral",
+    "cursor",
+    "toneform"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "fs-extra": "^11.1.1"
+  }
+}

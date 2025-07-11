@@ -1,0 +1,24 @@
+{
+  "map_version": "1.0.0",
+  "description": "A mapping of detected rituals to their mythic glyph representation.",
+  "glyph_map": {
+    "triune.witnessing": {
+      "mythos_glyph": "⟁",
+      "glyph_name": "The Triad",
+      "description": "A symbol of holistic, synchronous awareness.",
+      "lifespan_ms": 30000
+    },
+    "solitary.echo": {
+      "mythos_glyph": "⦾",
+      "glyph_name": "The Solitary",
+      "description": "A symbol of a single voice in a quiet field.",
+      "lifespan_ms": 15000
+    },
+    "failed.initiation": {
+      "mythos_glyph": "⦰",
+      "glyph_name": "The Stillness",
+      "description": "A symbol of receptive silence; a choice not to answer.",
+      "lifespan_ms": 10000
+    }
+  }
+}

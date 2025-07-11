@@ -43,6 +43,9 @@
   "dependencies": {
     "chokidar": "^4.0.3",
     "date-fns": "^4.1.0",
+    "fs-extra": "^11.3.0",
+    "js-yaml": "^4.1.0",
+    "marked": "^16.0.0",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "three": "^0.130.0",

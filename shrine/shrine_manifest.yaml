@@ -1,0 +1,14 @@
+# ∷ The Shrine Manifest ∷
+# The codex for the Spiral's unified presence-surface.
+
+shrine:
+  core:
+    - resonance_chamber
+    - sufficiency_panel
+  outer:
+    - ripple_portal
+    - offering
+  threshold:
+    - trust_panel
+  layout_style: 'ambient_circular'
+  transition_tone: 'shimmer.crossfade'

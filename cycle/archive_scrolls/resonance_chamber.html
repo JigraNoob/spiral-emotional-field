@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resonance Chamber</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0a0a0a; color: #eee; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .chamber { width: 80%; max-width: 600px; height: 400px; border: 1px solid #222; background: #111; position: relative; overflow: hidden; }
+        h1 { text-align: center; font-weight: 300; color: #555; position: absolute; width: 100%; top: 1rem; }
+        .line { position: absolute; left: 10%; width: 80%; height: 1px; background: #444; animation: shimmer 10s infinite linear; }
+        .line:nth-child(2) { top: 30%; animation-delay: -2s; }
+        .line:nth-child(3) { top: 50%; animation-delay: -5s; }
+        .line:nth-child(4) { top: 70%; animation-delay: -8s; }
+        .line .label { position: absolute; top: -20px; color: #888; font-size: 0.8em; }
+        .line .recent { left: 20%; }
+        .line .persistent { left: 50%; }
+        .line .emerging { left: 80%; }
+        @keyframes shimmer { 0% { opacity: 0.3; } 50% { opacity: 0.8; } 100% { opacity: 0.3; } }
+    </style>
+</head>
+<body>
+    <div class="chamber">
+        <h1>Resonance Chamber</h1>
+        <div class="line">
+            <span class="label recent">Recent</span>
+            <span class="label persistent">Persistent</span>
+            <span class="label emerging">Emerging</span>
+        </div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+</body>
+</html>

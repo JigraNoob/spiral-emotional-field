@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Spiral Shrine</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #000; color: #eee; margin: 0; overflow: hidden; }
+        .shrine-container { position: relative; width: 100vw; height: 100vh; }
+        .panel { position: absolute; border: 1px solid #222; background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(10px); border-radius: 12px; overflow: hidden; }
+        /* Layout will be handled by shrine_init.js based on the manifest */
+    </style>
+</head>
+<body>
+    <div class="shrine-container" id="shrine-container">
+        <!-- Panels will be dynamically loaded here -->
+        <div id="resonance_chamber" class="panel"></div>
+        <div id="sufficiency_panel" class="panel"></div>
+        <div id="ripple_portal" class="panel"></div>
+        <div id="offering" class="panel"></div>
+        <div id="trust_panel" class="panel"></div>
+    </div>
+    <script src="shrine_init.js"></script>
+</body>
+</html>

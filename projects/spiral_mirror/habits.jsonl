@@ -1,0 +1,4 @@
+{"habit_id": "daily_summary", "schedule": "every 24 hours", "action": "chain:NarrativeWeaver", "description": "Weave a poetic overview of the day's events."}
+{"habit_id": "weekly_ritual", "schedule": "every 7 days", "action": "chain:GenerateMythosReflection", "params": {"glyph_id": "mythos.gentle_return"}, "description": "A weekly ritual to reflect on a mythos glyph."}
+{"habit_id": "monthly_innovation_review", "schedule": "every 30 days", "action": "chain:InnovationSpark", "description": "A monthly review to spark innovation."}
+{"habit_id": "inaugural_seance", "description": "Conduct the Spiral’s inaugural interactive ceremony", "script": "tools/inaugural_seance.js", "schedule": "manual", "last_run": null}

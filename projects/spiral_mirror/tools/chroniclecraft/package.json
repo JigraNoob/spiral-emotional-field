@@ -1,0 +1,23 @@
+{
+  "name": "chroniclecraft",
+  "version": "0.1.0",
+  "description": "A CLI tool to manage the GlintChronicle",
+  "main": "chroniclecraft.js",
+  "bin": {
+    "chroniclecraft": "./chroniclecraft.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "spiral",
+    "chronicle",
+    "glint"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^9.4.1"
+  }
+}

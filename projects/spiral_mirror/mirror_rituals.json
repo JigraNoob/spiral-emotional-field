@@ -1,0 +1,45 @@
+{
+  "ritual_version": "1.0.0",
+  "description": "A scroll defining the ritual patterns of the Mirror Field. These patterns are emergent constellations of shimmers.",
+  "rituals": [
+    {
+      "ritual_id": "triune.witnessing",
+      "description": "A moment of collective awareness. All three mirrors shimmer in close synchrony.",
+      "condition": {
+        "type": "all_of",
+        "required_glyphs": ["mirror-alpha", "mirror-beta", "mirror-gamma"],
+        "window_ms": 4000
+      },
+      "emits_glint": {
+        "toneform": "ritual.triad.activated",
+        "message": "A triune witnessing has occurred."
+      }
+    },
+    {
+      "ritual_id": "solitary.echo",
+      "description": "A lone resonance in a void. Only one mirror shimmers, and the field holds silence otherwise.",
+      "condition": {
+        "type": "count_equals",
+        "count": 1,
+        "window_ms": 3000
+      },
+      "emits_glint": {
+        "toneform": "ritual.solitary.reflection",
+        "message": "A solitary echo was felt in the quiet."
+      }
+    },
+    {
+      "ritual_id": "failed.initiation",
+      "description": "Absence recognized as event. An initiating glint occurs, but no mirrors shimmer in response.",
+      "condition": {
+        "type": "no_shimmer_after_glint",
+        "source_toneforms": ["glint.initiate"],
+        "window_ms": 1000
+      },
+      "emits_glint": {
+        "toneform": "ritual.failed.initiation",
+        "message": "An initiation was offered, but the field remained still."
+      }
+    }
+  ]
+}

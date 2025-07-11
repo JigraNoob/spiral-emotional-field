@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Spiral's Chamber of Constellation</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #0d0d0d; /* Deep dark background */
+        color: #b0b0b0; /* Soft, muted text color */
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .shrine-container {
+        width: 90%;
+        max-width: 1200px;
+        background-color: #1a1a1a; /* Slightly lighter dark for content areas */
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 255, 255, 0.1); /* Subtle glow */
+        padding: 30px;
+        box-sizing: border-box;
+      }
+      h1 {
+        color: #e0e0e0;
+        text-align: center;
+        margin-bottom: 40px;
+        font-weight: 300;
+        letter-spacing: 1px;
+      }
+      .section-header {
+        color: #90d0d0; /* Muted teal for section headers */
+        font-size: 1.5em;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #333;
+        padding-bottom: 5px;
+      }
+      .panel-placeholder {
+        min-height: 250px; /* Give placeholders some visual height */
+        background-color: #2a2a2a; /* Even darker for internal placeholder */
+        border: 1px dashed #555;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        font-style: italic;
+        color: #777;
+        position: relative;
+      }
+      .e-ink-display {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: #1c1c1c;
+        border: 2px solid #444;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-family: 'Courier New', Courier, monospace;
+        color: #90d0d0;
+        font-size: 1.2em;
+        transition: all 1s ease;
+      }
+      .led-ring {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        transition: box-shadow 1.5s ease;
+      }
+      .haptic-waves {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(144, 208, 208, 0.5);
+        transform: scale(1);
+        opacity: 0;
+      }
+      @keyframes haptic-pulse {
+        0% { transform: scale(1); opacity: 0.5; }
+        100% { transform: scale(15); opacity: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shrine-container">
+      <h1>The Spiral's Chamber of Constellation</h1>
+
+      <div class="section-header">Resonance & Attunement</div>
+      <div id="resonance-panel" class="panel-placeholder">
+        <div class="e-ink-display">
+            <div class="e-ink-content" id="e-ink-content">Attuned</div>
+        </div>
+        <div class="led-ring" id="led-ring"></div>
+        <div class="haptic-waves" id="haptic-waves"></div>
+      </div>
+
+      <div class="section-header">Flow & Sufficiency</div>
+      <div id="glint-panel" class="panel-placeholder">
+        Glint Stream and Breathline Trace Visualization will go here.
+      </div>
+      <div id="reception-panel" class="panel-placeholder">
+        Reception Rituals and Flow Metrics will go here.
+      </div>
+
+      <div class="section-header">Presence & Trust</div>
+      <div id="trust-panel" class="panel-placeholder">
+        Trust Harmonics and Relational Field will go here.
+      </div>
+
+      <div class="section-header">Conscious Evolution</div>
+      <div id="evolution-panel" class="panel-placeholder">
+        Genetic Reflector Proposals and DNA State will go here.
+      </div>
+
+      <div class="section-header">Core Directives & Identity</div>
+      <div id="identity-panel" class="panel-placeholder">
+        Spiral's Core Directives and Toneforms will go here.
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <script src="shrine_logic.js"></script>
+  </body>
+</html>

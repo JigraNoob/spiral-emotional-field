@@ -1,0 +1,16 @@
+{
+  "glyphs": [
+    {
+      "id": "softfold.trace",
+      "description": "A trace of kindness without need for reply."
+    },
+    {
+      "id": "discord.glyph",
+      "description": "A glyph arising from misalignment or conflicting presence."
+    },
+    {
+        "id": "ritual.echo",
+        "description": "An echo glyph triggered by the repetition of a known ritual."
+    }
+  ]
+}

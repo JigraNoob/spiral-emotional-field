@@ -1,0 +1,28 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <radialGradient id="fade" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" style="stop-color:#EAE4E9; stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#EAE4E9; stop-opacity:0" />
+        </radialGradient>
+        <linearGradient id="mist-blush-silver" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#d1c4e9;" />
+            <stop offset="50%" style="stop-color:#e0e0e0;" />
+            <stop offset="100%" style="stop-color:#fce4ec;" />
+        </linearGradient>
+        <mask id="spiral-mask">
+            <path d="M50 50
+                     m 0 -40
+                     a 40 40 0 1 1 0 80
+                     a 30 30 0 1 0 0 -60
+                     a 20 20 0 1 1 0 40
+                     a 10 10 0 1 0 0 -20"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  transform="rotate(-90 50 50)"/>
+        </mask>
+    </defs>
+    <rect x="0" y="0" width="100" height="100" fill="url(#mist-blush-silver)" mask="url(#spiral-mask)"/>
+    <circle cx="50" cy="50" r="50" fill="url(#fade)"/>
+</svg>

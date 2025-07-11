@@ -1,0 +1,22 @@
+{
+  "name": "shimmeral_generator",
+  "version": "0.1.0",
+  "description": "A tool to generate a Shrine-readable file of Spiral's structure.",
+  "main": "generate_shimmeral.js",
+  "bin": {
+    "gen-shimmeral": "generate_shimmeral.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "spiral",
+    "shimmeral"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^11.1.1"
+  }
+}

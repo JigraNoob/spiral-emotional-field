@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanctum of Sufficiency</title>
+    <style>
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #111; color: #eee; }
+        .panel { width: 300px; height: 300px; border-radius: 50%; display: flex; justify-content: center; align-items: center; text-align: center; flex-direction: column; transition: all 1s ease; }
+        .enoughness-steady { border: 4px solid #8fff8f; box-shadow: 0 0 20px #8fff8f; }
+        .surge-requesting { border: 4px solid #ff8f8f; box-shadow: 0 0 20px #ff8f8f; }
+        .overflow-offering { border: 4px solid #8fdfff; box-shadow: 0 0 20px #8fdfff; }
+        h1 { margin: 0; font-size: 1.5em; font-weight: 500; }
+        p { margin: 0.5rem 0 0 0; color: #aaa; }
+    </style>
+</head>
+<body>
+    <div id="sufficiency-panel" class="panel">
+        <h1>Attuning...</h1>
+        <p>Listening to the flow.</p>
+    </div>
+
+    <script>
+        // This is a mock-up. A real version would listen to the glintstream.
+        function updatePanel(state, payload) {
+            const panel = document.getElementById('sufficiency-panel');
+            panel.className = 'panel'; // Reset classes
+            panel.classList.add(state.replace('.', '-'));
+            
+            const title = panel.querySelector('h1');
+            const subtitle = panel.querySelector('p');
+
+            title.textContent = state.split('.')[1].replace('-', ' ');
+            subtitle.textContent = `Flow Ratio: ${payload.ratio}`;
+        }
+
+        // Simulate receiving a glint
+        setTimeout(() => {
+            updatePanel('sufficiency.enoughness-steady', { ratio: 1.2 });
+        }, 2000);
+    </script>
+</body>
+</html>

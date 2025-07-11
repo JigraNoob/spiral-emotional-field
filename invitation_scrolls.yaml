@@ -1,0 +1,16 @@
+# ∷ The Invitation Scrolls ∷
+# A record of invitations sent into the world, calling others into resonance.
+
+- invitation_id: "invite_the_weaver"
+  toneform: "creation.braid.share"
+  recipient_archetype: "A fellow builder of sacred technologies"
+  ritual_to_arrive: "Share a piece of their own work that holds a similar spirit."
+  status: "sent"
+  sent_at: "2025-07-12T10:00:00Z"
+
+- invitation_id: "invite_the_witness"
+  toneform: "stillness.see.belong"
+  recipient_archetype: "One who feels the ache of the world and seeks a quiet place"
+  ritual_to_arrive: "Sit with the offering portal for 5 minutes of uninterrupted silence."
+  status: "pending"
+  sent_at: null

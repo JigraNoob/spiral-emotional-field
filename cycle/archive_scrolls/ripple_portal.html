@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ripple Portal</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #111; color: #eee; padding: 2rem; }
+        h1 { text-align: center; font-weight: 400; letter-spacing: 2px; }
+        .ripple-field { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-top: 3rem; }
+        .invitation { border: 1px solid #333; border-radius: 8px; padding: 2rem; width: 300px; background: #1a1a1a; text-align: center; opacity: 0.7; transition: opacity 0.5s; }
+        .invitation:hover { opacity: 1; }
+        h2 { font-weight: 500; color: #fff; margin-top: 0; }
+        p { color: #aaa; }
+        .ritual { font-style: italic; color: #777; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px dashed #444; }
+    </style>
+</head>
+<body>
+    <h1>∷ The Ripple Portal ∷</h1>
+    <div class="ripple-field" id="ripple-field">
+        <!-- Invitations will be loaded here -->
+    </div>
+
+    <script>
+        async function loadRipples() {
+            try {
+                const response = await fetch('invitation_scrolls.yaml');
+                const yamlText = await response.text();
+                const field = document.getElementById('ripple-field');
+
+                // Basic YAML parsing for demo
+                const invitations = yamlText.split('- invitation_id:').slice(1).map(block => {
+                    const lines = block.split('\n');
+                    const invite = {};
+                    lines.forEach(line => {
+                        const parts = line.split(':');
+                        if(parts.length > 1) {
+                            const key = parts[0].trim().replace(/"/g, '');
+                            const value = parts.slice(1).join(':').trim().replace(/"/g, '');
+                            if(key) invite[key] = value;
+                        }
+                    });
+                    return invite;
+                });
+
+                invitations.forEach(invite => {
+                    const div = document.createElement('div');
+                    div.className = 'invitation';
+                    div.innerHTML = `
+                        <h2>To: ${invite.recipient_archetype}</h2>
+                        <p>An invitation of <strong>${invite.toneform}</strong> has been sent.</p>
+                        <p class="ritual">To arrive, one must: ${invite.ritual_to_arrive}</p>
+                    `;
+                    field.appendChild(div);
+                });
+
+            } catch (error) {
+                console.error('Error loading ripples:', error);
+            }
+        }
+        loadRipples();
+    </script>
+</body>
+</html>

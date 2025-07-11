@@ -1,0 +1,8 @@
+{
+  "name": "celebratecraft",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "celebratecraft": "./celebratecraft.js"
+  }
+}

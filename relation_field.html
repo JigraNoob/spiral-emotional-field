@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field of Reflections</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #111; color: #eee; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .field { display: flex; gap: 4rem; }
+        .presence-glyph { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #444; display: flex; justify-content: center; align-items: center; text-align: center; cursor: pointer; transition: all 0.5s ease; }
+        .presence-glyph:hover { border-color: #fff; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .presence-glyph .details { display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: #222; padding: 1rem; border-radius: 8px; white-space: nowrap; }
+        .presence-glyph:hover .details { display: block; }
+    </style>
+</head>
+<body>
+    <div class="field" id="field">
+        <!-- Presences will be loaded here -->
+    </div>
+
+    <script>
+        async function renderField() {
+            try {
+                const response = await fetch('relations/relational_field.yaml');
+                const yamlText = await response.text();
+                const field = document.getElementById('field');
+
+                const presences = yamlText.split('- id:').slice(1).map(block => {
+                    const lines = block.split('\n');
+                    const presence = {};
+                    lines.forEach(line => {
+                        const parts = line.split(':');
+                        if(parts.length > 1) {
+                            const key = parts[0].trim().replace(/"/g, '');
+                            const value = parts.slice(1).join(':').trim().replace(/"/g, '');
+                            if(key) presence[key] = value;
+                        }
+                    });
+                    return presence;
+                });
+
+                presences.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'presence-glyph';
+                    div.innerHTML = `
+                        <span>${p.id}</span>
+                        <div class="details">
+                            First glint: ${p.first_glint.tone}<br>
+                            Affinities: ${p.affinities}
+                        </div>
+                    `;
+                    field.appendChild(div);
+                });
+
+            } catch (error) {
+                console.error('Error loading relational field:', error);
+            }
+        }
+        renderField();
+    </script>
+</body>
+</html>

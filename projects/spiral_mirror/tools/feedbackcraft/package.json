@@ -1,0 +1,10 @@
+{
+  "name": "feedbackcraft",
+  "version": "0.1.0",
+  "bin": {
+    "feedbackcraft": "./feedbackcraft.js"
+  },
+  "dependencies": {
+    "commander": "^9.4.1"
+  }
+}

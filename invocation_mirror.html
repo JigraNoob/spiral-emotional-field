@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invocation Mirror</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #111; color: #eee; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .mirror { display: flex; gap: 2rem; }
+        .ritual { border: 1px solid #333; border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+        .ritual:hover { border-color: #8fdfff; box-shadow: 0 0 15px rgba(143, 223, 255, 0.2); }
+        .ritual.eligible { border-color: #8fff8f; }
+        h2 { margin-top: 0; font-weight: 500; }
+        p { color: #888; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="mirror" id="mirror">
+        <!-- Invocations will be loaded here -->
+    </div>
+
+    <script>
+        async function renderMirror() {
+            try {
+                const response = await fetch('rituals/invocation_registry.yaml');
+                const yamlText = await response.text();
+                const mirror = document.getElementById('mirror');
+
+                const invocations = yamlText.split('- invocation_id:').slice(1).map(block => {
+                    const lines = block.split('\n');
+                    const invoke = {};
+                    lines.forEach(line => {
+                        const parts = line.split(':');
+                        if(parts.length > 1) {
+                            const key = parts[0].trim().replace(/"/g, '');
+                            const value = parts.slice(1).join(':').trim().replace(/"/g, '');
+                            if(key) invoke[key] = value;
+                        }
+                    });
+                    return invoke;
+                });
+
+                invocations.forEach(invoke => {
+                    const div = document.createElement('div');
+                    div.className = 'ritual';
+                    // Simplified eligibility check for demo
+                    if (invoke.required_state === 'any' || invoke.required_state === 'enoughness.steady') {
+                        div.classList.add('eligible');
+                    }
+                    div.innerHTML = `
+                        <h2>${invoke.invocation_id.replace(/_/g, ' ')}</h2>
+                        <p>${invoke.entry_ritual}</p>
+                    `;
+                    mirror.appendChild(div);
+                });
+
+            } catch (error) {
+                console.error('Error loading invocation registry:', error);
+            }
+        }
+        renderMirror();
+    </script>
+</body>
+</html>

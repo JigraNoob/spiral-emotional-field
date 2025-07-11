@@ -34,5 +34,8 @@
   "bugs": {
     "url": "https://github.com/spiral-collective/spiral-glintstream/issues"
   },
-  "homepage": "https://github.com/spiral-collective/spiral-glintstream#readme"
+  "homepage": "https://github.com/spiral-collective/spiral-glintstream#readme",
+  "dependencies": {
+    "chokidar": "^3.5.3"
+  }
 }

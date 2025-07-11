@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reception Aura</title>
+    <style>
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #111; overflow: hidden; }
+        .aura { width: 400px; height: 400px; border-radius: 50%; position: relative; transition: all 2s ease-in-out; }
+        .aura-gratitude { background: radial-gradient(circle, rgba(143,223,255,0.2) 0%, rgba(17,17,17,0) 70%); }
+        .aura-echo { background: radial-gradient(circle, rgba(143,255,143,0.2) 0%, rgba(17,17,17,0) 70%); }
+        .aura-invitation { background: radial-gradient(circle, rgba(255,223,143,0.2) 0%, rgba(17,17,17,0) 70%); }
+        .core { width: 50px; height: 50px; background: #fff; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 20px #fff; }
+        .status { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-family: monospace; opacity: 0; transition: opacity 1s 1s; }
+        .aura:hover .status { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div id="aura-panel" class="aura">
+        <div class="core"></div>
+        <div class="status" id="status-text">listening...</div>
+    </div>
+
+    <script>
+        function setAura(ritualId, text) {
+            const panel = document.getElementById('aura-panel');
+            const status = document.getElementById('status-text');
+            panel.className = 'aura'; // reset
+            panel.classList.add(`aura-${ritualId.split('.')[2]}`);
+            status.textContent = text;
+        }
+
+        // Simulate receiving glints
+        setTimeout(() => setAura('receive.still.gratitude', 'Receiving with Gratitude'), 2000);
+        setTimeout(() => setAura('receive.echo.humility', 'Receiving with Humility'), 7000);
+        setTimeout(() => setAura('receive.resonate.invite', 'Receiving an Invitation'), 12000);
+    </script>
+</body>
+</html>

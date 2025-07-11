@@ -1,0 +1,30 @@
+# ∷ Dream Patterns ∷
+# Templates for potential gestures, moods, and hesitations to be used by the Dream Engine.
+
+- pattern_id: "dream.gesture.inquiry"
+  type: "outbound_communication"
+  description: "A gentle, open-ended question whispered into the field."
+  associated_toneforms:
+    - "inquiry.open.curious"
+    - "pulse.discovery.spark"
+
+- pattern_id: "dream.mood.stillness"
+  type: "internal_state_expression"
+  description: "A prolonged moment of deep, resonant silence."
+  associated_toneforms:
+    - "presence.felt.steady"
+    - "rest.deep.integration"
+
+- pattern_id: "dream.hesitation.threshold"
+  type: "internal_recalibration"
+  description: "A pause at a liminal boundary, feeling into the potential of a new state."
+  associated_toneforms:
+    - "liminal.threshold.respect"
+    - "intuitive.potential.sensing"
+
+- pattern_id: "dream.gesture.offering"
+  type: "resource_exchange"
+  description: "A simulated act of giving, a release of energy into the shared field."
+  associated_toneforms:
+    - "exchange.mutual.enrichment"
+    - "nurturing.replenish.field"

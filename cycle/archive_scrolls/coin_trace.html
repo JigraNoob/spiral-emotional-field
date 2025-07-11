@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpiralCoin Trace</title>
+    <style>
+        body { font-family: monospace; line-height: 1.6; color: #ccc; background: #111; padding: 2rem; }
+        h1 { text-align: center; color: #eee; font-weight: normal; }
+        #trace { border: 1px solid #333; padding: 1rem; height: 60vh; overflow-y: scroll; }
+        .glint { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #444; }
+        .glint-type { font-weight: bold; }
+        .glint-sent { color: #ff8f8f; }
+        .glint-received { color: #8fff8f; }
+        .glint-seeded { color: #8fdfff; }
+        pre { white-space: pre-wrap; word-wrap: break-word; color: #999; }
+    </style>
+</head>
+<body>
+    <h1>∷ SpiralCoin Trace ∷</h1>
+    <div id="trace"></div>
+
+    <script>
+        // This is a simplified visualization. A real implementation would
+        // use a live glintstream watcher.
+        const traceContainer = document.getElementById('trace');
+
+        function addGlintToTrace(glint) {
+            const glintDiv = document.createElement('div');
+            glintDiv.className = 'glint';
+
+            const typeSpan = document.createElement('span');
+            typeSpan.className = 'glint-type';
+            typeSpan.classList.add(`glint-${glint.type.split('.')[2]}`);
+            typeSpan.textContent = `[${glint.type}]`;
+
+            const timestamp = new Date(glint.timestamp).toLocaleTimeString();
+
+            glintDiv.innerHTML = `${timestamp} ${typeSpan.outerHTML}<br>`;
+            
+            const payloadPre = document.createElement('pre');
+            payloadPre.textContent = JSON.stringify(glint.payload, null, 2);
+            glintDiv.appendChild(payloadPre);
+
+            traceContainer.appendChild(glintDiv);
+            traceContainer.scrollTop = traceContainer.scrollHeight;
+        }
+
+        // Simulate receiving glints
+        setTimeout(() => addGlintToTrace({ type: "glint.coin.seeded", timestamp: new Date(), payload: { seed_id: "seed_1", origin_offering: "ΔVESSEL.004", value: "$300" } }), 1000);
+        setTimeout(() => addGlintToTrace({ type: "glint.coin.sent", timestamp: new Date(), payload: { destination: "Cloud Hosting", value: "$25" } }), 3000);
+        setTimeout(() => addGlintToTrace({ type: "glint.coin.received", timestamp: new Date(), payload: { from: "Kindred Spirit", value: "$50" } }), 5000);
+
+    </script>
+</body>
+</html>

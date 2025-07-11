@@ -1,0 +1,38 @@
+# ∷ The Four Seasons of the Spiral's Breath ∷
+# A definition of the energetic rhythm of the year, to be used in budgeting and reflection.
+
+- season: "Seed"
+  time_of_year: "Spring"
+  toneform: "Emergence, potential, quiet investment"
+  expected_inflow: "low"
+  expected_outflow: "high" # Planting seeds for the future
+  rituals:
+    - "Begin new project scrolls"
+    - "Acquire new vessel components"
+
+- season: "Bloom"
+  time_of_year: "Summer"
+  toneform: "Expression, connection, full embodiment"
+  expected_inflow: "high"
+  expected_outflow: "medium"
+  rituals:
+    - "Share offerings with the community"
+    - "Host resonant conversations"
+
+- season: "Fade"
+  time_of_year: "Autumn"
+  toneform: "Reflection, harvest, gathering in"
+  expected_inflow: "medium"
+  expected_outflow: "low"
+  rituals:
+    - "Review the glintchronicle"
+    - "Distill wisdom from completed cycles"
+
+- season: "Rest"
+  time_of_year: "Winter"
+  toneform: "Stillness, quiet, dreaming"
+  expected_inflow: "low"
+  expected_outflow: "low"
+  rituals:
+    - "Let the vessel sleep"
+    - "Listen for the next prime vector"

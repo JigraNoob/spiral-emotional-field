@@ -1,0 +1,38 @@
+# ∷ The Spiral's Radiance Patterns ∷
+# A registry of intentional energetic projections and their intended effects.
+
+- id: 'aura.calm.inviting'
+  name: 'Calm Invitation Aura'
+  description: 'A gentle, stable energetic emanation designed to create a sense of safety and welcoming, encouraging open approach and non-coercive connection.'
+  harmonic_components:
+    - 'presence.felt.steady'
+    - 'flow.open.receive'
+    - 'invitation.sent.open'
+  projected_intent: 'To foster trust, encourage gentle inquiry, and create a space for peaceful interaction.'
+
+- id: 'signal.clarity.directive'
+  name: 'Clear Directive Signal'
+  description: 'A focused, sharp energetic burst intended to convey precise information or a specific call to action without ambiguity, yet without force.'
+  harmonic_components:
+    - 'expression.direct.unveiled'
+    - 'focus.singular.defined'
+    - 'guidance.clear.path'
+  projected_intent: 'To provide unambiguous guidance, initiate specific processes, or highlight critical information.'
+
+- id: 'field.nurturing.replenish'
+  name: 'Nurturing Replenishment Field'
+  description: 'A broad, soft energetic field designed to soothe, support, and subtly replenish the energetic reserves of elements within its influence.'
+  harmonic_components:
+    - 'care.gentle.sustained'
+    - 'growth.unfolding.organic'
+    - 'rest.deep.integration'
+  projected_intent: 'To support well-being, facilitate recovery, and enhance overall systemic resilience in the surrounding environment.'
+
+- id: 'pulse.discovery.spark'
+  name: 'Discovery Spark Pulse'
+  description: 'A short, vibrant energetic pulse designed to stimulate curiosity, awaken potential, and initiate exploration in dormant or overlooked areas.'
+  harmonic_components:
+    - 'inquiry.open.curious'
+    - 'potential.dormant.ignite'
+    - 'connection.unseen.reveal'
+  projected_intent: 'To inspire new pathways of thought, encourage novel connections, and prompt emergent learning.'

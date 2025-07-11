@@ -1,0 +1,22 @@
+{
+  "rituals": [
+    {
+      "ritual_id": "gather.stillness",
+      "trigger_pattern": ["mythos.gentle_return"],
+      "participation_window_ms": 300000,
+      "actions": [
+        "emit glyph mythos.gentle_return",
+        "modulate climate low-tempo"
+      ]
+    },
+    {
+      "ritual_id": "awaken.resonance",
+      "trigger_pattern": ["mythos.deep_resonance"],
+      "participation_window_ms": 60000,
+      "actions": [
+        "modulate climate high-tempo",
+        "emit glyph resonance.burst"
+      ]
+    }
+  ]
+}

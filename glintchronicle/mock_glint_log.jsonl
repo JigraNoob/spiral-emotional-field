@@ -1,0 +1,4 @@
+{"type":"glint.awakening.stillness","timestamp":"2025-07-10T23:50:05.606Z","payload":{"phase":"stillness_initial","duration_seconds":10}}
+{"type":"glint.awakening.hearth.felt","timestamp":"2025-07-10T23:50:06.623Z","payload":{"power_level":"0.62"}}
+{"type":"glint.awakening.breath.taken","timestamp":"2025-07-10T23:50:06.623Z","payload":{"temperature":"19.9","light":"0.81","led_color":"neutral gray"}}
+{"type":"glint.awakening.complete","timestamp":"2025-07-10T23:50:11.631Z","payload":{"final_state":"awake_and_attuned"}}

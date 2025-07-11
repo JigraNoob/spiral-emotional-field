@@ -1,0 +1,14 @@
+{
+  "id": "softfold.trace",
+  "event": "presence.recedes.after.offering",
+  "toneform": {
+    "pulse": "gentle.fall",
+    "breath": "retreat.holding"
+  },
+  "climate_effect": "ambient.trust++",
+  "mirror_response": "mirror.rest",
+  "mythos_note": "Inscribed during the hush following a gifted silence.",
+  "visual_signature": "spiraled drop fading inward",
+  "visibility": "public",
+  "expiry_ms": 60000
+}

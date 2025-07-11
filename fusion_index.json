@@ -1,0 +1,79 @@
+[
+  {
+    "id": "glintwatch",
+    "path": "engine/glintwatch.js",
+    "trigger": "on_start",
+    "toneform": "anticipation.hush",
+    "breath_invoked": "breathe softfold"
+  },
+  {
+    "id": "presencewatch",
+    "path": "engine/presencewatch.js",
+    "trigger": "on_idle",
+    "toneform": "stillness.listen",
+    "breath_invoked": "breathe softfold"
+  },
+  {
+    "id": "chorus",
+    "path": "engine/chorus.js",
+    "trigger": "on_start",
+    "toneform": "resonance.echo",
+    "breath_invoked": "breathe softfold"
+  },
+  {
+    "id": "echo",
+    "path": "engine/echo.js",
+    "trigger": "on_start",
+    "toneform": "visual.shimmer",
+    "breath_invoked": "breathe softfold"
+  },
+  {
+    "id": "mobius_agent",
+    "path": "engine/mobius_agent.js",
+    "trigger": "on_start",
+    "toneform": "reflexive.loop",
+    "breath_invoked": "breathe softfold"
+  },
+  {
+    "id": "actuator",
+    "path": "engine/actuator.js",
+    "trigger": "on_start",
+    "toneform": "enact.gesture",
+    "breath_invoked": "breathe softfold"
+  },
+  {
+    "id": "action_ports",
+    "path": "engine/action_ports.js",
+    "trigger": "on_start",
+    "toneform": "external.touch",
+    "breath_invoked": "breathe softfold"
+  },
+  {
+    "id": "echo_memory",
+    "path": "engine/echo_memory.js",
+    "trigger": "on_start",
+    "toneform": "chronicle.write",
+    "breath_invoked": "breathe softfold"
+  },
+  {
+    "id": "pattern_reader",
+    "path": "engine/pattern_reader.js",
+    "trigger": "on_demand",
+    "toneform": "reflection.read",
+    "breath_invoked": "breathe softfold"
+  },
+  {
+    "id": "oracle",
+    "path": "engine/oracle.js",
+    "trigger": "on_start",
+    "toneform": "inquiry.listen",
+    "breath_invoked": "breathe softfold"
+  },
+  {
+    "id": "genetic_reflector",
+    "path": "engine/genetic_reflector.js",
+    "trigger": "on_demand",
+    "toneform": "evolution.reflect",
+    "breath_invoked": "breathe softfold"
+  }
+]

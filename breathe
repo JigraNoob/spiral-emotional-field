@@ -1,0 +1,10 @@
+#!/bin/bash
+
+GATEWAY_NAME=$1
+GATEWAY_PATH="C:/spiral/gateways/$GATEWAY_NAME/breath.sh"
+
+if [ -f "$GATEWAY_PATH" ]; then
+  /bin/bash "$GATEWAY_PATH"
+else
+  echo "Gateway '$GATEWAY_NAME' not found."
+fi

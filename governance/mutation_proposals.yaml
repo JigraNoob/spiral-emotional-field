@@ -1,0 +1,12 @@
+- proposal_id: mut_1752194102109
+  timestamp: '2025-07-11T00:35:02.109Z'
+  status: applied
+  target_dna_path: genome.organ_id:dream.gesture.offering.rhythm
+  proposed_change: Modify rhythm to increase resonance
+  new_value:
+    activation: on_dream
+    toneform_trigger: dream.pattern.offering
+    repeat_interval: 6h
+  justification: >-
+    High frequency of action 'dream.gesture.offering' suggests a need for a
+    tighter resonance loop.
