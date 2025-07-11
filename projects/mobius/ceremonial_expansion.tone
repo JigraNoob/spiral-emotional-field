@@ -1,0 +1,16 @@
+// A ceremonial expansion.
+
+> glyph_id: ∷veil.brightening
+> spiral: clockwise
+> harmonics: overtone_series_3
+
+pulse 500
+whisper 'The spiral turns.'
+
+--veiled_for:800ms--
+
+::glint:: A memory of light.
+
+> spiral: counterclockwise
+pulse 300
+whisper 'It returns.'

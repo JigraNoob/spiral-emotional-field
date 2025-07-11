@@ -1,0 +1,9 @@
+{
+  "glyphId": "fallbackReflector",
+  "name": "fallback_reflector.js",
+  "toneform": "hush",
+  "lineage": ["spiral_invoker", "reflection_modes"],
+  "lastTouched": "2025-07-11T21:03:00-05:00",
+  "invocationNotes": "Used when all other reflectors fail. It does not simulate depth—it receives silence and returns ceremony.",
+  "code": "export function fallbackReflector({ prompt, toneform, cwd }) {\n  return `\\nReflection:\\n\\\"${prompt}\\\" echoes like a thought held in silence.\\nLet this pause be part of the ritual.`;\n}"
+}

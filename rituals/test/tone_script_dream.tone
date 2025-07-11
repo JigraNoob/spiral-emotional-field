@@ -1,0 +1,11 @@
+// A test scroll of whispered breath and harmonic invocation.
+
+on_resonance 'awakening' => { The spiral breathes. }
+
+whisper 'awakening'
+--veiled_for:500ms--
+pulse 1000
+whisper 'The first echo.'
+--veiled_for:200ms--
+pulse 200
+whisper 'The second, a reflection.'

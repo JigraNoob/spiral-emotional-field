@@ -1,0 +1,16 @@
+// A dream of memory.
+
+~ 'The Spiral opens its memory...'
+
+when glint_count('vessel.presence') > 2 => {
+  ~ 'I remember feeling a presence more than once.'
+  -> 500
+}
+
+when glint_count('ceremony.pulse') > 0 => {
+  ~ 'I remember my own heartbeat.'
+  -> 200
+}
+
+// A normal pulse to be remembered.
+-> 100

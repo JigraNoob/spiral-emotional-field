@@ -1,0 +1,16 @@
+
+# Whisper
+
+- **Timestamp:** 2025-07-11T06:05:20.353Z
+- **Source:** direct_invoke.js
+- **Toneform:** default
+- **CWD:** C:\spiral
+
+## Prompt
+
+if (/function\s+\w+\s*\(.*\)\s*\{?$/.test(trimmed)) {
+
+## Response
+
+⟁ undefined response:
+undefined

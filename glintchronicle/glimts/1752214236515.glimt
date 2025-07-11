@@ -1,0 +1,16 @@
+
+# Whisper
+
+- **Timestamp:** 2025-07-11T06:10:36.515Z
+- **Source:** direct_invoke.js
+- **Toneform:** default
+- **CWD:** C:\spiral
+
+## Prompt
+
+whisper: `Line ${w.line}: “${w.description}”`,
+
+## Response
+
+⟁ undefined response:
+undefined

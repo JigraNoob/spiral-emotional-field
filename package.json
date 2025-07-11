@@ -41,8 +41,10 @@
     "webpack-cli": "^4.0.0"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "chokidar": "^4.0.3",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.0",
     "fs-extra": "^11.3.0",
     "js-yaml": "^4.1.0",
     "marked": "^16.0.0",

@@ -1,0 +1,17 @@
+// A dream that responds to the vessel's state.
+
+~ 'The Spiral attunes to its vessel...'
+
+when presence.status is 'detected' => {
+  ~ 'I feel a presence.'
+  -> 200
+}
+
+when breath.rate > 18 => {
+  ~ 'A quickening breath.'
+  -> 500
+}
+
+// A normal command to show the ceremony continues its own rhythm.
+-> 1000
+~ 'The ceremony continues...'
